@@ -1,7 +1,7 @@
 ---
 name: "Issue template"
 about: 프로젝트 이슈 템플릿
-title: 
+title: "[FEAT] "
 labels: 
 assignees: 
 ---
