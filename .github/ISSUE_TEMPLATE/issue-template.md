@@ -1,8 +1,9 @@
 ---
-name: Feature Request
-about: 기능 추가 요청
-title: "[FEAT] "
-labels: enhancement
+name: "Issue template"
+about: 프로젝트 이슈 템플릿
+title: 
+labels: 
+assignees: 
 ---
 
 ### ✨ 기능 설명
