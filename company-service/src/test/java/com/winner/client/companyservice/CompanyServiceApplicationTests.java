@@ -1,4 +1,4 @@
-package com.winner.client.companyService;
+package com.winner.client.companyservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
