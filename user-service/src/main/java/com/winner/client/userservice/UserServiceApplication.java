@@ -1,4 +1,4 @@
-package com.winner.client.userService;
+package com.winner.client.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
