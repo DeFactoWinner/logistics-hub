@@ -3,7 +3,6 @@ package com.winner.client.companyservice.domain.entity;
 import com.winner.client.companyservice.domain.vo.CompanyLocation;
 import com.winner.client.companyservice.domain.vo.HubId;
 import com.winner.client.companyservice.domain.vo.Type;
-import com.winner.client.companyservice.infrastructure.service.GeocodingService;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.GeneratedValue;
@@ -41,18 +40,17 @@ public class Company {
   private CompanyLocation location;
 
   public static Company create(UUID id, String companyName, Type type, HubId hubId,
-      CompanyLocation location, GeocodingService geocodingService){
-
-    CompanyLocation cl = CompanyLocation.of(location.getAddress(), geocodingService);
+      CompanyLocation location){
 
     return Company.builder()
         .id(id)
         .companyName(companyName)
         .type(type)
         .hubId(hubId)
-        .location(cl)
+        .location(location)
         .build();
   }
+
 
 
 
