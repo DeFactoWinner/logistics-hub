@@ -39,11 +39,10 @@ public class Company {
   @Embedded
   private CompanyLocation location;
 
-  public static Company create(UUID id, String companyName, Type type, HubId hubId,
+  public static Company create(String companyName, Type type, HubId hubId,
       CompanyLocation location){
 
     return Company.builder()
-        .id(id)
         .companyName(companyName)
         .type(type)
         .hubId(hubId)
