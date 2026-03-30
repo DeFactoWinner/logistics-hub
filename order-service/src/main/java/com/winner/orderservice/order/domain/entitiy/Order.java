@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -19,8 +20,9 @@ import java.util.UUID;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", updatable = false, nullable = false)
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id", nullable = false)
     private UUID id;
 
     @Embedded
@@ -37,12 +39,10 @@ public class Order {
     private OrderStatus status;
 
     @Column(name = "delivery_id")
-    private UUID deliveryId; // nullable - 배송 생성 후 주입
+    private UUID deliveryId;
 
     @Column(name = "ordered_at", nullable = false, updatable = false)
     private LocalDateTime orderedAt;
-
-
 
     public static Order create(
             OrderParticipants participants,

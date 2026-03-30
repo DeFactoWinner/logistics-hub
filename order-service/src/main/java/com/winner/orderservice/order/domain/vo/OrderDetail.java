@@ -15,7 +15,7 @@ public class OrderDetail {
     private Long count;
 
     @Column(name = "comment", columnDefinition = "text")
-    private String comment; // nullable
+    private String comment;
 
     public OrderDetail(Long count, String comment) {
         validateCount(count);
