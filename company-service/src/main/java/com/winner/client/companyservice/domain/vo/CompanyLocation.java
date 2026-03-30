@@ -1,6 +1,6 @@
 package com.winner.client.companyservice.domain.vo;
 
-import com.winner.client.companyservice.infrastructure.service.GeocodingService;
+import com.winner.client.companyservice.infrastructure.api.KaKaoAddress;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -23,9 +23,9 @@ public class CompanyLocation {
   @Column(name = "lng", nullable = false)
   private Double longitude;
 
-  public static CompanyLocation of(String address, GeocodingService geocodingService) {
+  public static CompanyLocation of(String address, KaKaoAddress kaKaoAddress) {
 
-    Double[] result = geocodingService.convert(address);
+    Double[] result = kaKaoAddress.convert(address);
     if(result == null || result.length < 2){
       throw new IllegalArgumentException("위경도를 찾을 수 없습니다.");
     }else{
