@@ -1,28 +1,34 @@
 package com.winner.orderservice.order.domain.entity;
 
-import com.winner.orderservice.order.domain.enums.OrderStatus;
+import com.winner.client.global.entity.BaseAuditEntity;
 import com.winner.orderservice.order.domain.vo.OrderDetail;
 import com.winner.orderservice.order.domain.vo.OrderParticipants;
 import com.winner.orderservice.order.domain.vo.OrderSnapshot;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.UuidGenerator;
-
+import com.winner.orderservice.order.domain.enums.OrderStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 @Entity
 @Table(name = "p_orders")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order {
+public class Order extends BaseAuditEntity {
 
     @Id
-    @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
     @Embedded
