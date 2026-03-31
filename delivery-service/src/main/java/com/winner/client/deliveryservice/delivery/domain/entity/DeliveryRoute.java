@@ -4,6 +4,7 @@ import com.winner.client.deliveryservice.delivery.domain.enums.DeliveryRouteStat
 import com.winner.client.deliveryservice.delivery.domain.vo.CurrentHubRoute;
 import com.winner.client.deliveryservice.delivery.domain.vo.Distance;
 import com.winner.client.deliveryservice.delivery.domain.vo.Duration;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -46,16 +47,20 @@ public class DeliveryRoute {
   @Embedded
   private CurrentHubRoute currentHubRoute;
 
-  @Column(name = "estimated_distance", nullable = false, precision = 10, scale = 2)
+  @Embedded
+  @AttributeOverride(name = "kilometers", column = @Column(name = "estimated_distance", nullable = false))
   private Distance estimatedDistance;
 
-  @Column(name = "estimated_arrival_time", nullable = false)
+  @Embedded
+  @AttributeOverride(name = "minutes", column = @Column(name = "estimated_arrival_time", nullable = false))
   private Duration estimatedArrivalTime;
 
-  @Column(name = "actual_distance", precision = 10, scale = 2)
+  @Embedded
+  @AttributeOverride(name = "kilometers", column = @Column(name = "actual_distance"))
   private Distance actualDistance;
 
-  @Column(name = "actual_arrival_time")
+  @Embedded
+  @AttributeOverride(name = "minutes", column = @Column(name = "actual_arrival_time"))
   private Duration actualArrivalTime;
 
   @Enumerated(EnumType.STRING)
