@@ -22,7 +22,7 @@ public class OrderDetail {
     @Column(name = "comment", columnDefinition = "text")
     private String comment;
 
-    public OrderDetail(Long count, String comment) {
+    public OrderDetail(UUID productId, Long count, String comment) {
         validateNotNull(productId, "상품 ID");
         validateCount(count);
         this.productId = productId;
@@ -32,11 +32,11 @@ public class OrderDetail {
 
     public OrderDetail withCount(Long newCount) {
         validateCount(newCount);
-        return new OrderDetail(newCount, this.comment);
+        return new OrderDetail(this.productId, newCount, this.comment);
     }
 
     public OrderDetail withComment(String newComment) {
-        return new OrderDetail(this.count, newComment);
+        return new OrderDetail(this.productId, this.count, newComment);
     }
 
     private void validateNotNull(UUID value, String fieldName) {

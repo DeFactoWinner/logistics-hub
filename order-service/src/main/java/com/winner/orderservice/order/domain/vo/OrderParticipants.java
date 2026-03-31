@@ -19,7 +19,7 @@ public class OrderParticipants {
     @Column(name = "receiver_id", nullable = false, updatable = false)
     private UUID receiverId;
 
-    public OrderParticipants(UUID supplierId, UUID receiverId, UUID productId) {
+    public OrderParticipants(UUID supplierId, UUID receiverId) {
         validateNotNull(supplierId, "공급 업체 ID");
         validateNotNull(receiverId, "수령 업체 ID");
         this.supplierId = supplierId;

@@ -1,12 +1,12 @@
 spring:
   application:
-    name: orderservice
+    name: order-service
 
   eureka:
     client:
       enabled: ${EUREKA_CLIENT_ENABLED:true}
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT:5432}/${POSTGRES_DB}?currentSchema=${POSTGRES_ORDER_SCHEMA}
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT:5432}/${POSTGRES_DB}?currentSchema=${POSTGRES_ORDER_SCHEMA:order_service}
     driver-class-name: org.postgresql.Driver
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
@@ -20,7 +20,7 @@ spring:
     properties:
       hibernate:
         format_sql: ${JPA_FORMAT_SQL:true}
-        default_schema: ${POSTGRES_ORDER_SCHEMA}
+        default_schema: ${POSTGRES_ORDER_SCHEMA:order_service}
     show-sql: ${JPA_SHOW_SQL:false}
 
   data:
