@@ -1,0 +1,11 @@
+rootProject.name = 'logistics-hub'
+
+include 'global'
+include 'gateway'
+include 'eureka-server'
+include 'user-service'
+include 'company-service'
+include 'hub-service'
+include 'product-service'
+include 'order-service'
+include 'delivery-service'
