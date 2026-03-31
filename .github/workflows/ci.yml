@@ -16,7 +16,7 @@ jobs:
           - gateway
           - hub-service
           - delivery-service
-          - orderservice
+          - order-service
           - user-service
           - product-service
           - eureka-server
