@@ -35,8 +35,10 @@ public class User extends BaseAuditEntity {
   @Column(nullable = false, length = 20)
   private String name;
 
+  @Embedded
   private Password passwordHash;
 
+  @Embedded
   private PhoneNumber phoneNumber;
 
   @Column(length = 50)
@@ -46,6 +48,7 @@ public class User extends BaseAuditEntity {
 
   private ApprovalStatusType approvalStatus;
 
+  @Embedded
   private UserRole userRole;
 
   public User(String username, String name, Password passwordHash, PhoneNumber phoneNumber) {
