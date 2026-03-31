@@ -21,3 +21,19 @@ spring:
   sql:
     init:
       mode: always
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:17001/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+kakao :
+  api :
+    key : ${KAKAO_API_KEY}
