@@ -49,6 +49,9 @@ public enum OrderStatus {
     public abstract boolean isDeletable();
 
     public boolean canTransitionTo(OrderStatus next) {
+        if (next == null) {
+            return false;
+        }
         return nextStates().contains(next);
     }
 

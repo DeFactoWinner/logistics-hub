@@ -6,10 +6,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderDetail {
+
+    @Column(name = "product_id", nullable = false, updatable = false)
+    private UUID productId;
 
     @Column(name = "count", nullable = false)
     private Long count;
@@ -18,7 +23,9 @@ public class OrderDetail {
     private String comment;
 
     public OrderDetail(Long count, String comment) {
+        validateNotNull(productId, "상품 ID");
         validateCount(count);
+        this.productId = productId;
         this.count = count;
         this.comment = comment;
     }
@@ -30,6 +37,12 @@ public class OrderDetail {
 
     public OrderDetail withComment(String newComment) {
         return new OrderDetail(this.count, newComment);
+    }
+
+    private void validateNotNull(UUID value, String fieldName) {
+        if (value == null) {
+            throw new IllegalArgumentException(fieldName + "는 필수입니다.");
+        }
     }
 
     private void validateCount(Long count) {

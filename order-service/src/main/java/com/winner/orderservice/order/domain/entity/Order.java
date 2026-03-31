@@ -49,6 +49,10 @@ public class Order {
             OrderSnapshot snapshot,
             OrderDetail orderDetail
     ) {
+        validateNotNull(participants, "거래 당사자");
+        validateNotNull(snapshot, "주문 스냅샷");
+        validateNotNull(orderDetail, "주문 상세");
+
         Order order = new Order();
         order.participants = participants;
         order.snapshot = snapshot;
@@ -56,5 +60,11 @@ public class Order {
         order.status = OrderStatus.PENDING;
         order.orderedAt = LocalDateTime.now();
         return order;
+    }
+
+    private static void validateNotNull(Object value, String fieldName) {
+        if (value == null) {
+            throw new IllegalArgumentException(fieldName + "는 필수입니다.");
+        }
     }
 }
