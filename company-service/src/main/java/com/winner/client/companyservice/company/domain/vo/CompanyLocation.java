@@ -1,5 +1,7 @@
-package com.winner.client.companyservice.company.entity.vo;
+package com.winner.client.companyservice.company.domain.vo;
 
+import com.winner.client.companyservice.common.exception.BusinessException;
+import com.winner.client.companyservice.common.exception.CompanyErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -22,10 +24,10 @@ public class CompanyLocation {
   public static CompanyLocation of(Double lng, Double lat) {
 
     if (lat < -90 || lat > 90) {
-      throw new IllegalArgumentException("유효하지 않은 위도 좌표입니다.");
+      throw new BusinessException(CompanyErrorCode.INVALID_LATITUDE);
     }
     if(lng < -180 || lng > 180 ){
-      throw new IllegalArgumentException("유효하지 않은 경도 좌표입니다.");
+      throw new BusinessException(CompanyErrorCode.INVALID_LONGITUDE);
     }
     return new CompanyLocation(lat, lng);
   }

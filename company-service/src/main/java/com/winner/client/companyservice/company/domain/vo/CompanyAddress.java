@@ -1,5 +1,7 @@
-package com.winner.client.companyservice.company.entity.vo;
+package com.winner.client.companyservice.company.domain.vo;
 
+import com.winner.client.companyservice.common.exception.BusinessException;
+import com.winner.client.companyservice.common.exception.CompanyErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -21,7 +23,7 @@ public class CompanyAddress {
 
   public static CompanyAddress of(String address, String addressDetail){
     if(address == null || address.isBlank()){
-      throw new IllegalArgumentException("주소는 필수 값입니다.");
+      throw new BusinessException(CompanyErrorCode.ADDRESS_REQUIRED);
     }
     return new CompanyAddress(address,addressDetail);
   }
