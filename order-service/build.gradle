@@ -28,6 +28,7 @@ ext {
 }
 
 dependencies {
+	implementation project(':global')
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -39,6 +40,8 @@ dependencies {
 	implementation 'io.github.openfeign:feign-hc5'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -55,4 +58,7 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
 }
