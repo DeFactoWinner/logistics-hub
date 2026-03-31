@@ -1,6 +1,7 @@
 package com.winner.client.global.response;
 
-import com.winner.client.global.exception.ErrorCode;
+import com.winner.client.global.code.BaseCode;
+import com.winner.client.global.code.ErrorCode;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
@@ -25,7 +26,7 @@ public class ApiResponse<T> {
     this.timestamp = LocalDateTime.now();
   }
 
-  public static <T> ApiResponse<T> success(SuccessCode  successCode, T data) {
+  public static <T> ApiResponse<T> success(CommonSuccessCode successCode, T data) {
     return new ApiResponse<>(successCode, data);
   }
 

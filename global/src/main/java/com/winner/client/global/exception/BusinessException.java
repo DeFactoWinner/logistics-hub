@@ -1,5 +1,6 @@
 package com.winner.client.global.exception;
 
+import com.winner.client.global.code.ErrorCode;
 import lombok.Getter;
 
 @Getter
