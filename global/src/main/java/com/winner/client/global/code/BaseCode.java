@@ -1,4 +1,4 @@
-package com.winner.client.global.response;
+package com.winner.client.global.code;
 
 import org.springframework.http.HttpStatus;
 

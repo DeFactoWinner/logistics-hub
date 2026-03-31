@@ -1,3 +1,22 @@
 spring:
   application:
     name: company-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:logistics}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:logistics1234}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: false
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: ${POSTGRES_DEFAULT_SCHEMA:logistics}
+        format_sql: false
+        jdbc.time_zone: Asia/Seoul
+  sql:
+    init:
+      mode: never

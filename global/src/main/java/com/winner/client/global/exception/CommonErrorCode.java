@@ -1,13 +1,13 @@
 package com.winner.client.global.exception;
 
-import com.winner.client.global.response.BaseCode;
+import com.winner.client.global.code.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum ErrorCode implements BaseCode {
+public enum CommonErrorCode implements ErrorCode {
   INVALID_INPUT("ERROR_001", HttpStatus.BAD_REQUEST, "잘못된 입력입니다."),
   UNAUTHORIZED("ERROR_002", HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
   FORBIDDEN("ERROR_003", HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
