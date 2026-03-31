@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
-@Table(name = "p_delivery_manager_company", schema = "delivery")
+@Table(name = "p_delivery_manager_company")
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class DeliveryManagerCompany {
 
