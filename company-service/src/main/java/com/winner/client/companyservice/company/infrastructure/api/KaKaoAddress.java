@@ -1,6 +1,8 @@
 package com.winner.client.companyservice.company.infrastructure.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.winner.client.companyservice.common.exception.BusinessException;
+import com.winner.client.companyservice.common.exception.CompanyErrorCode;
 import com.winner.client.companyservice.company.infrastructure.service.GeocodingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +36,7 @@ public class KaKaoAddress implements GeocodingService {
          .body(JsonNode.class);
 
      if(jsonNode == null || jsonNode.get("documents").isEmpty()){
-       throw new RuntimeException("주소 변환에 실패햐였습니다.");
+       throw new BusinessException(CompanyErrorCode.ADDRESS_TRANSFORMATION_FAILED);
      }
         JsonNode node = jsonNode.get("documents").get(0);
           result[0] = node.get("x").asDouble();
@@ -45,7 +47,7 @@ public class KaKaoAddress implements GeocodingService {
 
     }catch(RuntimeException e){
       log.error("카카오 요청 오류 : {}", e.getMessage());
-      throw new RuntimeException("오류가 생겼습니다.");
+      throw new BusinessException(CompanyErrorCode.ADDRESS_API_ERROR);
     }
     return result;
   }
