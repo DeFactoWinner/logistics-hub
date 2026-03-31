@@ -1,5 +1,6 @@
 package com.winner.client.global.response;
 
+import com.winner.client.global.exception.ErrorCode;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
@@ -24,15 +25,15 @@ public class ApiResponse<T> {
     this.timestamp = LocalDateTime.now();
   }
 
-  public static <T> ApiResponse<T> success(BaseCode successCode, T data) {
+  public static <T> ApiResponse<T> success(SuccessCode  successCode, T data) {
     return new ApiResponse<>(successCode, data);
   }
 
-  public static <T> ApiResponse<T> error(BaseCode errorCode) {
+  public static <T> ApiResponse<T> error(ErrorCode errorCode) {
     return new ApiResponse<>(errorCode, null);
   }
 
-  public static <T> ApiResponse<T> error(BaseCode baseCode, String customMessage) {
-    return new ApiResponse<>(baseCode, customMessage, null);
+  public static <T> ApiResponse<T> error(ErrorCode errorCode, String customMessage) {
+    return new ApiResponse<>(errorCode, customMessage, null);
   }
 }
