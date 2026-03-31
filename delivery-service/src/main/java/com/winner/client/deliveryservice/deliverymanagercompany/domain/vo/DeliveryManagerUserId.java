@@ -1,4 +1,4 @@
-package com.winner.client.deliveryservice.deliverymanagerhub.domain.vo;
+package com.winner.client.deliveryservice.deliverymanagercompany.domain.vo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
