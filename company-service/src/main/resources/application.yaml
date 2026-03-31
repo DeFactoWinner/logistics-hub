@@ -3,20 +3,21 @@ spring:
     name: company-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:logistics}
-    username: ${POSTGRES_USER:postgres}
-    password: ${POSTGRES_PASSWORD:logistics1234}
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: create-drop
-    defer-datasource-initialization: false
+    defer-datasource-initialization: true
     show-sql: false
     open-in-view: false
     properties:
       hibernate:
-        default_schema: ${POSTGRES_DEFAULT_SCHEMA:logistics}
-        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: ${POSTGRES_DEFAULT_SCHEMA}
+        format_sql: true
         jdbc.time_zone: Asia/Seoul
   sql:
     init:
-      mode: never
+      mode: always
