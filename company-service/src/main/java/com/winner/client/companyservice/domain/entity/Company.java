@@ -1,5 +1,6 @@
 package com.winner.client.companyservice.domain.entity;
 
+import com.winner.client.companyservice.domain.vo.CompanyAddress;
 import com.winner.client.companyservice.domain.vo.CompanyLocation;
 import com.winner.client.companyservice.domain.vo.HubId;
 import com.winner.client.companyservice.domain.vo.Type;
@@ -19,7 +20,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Builder
 @Table(name = "p_company")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Company {
 
   @Column(name = "id", nullable = false)
@@ -37,16 +38,20 @@ public class Company {
   private HubId hubId;
 
   @Embedded
+  private CompanyAddress address;
+
+  @Embedded
   private CompanyLocation location;
 
   public static Company create(String companyName, Type type, HubId hubId,
-      CompanyLocation location){
+      CompanyLocation location, CompanyAddress address){
 
     return Company.builder()
         .companyName(companyName)
         .type(type)
         .hubId(hubId)
         .location(location)
+        .address(address)
         .build();
   }
 

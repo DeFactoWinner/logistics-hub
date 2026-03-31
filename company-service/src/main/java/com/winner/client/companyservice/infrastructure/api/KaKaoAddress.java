@@ -33,21 +33,18 @@ public class KaKaoAddress implements GeocodingService {
          .retrieve()
          .body(JsonNode.class);
 
-     if(jsonNode == null){
+     if(jsonNode == null || jsonNode.get("documents").isEmpty()){
        throw new RuntimeException("주소 변환에 실패햐였습니다.");
-     }else if (!jsonNode.get("documents").isEmpty()) {
-        jsonNode.get("documents").forEach(document -> {
-          result[0] = document.get("x").asDouble();
-          result[1] = document.get("y").asDouble();
-        });
-      }
+     }
+        JsonNode node = jsonNode.get("documents").get(0);
+          result[0] = node.get("x").asDouble();
+          result[1] = node.get("y").asDouble();
 
-    }catch(NullPointerException e){
+    }catch(RuntimeException e){
       log.error("카카오 요청 오류 : {}", e.getMessage());
-      throw new NullPointerException("주소를 찾을 수 없습니다.");
+      throw new RuntimeException("오류가 생겼습니다.");
     }
     return result;
   }
-
 
 }
