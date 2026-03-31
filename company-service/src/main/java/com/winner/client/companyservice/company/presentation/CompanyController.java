@@ -5,7 +5,7 @@ import com.winner.client.companyservice.company.application.dto.CompanyServiceDt
 import com.winner.client.companyservice.company.presentation.dto.CompanyRequestDto;
 import com.winner.client.companyservice.company.presentation.dto.CompanyResponseDto;
 import com.winner.client.global.response.ApiResponse;
-import com.winner.client.global.response.SuccessCode;
+import com.winner.client.global.response.CommonSuccessCode;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class CompanyController {
 
     CompanyResponseDto result = companyService.createCompany(serviceDto);
 
-    return ResponseEntity.ok(ApiResponse.success(SuccessCode.CREATED,result));
+    return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.CREATED,result));
   }
 
   @PatchMapping("/{companyId}")
@@ -44,7 +44,7 @@ public class CompanyController {
 
     CompanyResponseDto result = companyService.updateCompany(companyId,serviceDto);
 
-    return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK,result));
+    return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,result));
   }
 
   @GetMapping
@@ -52,7 +52,7 @@ public class CompanyController {
 
     List<CompanyResponseDto> result = companyService.selectCompanyList();
 
-    return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK,result));
+    return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,result));
 
   }
 
@@ -61,7 +61,7 @@ public class CompanyController {
 
     CompanyResponseDto result = companyService.selectCompany(companyId);
 
-    return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK,result));
+    return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,result));
   }
 
 
@@ -70,7 +70,7 @@ public class CompanyController {
 
     companyService.deleteCompany(companyId);
 
-    return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK,null));
+    return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,null));
   }
 
 }
