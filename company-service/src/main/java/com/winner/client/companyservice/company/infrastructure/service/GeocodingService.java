@@ -1,4 +1,4 @@
-package com.winner.client.companyservice.infrastructure.service;
+package com.winner.client.companyservice.company.infrastructure.service;
 
 public interface GeocodingService {
 

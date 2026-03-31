@@ -1,4 +1,4 @@
-package com.winner.client.companyservice.domain.vo;
+package com.winner.client.companyservice.company.entity.vo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -19,7 +19,7 @@ public class CompanyLocation {
   @Column(name = "lng", nullable = false)
   private Double longitude;
 
-  public static CompanyLocation of(Double lat, Double lng) {
+  public static CompanyLocation of(Double lng, Double lat) {
 
     if (lat < -90 || lat > 90) {
       throw new IllegalArgumentException("유효하지 않은 위도 좌표입니다.");

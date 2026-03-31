@@ -1,4 +1,4 @@
-package com.winner.client.companyservice.domain.vo;
+package com.winner.client.companyservice.company.entity.vo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

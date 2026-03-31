@@ -1,9 +1,9 @@
-package com.winner.client.companyservice.presentation;
+package com.winner.client.companyservice.company.presentation;
 
-import com.winner.client.companyservice.application.CompanyService;
-import com.winner.client.companyservice.application.dto.CompanyServiceDto;
-import com.winner.client.companyservice.presentation.dto.CompanyRequestDto;
-import com.winner.client.companyservice.presentation.dto.CompanyResponseDto;
+import com.winner.client.companyservice.company.application.CompanyService;
+import com.winner.client.companyservice.company.application.dto.CompanyServiceDto;
+import com.winner.client.companyservice.company.presentation.dto.CompanyRequestDto;
+import com.winner.client.companyservice.company.presentation.dto.CompanyResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

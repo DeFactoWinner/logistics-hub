@@ -1,12 +1,15 @@
-package com.winner.client.companyservice.domain.entity;
+package com.winner.client.companyservice.company.entity.entity;
 
-import com.winner.client.companyservice.domain.vo.CompanyAddress;
-import com.winner.client.companyservice.domain.vo.CompanyLocation;
-import com.winner.client.companyservice.domain.vo.HubId;
-import com.winner.client.companyservice.domain.vo.Type;
+import com.winner.client.companyservice.company.entity.vo.CompanyAddress;
+import com.winner.client.companyservice.company.entity.vo.CompanyLocation;
+import com.winner.client.companyservice.company.entity.vo.HubId;
+import com.winner.client.companyservice.company.entity.vo.Type;
+import com.winner.client.global.entity.BaseAuditEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -16,13 +19,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
+@Entity
 @Getter
 @Builder
-@Table(name = "p_company")
+@Table(name = "p_company", schema = "company_db")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Company {
+public class Company extends BaseAuditEntity {
 
+  @Id
   @Column(name = "id", nullable = false)
   @GeneratedValue
   @UuidGenerator
