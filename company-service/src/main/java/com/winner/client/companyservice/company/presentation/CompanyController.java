@@ -4,10 +4,16 @@ import com.winner.client.companyservice.company.application.CompanyService;
 import com.winner.client.companyservice.company.application.dto.CompanyServiceDto;
 import com.winner.client.companyservice.company.presentation.dto.CompanyRequestDto;
 import com.winner.client.companyservice.company.presentation.dto.CompanyResponseDto;
+import com.winner.client.global.response.ApiResponse;
+import com.winner.client.global.response.SuccessCode;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,31 +27,50 @@ public class CompanyController {
   private final CompanyService companyService;
 
   @PostMapping
-  public CompanyResponseDto createCompany(@RequestBody CompanyRequestDto.create companyRequestDto) {
+  public ResponseEntity<ApiResponse<CompanyResponseDto>> createCompany(@RequestBody CompanyRequestDto.create companyRequestDto) {
 
     CompanyServiceDto.create serviceDto = companyRequestDto.toServiceDto();
 
-    return companyService.createCompany(serviceDto);
-  }
+    CompanyResponseDto result = companyService.createCompany(serviceDto);
 
-  @GetMapping
-  public String getCompany() {
-    return "업체 전체 조회";
-  }
-
-  @GetMapping("/{companyId}")
-  public String companyDetail() {
-    return "업체 단건 조회";
+    return ResponseEntity.ok(ApiResponse.success(SuccessCode.CREATED,result));
   }
 
   @PatchMapping("/{companyId}")
-  public String updateCompany() {
-    return "업체 수정";
+  public ResponseEntity<ApiResponse<CompanyResponseDto>> updateCompany(@RequestBody CompanyRequestDto.update companyRequestDto,
+      @PathVariable UUID companyId) {
+
+    CompanyServiceDto.update serviceDto = companyRequestDto.toServiceDto();
+
+    CompanyResponseDto result = companyService.updateCompany(companyId,serviceDto);
+
+    return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK,result));
   }
 
+  @GetMapping
+  public ResponseEntity<ApiResponse<List<CompanyResponseDto>>> getCompany() {
+
+    List<CompanyResponseDto> result = companyService.selectCompanyList();
+
+    return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK,result));
+
+  }
+
+  @GetMapping("/{companyId}")
+  public ResponseEntity<ApiResponse<CompanyResponseDto>> companyDetail(@PathVariable UUID companyId) {
+
+    CompanyResponseDto result = companyService.selectCompany(companyId);
+
+    return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK,result));
+  }
+
+
   @DeleteMapping("/{companyId}")
-  public String deleteCompany() {
-    return "업체 삭제";
+  public ResponseEntity<ApiResponse<Void>> deleteCompany(@PathVariable UUID companyId) {
+
+    companyService.deleteCompany(companyId);
+
+    return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK,null));
   }
 
 }

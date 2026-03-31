@@ -1,7 +1,7 @@
 package com.winner.client.companyservice.company.presentation.dto;
 
-import com.winner.client.companyservice.company.entity.dto.CompanyDto;
-import com.winner.client.companyservice.company.entity.vo.Type;
+import com.winner.client.companyservice.company.domain.entity.Company;
+import com.winner.client.companyservice.company.domain.vo.Type;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,15 +12,17 @@ public class CompanyResponseDto {
 
   private String name;
   private String address;
+  private String addressDetail;
   private Type type;
   private UUID hubId;
 
-  public static CompanyResponseDto from(CompanyDto.create dto){
+  public static CompanyResponseDto from(Company company){
     return CompanyResponseDto.builder()
-        .name(dto.getName())
-        .address(dto.getAddress())
-        .type(dto.getType())
-        .hubId(dto.getHubId())
+        .name(company.getCompanyName())
+        .address(company.getAddress().getAddress())
+        .addressDetail(company.getAddress().getAddressDetail())
+        .type(company.getType())
+        .hubId(company.getHubId().getHubId())
         .build();
   }
 }

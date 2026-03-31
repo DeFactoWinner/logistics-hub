@@ -1,7 +1,7 @@
 package com.winner.client.companyservice.company.presentation.dto;
 
 import com.winner.client.companyservice.company.application.dto.CompanyServiceDto;
-import com.winner.client.companyservice.company.entity.vo.Type;
+import com.winner.client.companyservice.company.domain.vo.Type;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
@@ -42,6 +42,25 @@ public class CompanyRequestDto {
           .build();
     }
 
+  }
+
+  @Builder
+  @Getter
+  public static class update{
+
+    private String name;
+    private String address;
+    private String addressDetail;
+    private UUID hubId;
+
+    public CompanyServiceDto.update toServiceDto(){
+      return CompanyServiceDto.update.builder()
+          .name(this.name)
+          .address(this.address)
+          .addressDetail(this.addressDetail)
+          .hubId(this.hubId)
+          .build();
+    }
   }
 
 }

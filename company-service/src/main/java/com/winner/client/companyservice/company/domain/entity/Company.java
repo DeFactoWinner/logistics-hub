@@ -1,9 +1,9 @@
-package com.winner.client.companyservice.company.entity.entity;
+package com.winner.client.companyservice.company.domain.entity;
 
-import com.winner.client.companyservice.company.entity.vo.CompanyAddress;
-import com.winner.client.companyservice.company.entity.vo.CompanyLocation;
-import com.winner.client.companyservice.company.entity.vo.HubId;
-import com.winner.client.companyservice.company.entity.vo.Type;
+import com.winner.client.companyservice.company.domain.vo.CompanyAddress;
+import com.winner.client.companyservice.company.domain.vo.CompanyLocation;
+import com.winner.client.companyservice.company.domain.vo.HubId;
+import com.winner.client.companyservice.company.domain.vo.Type;
 import com.winner.client.global.entity.BaseAuditEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -60,7 +60,17 @@ public class Company extends BaseAuditEntity {
         .build();
   }
 
+  public void updateCompany(String companyName, HubId hubId, CompanyLocation location, CompanyAddress address){
 
+      if(companyName != null) this.companyName = companyName;
+
+      if(hubId != null) this.hubId = hubId;
+
+      if(location != null) this.location = location;
+
+      if(address != null) this.address = address;
+
+  }
 
 
 }
