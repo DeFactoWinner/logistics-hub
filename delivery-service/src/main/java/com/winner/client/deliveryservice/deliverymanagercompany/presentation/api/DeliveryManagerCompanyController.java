@@ -24,12 +24,8 @@ public class DeliveryManagerCompanyController {
 	public ResponseEntity<ApiResponse<DeliveryManagerCompanyInfo>> getDeliveryManagerCompany(
 		@PathVariable UUID id
 	) {
-		return ResponseEntity.ok()
-			.body(ApiResponse.success(
-				OK,
-				DeliveryManagerCompanyInfo.from(
-					deliveryManagerCompanyReadService.getDetail(id)))
-			);
+		return ResponseEntity.ok().body(ApiResponse.success(OK,
+			DeliveryManagerCompanyInfo.from(deliveryManagerCompanyReadService.getDetail(id))));
 	}
 
 }
