@@ -1,0 +1,44 @@
+package com.winner.client.hubservice.hub.application;
+
+import com.winner.client.hubservice.hub.application.dto.CreateHubCommand;
+import com.winner.client.hubservice.hub.application.dto.HubResult;
+import com.winner.client.hubservice.hub.domain.entity.Hub;
+import com.winner.client.hubservice.hub.domain.repository.HubRepository;
+import com.winner.client.hubservice.hub.domain.vo.HubLocation;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class HubService {
+
+    private final HubRepository hubRepository;
+
+    @Transactional
+    public UUID createHub(CreateHubCommand command) {
+        HubLocation location = new HubLocation(
+            command.getAddress(),
+            command.getLat(),
+            command.getLng()
+        );
+
+        Hub hub = Hub.create(command.getName(), location);
+        return hubRepository.save(hub).getId();
+    }
+
+    public HubResult getHub(UUID hubId) {
+        Hub hub = hubRepository.findById(hubId)
+            .orElseThrow(()-> new IllegalArgumentException("허브를 찾을 수 없습니다. ID: " + hubId));
+
+        return HubResult.builder()
+            .id(hub.getId())
+            .name(hub.getName())
+            .address(hub.getLocation().getAddress())
+            .lat(hub.getLocation().getLat())
+            .lng(hub.getLocation().getLng())
+            .build();
+    }
+}
