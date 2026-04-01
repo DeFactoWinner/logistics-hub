@@ -3,7 +3,6 @@ package com.winner.client.deliveryservice.deliverymanagercompany.domain.entity;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode.EXCEEDED_TO_IN_HUB_DELIVERY_MANAGER;
 
 import com.winner.client.deliveryservice.common.constants.DeliveryManagerStatus;
-import com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.vo.AssignmentOrder;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.vo.DeliveryManagerUserId;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.vo.HubId;

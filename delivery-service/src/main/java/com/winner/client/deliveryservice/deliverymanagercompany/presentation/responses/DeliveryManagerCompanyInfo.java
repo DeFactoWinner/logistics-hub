@@ -1,7 +1,6 @@
 package com.winner.client.deliveryservice.deliverymanagercompany.presentation.responses;
 
 import com.winner.client.deliveryservice.deliverymanagercompany.application.result.DeliveryManagerCompanyRegistrationResult;
-import com.winner.client.deliveryservice.deliverymanagercompany.domain.entity.DeliveryManagerCompany;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Builder;
