@@ -1,9 +1,14 @@
 package com.winner.client.deliveryservice.deliverymanagercompany.domain.entity;
 
+import static com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode.EXCEEDED_TO_IN_HUB_DELIVERY_MANAGER;
+
 import com.winner.client.deliveryservice.common.constants.DeliveryManagerStatus;
+import com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.vo.AssignmentOrder;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.vo.DeliveryManagerUserId;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.vo.HubId;
+import com.winner.client.global.entity.BaseAuditEntity;
+import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -21,7 +26,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 @Table(name = "p_delivery_manager_company")
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class DeliveryManagerCompany {
+public class DeliveryManagerCompany extends BaseAuditEntity {
 
 	@Getter
 	@Id
@@ -48,7 +53,10 @@ public class DeliveryManagerCompany {
 	@Column(name = "last_delivery_completed_time")
 	private LocalDateTime lastDeliveryCompletedTime;
 
-	public static DeliveryManagerCompany create(UUID userId, UUID hubId, Long assignmentOrder) {
+	public static DeliveryManagerCompany create(UUID userId, UUID hubId, Long assignmentOrder, Long curCount) {
+		if (curCount >= 10) {
+			throw new BusinessException(EXCEEDED_TO_IN_HUB_DELIVERY_MANAGER);
+		}
 		DeliveryManagerCompany manager = new DeliveryManagerCompany();
 		manager.userId = new DeliveryManagerUserId(userId);
 		manager.hubId = new HubId(hubId);
