@@ -5,6 +5,7 @@ import com.winner.client.deliveryservice.delivery.domain.vo.Address;
 import com.winner.client.deliveryservice.delivery.domain.vo.HubRoute;
 import com.winner.client.deliveryservice.delivery.domain.vo.Location;
 import com.winner.client.deliveryservice.delivery.domain.vo.Receiver;
+import com.winner.client.global.entity.BaseAuditEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -27,7 +28,7 @@ import org.hibernate.annotations.UuidGenerator;
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Delivery {
+public class Delivery extends BaseAuditEntity {
 
   @Id
   @GeneratedValue
@@ -40,6 +41,12 @@ public class Delivery {
 
   @Embedded
   private HubRoute hubRoute;
+
+  @Column(name = "origin_hub_name", nullable = false, updatable = false)
+  private String originHubName;
+
+  @Column(name = "destination_hub_name", nullable = false, updatable = false)
+  private String destinationHubName;
 
   @Embedded
   private Receiver receiver;
