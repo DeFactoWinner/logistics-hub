@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class DeliveryManagerUserId {
 
-	@Column(name = "delivery_manager_id", nullable = false)
+	@Column(name = "user_id", nullable = false)
 	private UUID value;
 
 	public DeliveryManagerUserId(UUID value) {
