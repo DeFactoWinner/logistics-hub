@@ -9,7 +9,7 @@ public record DeliveryRouteCommandResponse(
   public static DeliveryRouteCommandResponse from(DeliveryRoute route) {
     return new DeliveryRouteCommandResponse(
         route.getId(),
-        route.getDeliveryId(),
+        route.getDelivery().getId(),
         route.getStatus()
     );
   }

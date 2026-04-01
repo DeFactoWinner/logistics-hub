@@ -76,10 +76,14 @@ public class Delivery extends BaseAuditEntity {
 
   private void changeStatus(DeliveryStatus next) {
     if (!this.status.canTransitionTo(next)) {
-      throw new IllegalStateException(
-          "잘못된 상태 전이: " + this.status + " → " + next
-      );
+
+      if (next == DeliveryStatus.CANCELLED) {
+        throw new BusinessException(DeliveryErrorCode.CANNOT_CANCEL_DELIVERY);
+      }
+
+      throw new BusinessException(DeliveryErrorCode.INVALID_DELIVERY_STATUS_TRANSITION);
     }
+
     this.status = next;
   }
 

@@ -21,7 +21,7 @@ public enum DeliveryRouteStatus {
   IN_PROGRESS {
     @Override
     public Set<DeliveryRouteStatus> nextStates() {
-      return Set.of(COMPLETED, CANCELLED);
+      return Set.of(COMPLETED);
     }
   },
 

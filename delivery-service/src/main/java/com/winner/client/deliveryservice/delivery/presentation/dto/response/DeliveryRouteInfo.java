@@ -26,7 +26,7 @@ public record DeliveryRouteInfo(
   public static DeliveryRouteInfo from(DeliveryRoute route) {
     return new DeliveryRouteInfo(
         route.getId(),
-        route.getDeliveryId(),
+        route.getDelivery().getId(),
         route.getSeq(),
 
         new HubInfo(route.getCurrentHubRoute().getCurHubId(), route.getCurHubName()),

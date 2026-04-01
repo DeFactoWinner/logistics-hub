@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/deliveries")
+@RestController
+@RequestMapping("/deliveries")
 @RequiredArgsConstructor
 public class DeliveryController {
   private final DeliveryQueryService deliveryQueryService;
