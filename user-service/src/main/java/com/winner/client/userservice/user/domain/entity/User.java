@@ -7,6 +7,7 @@ import com.winner.client.userservice.user.domain.vo.Password;
 import com.winner.client.userservice.user.domain.vo.PhoneNumber;
 import com.winner.client.userservice.user.domain.vo.UserRole;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
