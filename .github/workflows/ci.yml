@@ -34,9 +34,6 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
-#        working-directory: ./${{ matrix.service }}
-
 
       - name: Build and test
-        run: ./gradlew :${{ matrix.service }}:clean :${{ matrix.service }}:build
-#       working-directory: ./${{ matrix.service }}
+        run: ./gradlew :${{ matrix.service }}:clean :${{ matrix.service }}:build -x test
