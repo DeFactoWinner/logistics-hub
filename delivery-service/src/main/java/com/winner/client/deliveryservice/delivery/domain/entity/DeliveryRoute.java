@@ -82,6 +82,34 @@ public class DeliveryRoute {
       throw new IllegalArgumentException("순번은 0 이상이어야 합니다.");
     }
   }
+  private void changeStatus(DeliveryRouteStatus next) {
+    if (!this.status.canTransitionTo(next)) {
+      throw new IllegalStateException(
+          "잘못된 경로 상태 전이: " + this.status + " → " + next
+      );
+    }
+    this.status = next;
+  }
+
+  public void assign() {
+    changeStatus(DeliveryRouteStatus.ASSIGNED);
+  }
+
+  public void startProgress() {
+    changeStatus(DeliveryRouteStatus.IN_PROGRESS);
+  }
+
+  public void complete() {
+    changeStatus(DeliveryRouteStatus.COMPLETED);
+  }
+
+  public void cancel() {
+    changeStatus(DeliveryRouteStatus.CANCELLED);
+  }
+
+  public boolean isRelatedToHub(UUID hubId) {
+    return currentHubRoute.isRelatedTo(hubId); // 위임
+  }
 
   public void updateActualDeliveryRouteInfo(BigDecimal actualDistance, int actualArrivalTime) {
     this.actualDistance = new Distance(actualDistance);

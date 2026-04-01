@@ -1,11 +1,15 @@
 package com.winner.client.deliveryservice.delivery.domain.entity;
 
+import com.winner.client.deliveryservice.common.exception.delivery.DeliveryErrorCode;
+import com.winner.client.deliveryservice.delivery.domain.enums.DeliveryRouteStatus;
 import com.winner.client.deliveryservice.delivery.domain.enums.DeliveryStatus;
 import com.winner.client.deliveryservice.delivery.domain.vo.Address;
 import com.winner.client.deliveryservice.delivery.domain.vo.HubRoute;
 import com.winner.client.deliveryservice.delivery.domain.vo.Location;
 import com.winner.client.deliveryservice.delivery.domain.vo.Receiver;
 import com.winner.client.global.entity.BaseAuditEntity;
+import com.winner.client.global.exception.BusinessException;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -13,8 +17,11 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -63,6 +70,56 @@ public class Delivery extends BaseAuditEntity {
 
   @Column(name = "delivery_manager_id")
   private UUID deliveryManagerId;
+
+  @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<DeliveryRoute> routes = new ArrayList<>();
+
+  private void changeStatus(DeliveryStatus next) {
+    if (!this.status.canTransitionTo(next)) {
+      throw new IllegalStateException(
+          "잘못된 상태 전이: " + this.status + " → " + next
+      );
+    }
+    this.status = next;
+  }
+
+  public boolean isAllRoutesCompleted() {
+    if (this.routes == null || this.routes.isEmpty()) return false;
+    return this.routes.stream()
+        .allMatch(route -> route.getStatus() == DeliveryRouteStatus.COMPLETED);
+  }
+
+  public void startHubWaiting() {
+    changeStatus(DeliveryStatus.HUB_WAITING);
+  }
+
+  public void startHubMoving() {
+    changeStatus(DeliveryStatus.HUB_MOVING);
+  }
+
+  public void arriveDestination() {
+    if (!isAllRoutesCompleted()) {
+      throw new BusinessException(DeliveryErrorCode.NOT_ALL_ROUTES_COMPLETED);
+    }
+    changeStatus(DeliveryStatus.DESTINATION_ARRIVED);
+  }
+
+  public void startVendorMoving() {
+    changeStatus(DeliveryStatus.FOR_VENDOR_MOVING);
+  }
+
+  public void complete() {
+    changeStatus(DeliveryStatus.COMPLETED);
+  }
+
+  public void cancel() {
+    changeStatus(DeliveryStatus.CANCELLED);
+    this.routes.forEach(DeliveryRoute::cancel);
+  }
+
+  public boolean isRelatedToHub(UUID hubId) {
+    return hubRoute.isRelatedTo(hubId);
+  }
 
   private Delivery(
       UUID ordersId, HubRoute hubRoute, Receiver receiver,
