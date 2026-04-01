@@ -33,7 +33,7 @@ public class JwtTokenProvider {
     this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
   }
 
-  public String createAccessToken(UUID userId, String role, UUID referenceId) {
+  public String createAccessToken(UUID userId, String role, UUID referenceId,boolean userStatus) {
     Date now = new Date();
     Date expirationDate = new Date(now.getTime() + accessExpirationTime);
 
@@ -41,6 +41,7 @@ public class JwtTokenProvider {
         .setSubject(String.valueOf(userId))
         .claim("role", role)
         .claim("referenceId", referenceId)
+        .claim("status",userStatus)
         .setIssuedAt(now)
         .setExpiration(expirationDate)
         .signWith(secretKey, SignatureAlgorithm.HS256)
