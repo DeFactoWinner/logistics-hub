@@ -6,7 +6,7 @@ import java.util.UUID;
 import lombok.Builder;
 
 @Builder
-public record DeliveryManagerCompanyRegistrationResult (
+public record DeliveryManagerCompanyInfoResult(
 	UUID userId,
 	UUID hubId,
 	String status,
@@ -14,10 +14,10 @@ public record DeliveryManagerCompanyRegistrationResult (
 	LocalDateTime lastDeliveryCompletedTime
 ) {
 
-	public static DeliveryManagerCompanyRegistrationResult from(
+	public static DeliveryManagerCompanyInfoResult from(
 		DeliveryManagerCompany entity) {
 
-		return DeliveryManagerCompanyRegistrationResult.builder()
+		return DeliveryManagerCompanyInfoResult.builder()
 			.userId(entity.getUserId())
 			.hubId(entity.getHubId())
 			.status(entity.getDeliveryManagerStatus().name())
