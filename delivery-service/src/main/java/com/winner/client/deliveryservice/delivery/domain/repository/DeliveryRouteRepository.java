@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DeliveryRouteRepository extends JpaRepository<DeliveryRoute, UUID> {
-  List<DeliveryRoute> findByDeliveryId(UUID deliveryId);
+  List<DeliveryRoute> findAllByDeliveryId(UUID deliveryId);
 }

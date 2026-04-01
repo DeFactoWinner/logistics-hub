@@ -4,7 +4,11 @@ import com.winner.client.deliveryservice.delivery.presentation.dto.request.Updat
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryRouteCommandResponse;
 import java.util.UUID;
 
-public interface DeliveryCommendService {
+public interface DeliveryRouteCommandService {
   DeliveryRouteCommandResponse updateActualDeliveryRouteInfo(
       UUID deliveryRouteId, UpdateDeliveryRequest request, UUID userId);
+
+  DeliveryRouteCommandResponse assignRoute(UUID routeId, String userRole, UUID referenceId);
+  DeliveryRouteCommandResponse startProgress(UUID routeId, UUID userId, String userRole, UUID referenceId);
+  DeliveryRouteCommandResponse completeRoute(UUID routeId, UUID userId, String userRole, UUID referenceId);
 }
