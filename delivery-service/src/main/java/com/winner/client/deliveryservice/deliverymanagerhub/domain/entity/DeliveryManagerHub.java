@@ -6,6 +6,7 @@ import com.winner.client.deliveryservice.common.constants.DeliveryManagerStatus;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.AssignmentOrder;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.DeliveryId;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.DeliveryManagerUserId;
+import com.winner.client.global.entity.BaseAuditEntity;
 import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -22,7 +23,7 @@ import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "p_delivery_manager_hub")
-public class DeliveryManagerHub {
+public class DeliveryManagerHub extends BaseAuditEntity {
 
 	@Getter
 	@Id
