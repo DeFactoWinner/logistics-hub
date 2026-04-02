@@ -23,10 +23,6 @@ spring:
     init:
       mode: never
 
-server:
-  servlet:
-    context-path: /api/v1
-
 eureka:
   client:
     service-url:
