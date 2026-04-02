@@ -5,8 +5,12 @@ import com.winner.client.deliveryservice.deliverymanagercompany.presentation.req
 import com.winner.client.deliveryservice.deliverymanagercompany.presentation.responses.DeliveryManagerCompanyInfo;
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,5 +34,15 @@ public class InternalDeliveryManagerCompanyController {
 					deliveryManagerCompanyWriteService.registration(
 						DeliveryManagerCompanyRegistrationRequest.toCommand(request.userId(),
 							request.hubId())))));
+	}
+
+	@DeleteMapping("/{userId}")
+	public ResponseEntity<ApiResponse<Void>> deactivate(
+		@PathVariable UUID userId
+	) {
+		deliveryManagerCompanyWriteService.deactivate(userId);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+			ApiResponse.success(CommonSuccessCode.DELETED, null)
+		);
 	}
 }

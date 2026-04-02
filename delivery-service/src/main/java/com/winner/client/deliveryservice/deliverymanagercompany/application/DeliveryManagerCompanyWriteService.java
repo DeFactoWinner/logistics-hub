@@ -46,4 +46,10 @@ public class DeliveryManagerCompanyWriteService {
 		deliveryManagerCompany.switchStatus();
 		return DeliveryManagerCompanyInfoResult.from(deliveryManagerCompany);
 	}
+
+	public void deactivate(UUID userId) {
+		DeliveryManagerCompany deliveryManagerCompany = repository.findByUserId(userId)
+			.orElseThrow(() -> new BusinessException(NOT_FOUND_COMPANY_DELIVERY_MANAGER));
+		deliveryManagerCompany.softDelete(userId);
+	}
 }
