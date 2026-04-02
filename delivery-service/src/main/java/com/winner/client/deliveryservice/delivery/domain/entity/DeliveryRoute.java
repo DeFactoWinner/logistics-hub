@@ -1,19 +1,25 @@
 package com.winner.client.deliveryservice.delivery.domain.entity;
 
+import com.winner.client.deliveryservice.common.exception.delivery.DeliveryErrorCode;
 import com.winner.client.deliveryservice.delivery.domain.enums.DeliveryRouteStatus;
 import com.winner.client.deliveryservice.delivery.domain.vo.CurrentHubRoute;
 import com.winner.client.deliveryservice.delivery.domain.vo.Distance;
 import com.winner.client.deliveryservice.delivery.domain.vo.Duration;
+import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -38,8 +44,9 @@ public class DeliveryRoute {
   @Column(name = "id", nullable = false, updatable = false)
   private UUID id;
 
-  @Column(name = "delivery_id", nullable = false, updatable = false)
-  private UUID deliveryId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "delivery_id", nullable = false, updatable = false)
+  private Delivery delivery;
 
   @Column(name = "seq", nullable = false)
   private int seq;
@@ -47,8 +54,14 @@ public class DeliveryRoute {
   @Embedded
   private CurrentHubRoute currentHubRoute;
 
+  @Column(name = "cur_hub_name", nullable = false, updatable = false)
+  private String curHubName;
+
+  @Column(name = "next_hub_name", nullable = false, updatable = false)
+  private String nextHubName;
+
   @Embedded
-  @AttributeOverride(name = "kilometers", column = @Column(name = "estimated_distance", nullable = false))
+  @AttributeOverride(name = "kilometers", column = @Column(name = "estimated_distance", precision = 10, scale = 2, nullable = false))
   private Distance estimatedDistance;
 
   @Embedded
@@ -56,7 +69,7 @@ public class DeliveryRoute {
   private Duration estimatedArrivalTime;
 
   @Embedded
-  @AttributeOverride(name = "kilometers", column = @Column(name = "actual_distance"))
+  @AttributeOverride(name = "kilometers", column = @Column(name = "actual_distance", precision = 10, scale = 2))
   private Distance actualDistance;
 
   @Embedded
@@ -75,10 +88,47 @@ public class DeliveryRoute {
       throw new IllegalArgumentException("순번은 0 이상이어야 합니다.");
     }
   }
+  private void changeStatus(DeliveryRouteStatus next) {
+    if (!this.status.canTransitionTo(next)) {
 
-  public DeliveryRoute(UUID deliveryId, int seq, CurrentHubRoute currentHubRoute,
+      if (next == DeliveryRouteStatus.CANCELLED) {
+        throw new BusinessException(DeliveryErrorCode.CANNOT_CANCEL_ROUTE);
+      }
+
+      throw new BusinessException(DeliveryErrorCode.INVALID_DELIVERY_STATUS_TRANSITION);
+    }
+
+    this.status = next;
+  }
+
+  public void assign() {
+    changeStatus(DeliveryRouteStatus.ASSIGNED);
+  }
+
+  public void startProgress() {
+    changeStatus(DeliveryRouteStatus.IN_PROGRESS);
+  }
+
+  public void complete() {
+    changeStatus(DeliveryRouteStatus.COMPLETED);
+  }
+
+  public void cancel() {
+    changeStatus(DeliveryRouteStatus.CANCELLED);
+  }
+
+  public boolean isRelatedToHub(UUID hubId) {
+    return currentHubRoute.isRelatedTo(hubId); // 위임
+  }
+
+  public void updateActualDeliveryRouteInfo(BigDecimal actualDistance, int actualArrivalTime) {
+    this.actualDistance = new Distance(actualDistance);
+    this.actualArrivalTime = new Duration(actualArrivalTime);
+  }
+
+  public DeliveryRoute(Delivery delivery, int seq, CurrentHubRoute currentHubRoute,
       Distance estimatedDistance, Duration estimatedArrivalTime, UUID deliveryManagerId) {
-    this.deliveryId = deliveryId;
+    this.delivery = delivery;
     this.seq = seq;
     this.currentHubRoute = currentHubRoute;
     this.estimatedDistance = estimatedDistance;
@@ -87,9 +137,9 @@ public class DeliveryRoute {
     this.deliveryManagerId = deliveryManagerId;
   }
 
-  public static DeliveryRoute create(UUID deliveryId, int seq, CurrentHubRoute currentHubRoute,
+  public static DeliveryRoute create(Delivery delivery, int seq, CurrentHubRoute currentHubRoute,
       Distance estimatedDistance, Duration estimatedArrivalTime, UUID deliveryManagerId){
     validateSeq(seq);
-    return new DeliveryRoute(deliveryId, seq, currentHubRoute, estimatedDistance, estimatedArrivalTime, deliveryManagerId);
+    return new DeliveryRoute(delivery, seq, currentHubRoute, estimatedDistance, estimatedArrivalTime, deliveryManagerId);
   }
 }

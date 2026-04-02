@@ -14,20 +14,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HubRoute {
   @Column(name = "origin_id", nullable = false)
-  private UUID originId;
+  private UUID originHubId;
 
   @Column(name = "destination_id", nullable = false)
-  private UUID destinationId;
+  private UUID destinationHubId;
 
-  public HubRoute(UUID originId, UUID destinationId) {
-    validateDifferentHubs(originId, destinationId);
-    this.originId = originId;
-    this.destinationId = destinationId;
+  public HubRoute(UUID originHubId, UUID destinationHubId) {
+    this.originHubId = originHubId;
+    this.destinationHubId = destinationHubId;
   }
 
-  private static void validateDifferentHubs(UUID originId, UUID destinationId) {
-    if (originId.equals(destinationId)) {
-      throw new IllegalArgumentException("출발 허브와 도착 허브는 동일할 수 없습니다.");
-    }
+  public boolean isRelatedTo(UUID hubId) {
+    if (hubId == null) return false;
+    return originHubId.equals(hubId) || destinationHubId.equals(hubId);
   }
 }

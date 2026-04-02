@@ -1,31 +1,79 @@
 plugins {
-	id 'java-library'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java-library'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'sparta.project.logistics.global'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+}
+
+configurations {
+    jwtLib {
+        canBeResolved = true
+        canBeConsumed = true
+    }
+    api.extendsFrom(jwtLib)
+    implementation.extendsFrom(jwtLib)
+    testImplementation.extendsFrom(jwtLib)
 }
 
 dependencyManagement {
-	imports {
-		mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.12"
-	}
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.12"
+    }
 }
 
 dependencies {
-	implementation 'org.springframework:spring-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework:spring-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    jwtLib 'io.jsonwebtoken:jjwt-api:0.11.5'
+    jwtLib 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    jwtLib 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+artifacts {
+    jwtLib jar
+}
+
+tasks.withType(Test).configureEach {
+    systemProperty "file.encoding", "UTF-8"
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+
+    def envFile = rootProject.file('.env')
+    if (envFile.exists()) {
+        envFile.eachLine { line ->
+            if (line.trim() && !line.startsWith('#')) {
+                def (key, value) = line.tokenize('=')
+                environment key.trim(), value.trim()
+            }
+        }
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+        exceptionFormat = "full"
+    }
 }

@@ -8,12 +8,20 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.UUID;
 import lombok.Getter;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Getter
+@Table(
+    uniqueConstraints = @UniqueConstraint(
+        name = "uq_hub_route",
+        columnNames = {"from_hub_id", "to_hub_id"}
+    )
+)
 public class HubRoute {
 
     @Id

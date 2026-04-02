@@ -1,13 +1,13 @@
 package com.winner.client.userservice.common.exception;
 
-import com.winner.client.global.response.BaseCode;
+import com.winner.client.global.code.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum UserErrorCode implements BaseCode {
+public enum UserErrorCode implements ErrorCode {
   INVALID_INPUT_VALUE("USER_4000", HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다"),
   LOGIN_FAILED("USER_4011", HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 일치하지 않습니다."),
   USER_NOT_APPROVED("USER_4031", HttpStatus.FORBIDDEN, "아직 승인되지 않은 사용자입니다."),
