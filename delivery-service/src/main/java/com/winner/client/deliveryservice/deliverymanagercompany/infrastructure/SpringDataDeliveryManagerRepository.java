@@ -12,4 +12,5 @@ public interface SpringDataDeliveryManagerRepository
 	Optional<DeliveryManagerCompany> findTopByHubId_ValueOrderByAssignmentOrder_ValueDesc(UUID hubId);
 	boolean existsByUserId_Value(UUID userId);
 	Long countByHubId_Value(UUID hubId);
+	Optional<DeliveryManagerCompany> findByUserId_Value(UUID userId);
 }
