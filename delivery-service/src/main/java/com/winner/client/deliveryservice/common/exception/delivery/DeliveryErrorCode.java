@@ -17,8 +17,8 @@ public enum DeliveryErrorCode implements ErrorCode {
 
   NOT_ALL_ROUTES_COMPLETED("ERROR_508", HttpStatus.BAD_REQUEST, "하위 배송 경로가 모두 완료되지 않아 배송을 완료할 수 없습니다."),
   INVALID_DELIVERY_STATUS_TRANSITION("ERROR_509", HttpStatus.BAD_REQUEST, "현재 상태에서 해당 단계로 변경할 수 없습니다."),
-  CANNOT_CANCEL_ROUTE("ERROR_509", HttpStatus.BAD_REQUEST, "이미 배송이 진행 중이거나 완료된 경로는 취소할 수 없습니다."),
-  CANNOT_CANCEL_DELIVERY("ERROR_509", HttpStatus.BAD_REQUEST, "이미 진행 중이거나 완료된 배송은 취소할 수 없습니다.")
+  CANNOT_CANCEL_ROUTE("ERROR_510", HttpStatus.BAD_REQUEST, "이미 배송이 진행 중이거나 완료된 경로는 취소할 수 없습니다."),
+  CANNOT_CANCEL_DELIVERY("ERROR_511", HttpStatus.BAD_REQUEST, "이미 진행 중이거나 완료된 배송은 취소할 수 없습니다.")
   ;
 
   private final String code;
