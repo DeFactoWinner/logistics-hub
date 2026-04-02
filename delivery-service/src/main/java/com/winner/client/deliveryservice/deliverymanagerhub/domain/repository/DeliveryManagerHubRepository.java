@@ -8,6 +8,6 @@ public interface DeliveryManagerHubRepository {
 
 	DeliveryManagerHub save(DeliveryManagerHub deliveryManagerHub);
 	boolean existByUserId(UUID userId);
-	Long count();
+	Long countByDeletedByIsNull();
 	Optional<DeliveryManagerHub> findFirstByOrderByAssignmentOrderDesc();
 }

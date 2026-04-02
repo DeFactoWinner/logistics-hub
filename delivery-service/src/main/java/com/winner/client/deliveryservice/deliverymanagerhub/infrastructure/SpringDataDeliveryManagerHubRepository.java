@@ -9,4 +9,5 @@ public interface SpringDataDeliveryManagerHubRepository extends JpaRepository<De
 
 	boolean existsByUserId_Value(UUID userId);
 	Optional<DeliveryManagerHub> findFirstByOrderByAssignmentOrder_ValueDesc();
+	Long countByDeletedByIsNull();
 }

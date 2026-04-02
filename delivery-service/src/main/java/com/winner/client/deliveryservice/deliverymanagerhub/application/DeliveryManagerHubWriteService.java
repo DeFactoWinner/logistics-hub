@@ -23,7 +23,7 @@ public class DeliveryManagerHubWriteService {
 			throw new BusinessException(ALREADY_REGISTERED_HUB_DELIVERY_MANAGER);
 		}
 
-		Long curCount = repository.count();
+		Long curCount = repository.countByDeletedByIsNull();
 
 		Long nextAssignmentOrder = repository.findFirstByOrderByAssignmentOrderDesc()
 			.map(last -> last.getAssignmentOrder() + 1)

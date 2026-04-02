@@ -24,8 +24,8 @@ public class DeliveryManagerHubJpaRepository implements DeliveryManagerHubReposi
 	}
 
 	@Override
-	public Long count() {
-		return repository.count();
+	public Long countByDeletedByIsNull() {
+		return repository.countByDeletedByIsNull();
 	}
 
 	@Override
