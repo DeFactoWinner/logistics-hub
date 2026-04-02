@@ -1,5 +1,6 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.domain.entity;
 
+import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.DELIVERY_MANAGER_IN_PROGRESS;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.HUB_DELIVERY_MANAGER_OVER_CAPACITY;
 
 import com.winner.client.deliveryservice.common.constants.DeliveryManagerStatus;
@@ -77,6 +78,21 @@ public class DeliveryManagerHub extends BaseAuditEntity {
 		this.lastDeliveryCompletedTime = LocalDateTime.now();
 		this.deliveryManagerStatus = DeliveryManagerStatus.AVAILABLE;
 		this.deliveryId = new DeliveryId(null);
+	}
+
+	public void switchStatus() {
+		switch (this.deliveryManagerStatus) {
+			case AVAILABLE -> this.deliveryManagerStatus = DeliveryManagerStatus.OFF_DUTY;
+			case OFF_DUTY -> this.deliveryManagerStatus = DeliveryManagerStatus.AVAILABLE;
+		}
+	}
+
+	@Override
+	public void softDelete(UUID userId) {
+		if (this.deliveryManagerStatus == DeliveryManagerStatus.IN_DELIVERY) {
+			throw new BusinessException(DELIVERY_MANAGER_IN_PROGRESS);
+		}
+		super.softDelete(userId);
 	}
 
 	public UUID getUserId() { return userId.getValue(); }

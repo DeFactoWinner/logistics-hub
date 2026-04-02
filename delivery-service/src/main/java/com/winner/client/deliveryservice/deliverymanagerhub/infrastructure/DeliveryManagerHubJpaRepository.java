@@ -32,4 +32,9 @@ public class DeliveryManagerHubJpaRepository implements DeliveryManagerHubReposi
 	public Optional<DeliveryManagerHub> findFirstByOrderByAssignmentOrderDesc() {
 		return repository.findFirstByOrderByAssignmentOrder_ValueDesc();
 	}
+
+	@Override
+	public Optional<DeliveryManagerHub> findByUserId(UUID userId) {
+		return repository.findByUserId_ValueAndDeletedByNull(userId);
+	}
 }

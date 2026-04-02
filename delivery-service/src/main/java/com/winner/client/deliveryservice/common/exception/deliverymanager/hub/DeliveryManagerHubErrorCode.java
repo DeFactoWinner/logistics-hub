@@ -12,6 +12,10 @@ public enum DeliveryManagerHubErrorCode implements ErrorCode {
 		"이미 등록 된 업체 배송 담당자 입니다."),
 	HUB_DELIVERY_MANAGER_OVER_CAPACITY("ERROR_652", HttpStatus.CONFLICT,
 		"허브 배송 담당자 정원 초과"),
+	NOT_FOUND_HUB_DELIVERY_MANAGER("ERROR_653", HttpStatus.NOT_FOUND,
+		"존재하지 않는 허브배송담당자 입니다."),
+	DELIVERY_MANAGER_IN_PROGRESS("ERROR_654", HttpStatus.BAD_REQUEST,
+		"업무 진행 중엔 탈퇴가 불가능 합니다.")
 	;
 
 	private final String code;
