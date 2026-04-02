@@ -1,26 +1,23 @@
 package com.winner.client.hubservice.hub.domain.vo;
 
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
+import java.util.UUID;
 import lombok.Getter;
 
 @Getter
 @Embeddable
 public class RouteInfo {
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "from_hub_id", nullable = false))
-    private HubId fromHubId;
+    @Column(name = "from_hub_id", nullable = false)
+    private UUID fromHubId;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "to_hub_id", nullable = false))
-    private HubId toHubId;
+    @Column(name = "to_hub_id", nullable = false)
+    private UUID toHubId;
 
     protected RouteInfo() {}
 
-    public RouteInfo(HubId fromHubId, HubId toHubId) {
+    public RouteInfo(UUID fromHubId, UUID toHubId) {
         if (fromHubId == null || toHubId == null) {
             throw new IllegalArgumentException("허브 ID는 null일 수 없습니다.");
         }
