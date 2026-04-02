@@ -5,6 +5,7 @@ import com.winner.client.global.exception.CommonErrorCode;
 import com.winner.client.global.response.ApiResponse;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -12,11 +13,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(BusinessException.class)
   protected ResponseEntity<ApiResponse<Void>> handleBusinessException(BusinessException e) {
+    log.warn("BusinessException: {}", e.getErrorCode().getMessage());
     return ResponseEntity
         .status(e.getErrorCode().getStatus())
         .body(ApiResponse.error(e.getErrorCode()));
@@ -25,6 +28,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   public ResponseEntity<ApiResponse<Void>> handleHttpRequestMethodNotSupportedException(
       HttpRequestMethodNotSupportedException e) {
+    log.warn("HttpRequestMethodNotSupportedException: {}", e.getMessage());
     return ResponseEntity
         .status(HttpStatus.METHOD_NOT_ALLOWED)
         .body(ApiResponse.error(CommonErrorCode.METHOD_NOT_ALLOWED));
@@ -41,13 +45,16 @@ public class GlobalExceptionHandler {
     ex.getBindingResult().getFieldErrors().forEach(error ->
         errors.put(error.getField(), error.getDefaultMessage())
     );
+
+    log.warn("MethodArgumentNotValidException: {}", errors);
+
     CommonErrorCode code = CommonErrorCode.INVALID_INPUT;
     return ResponseEntity.status(code.getStatus()).body(ApiResponse.error(code, errors));
   }
 
-
   @ExceptionHandler(Exception.class)
   protected ResponseEntity<ApiResponse<Void>> handleException(Exception e) {
+    log.error("Internal Server Error: ", e);
     return ResponseEntity
         .status(CommonErrorCode.INTERNAL_SERVER_ERROR.getStatus())
         .body(ApiResponse.error(CommonErrorCode.INTERNAL_SERVER_ERROR));
