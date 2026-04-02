@@ -11,20 +11,25 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.UUID;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Getter
-@Builder
-@Table(name = "p_company", schema = "company_db")
+@Table(
+    name = "p_companies",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_company_name_address",
+            columnNames = {"name", "address"}
+        )
+    }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Company extends BaseAuditEntity {
 
   @Id
@@ -48,16 +53,19 @@ public class Company extends BaseAuditEntity {
   @Embedded
   private CompanyLocation location;
 
+  public Company(String companyName, Type type, HubId hubId, CompanyLocation location, CompanyAddress address) {
+    this.companyName = companyName;
+    this.type = type;
+    this.hubId = hubId;
+    this.location = location;
+    this.address = address;
+  }
+
+
   public static Company create(String companyName, Type type, HubId hubId,
       CompanyLocation location, CompanyAddress address){
 
-    return Company.builder()
-        .companyName(companyName)
-        .type(type)
-        .hubId(hubId)
-        .location(location)
-        .address(address)
-        .build();
+    return new Company(companyName, type, hubId, location, address);
   }
 
   public void updateCompany(String companyName, HubId hubId, CompanyLocation location, CompanyAddress address){

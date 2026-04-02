@@ -5,13 +5,11 @@ import com.winner.client.companyservice.common.exception.CompanyErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Embeddable
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CompanyLocation {
 
@@ -20,6 +18,11 @@ public class CompanyLocation {
 
   @Column(name = "lng", nullable = false)
   private Double longitude;
+
+  private CompanyLocation(Double lat, Double lng) {
+    this.latitude = lat;
+    this.longitude = lng;
+  }
 
   public static CompanyLocation of(Double lng, Double lat) {
 
