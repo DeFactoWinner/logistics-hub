@@ -39,8 +39,8 @@ public class DeliveryManagerCompanyWriteService {
 			));
 	}
 
-	public DeliveryManagerCompanyInfoResult switchStatus(UUID id) {
-		DeliveryManagerCompany deliveryManagerCompany = repository.findById(id).orElseThrow(
+	public DeliveryManagerCompanyInfoResult switchStatus(UUID userId) {
+		DeliveryManagerCompany deliveryManagerCompany = repository.findByUserIdAndDeletedByNull(userId).orElseThrow(
 				() -> new BusinessException(NOT_FOUND_COMPANY_DELIVERY_MANAGER)
 			);
 		deliveryManagerCompany.switchStatus();
@@ -48,7 +48,7 @@ public class DeliveryManagerCompanyWriteService {
 	}
 
 	public void deactivate(UUID userId) {
-		DeliveryManagerCompany deliveryManagerCompany = repository.findByUserId(userId)
+		DeliveryManagerCompany deliveryManagerCompany = repository.findByUserIdAndDeletedByNull(userId)
 			.orElseThrow(() -> new BusinessException(NOT_FOUND_COMPANY_DELIVERY_MANAGER));
 		deliveryManagerCompany.softDelete(userId);
 	}

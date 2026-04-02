@@ -17,8 +17,8 @@ public class DeliveryManagerCompanyReadService {
 
 	private final DeliveryManagerCompanyRepository repository;
 
-	public DeliveryManagerCompanyInfoResult getDetail(UUID id) {
-		return DeliveryManagerCompanyInfoResult.from(repository.findById(id).orElseThrow(
+	public DeliveryManagerCompanyInfoResult getDetail(UUID userId) {
+		return DeliveryManagerCompanyInfoResult.from(repository.findByUserIdAndDeletedByNull(userId).orElseThrow(
 			() -> new BusinessException(NOT_FOUND_COMPANY_DELIVERY_MANAGER)
 		));
 	}
