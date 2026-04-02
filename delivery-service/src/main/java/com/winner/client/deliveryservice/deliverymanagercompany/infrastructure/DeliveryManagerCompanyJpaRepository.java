@@ -32,7 +32,7 @@ public class DeliveryManagerCompanyJpaRepository implements
 
 	@Override
 	public Long countByHubId(UUID hubId) {
-		return jpaRepository.countByHubId_Value(hubId);
+		return jpaRepository.countByHubId_ValueAndDeletedByIsNull(hubId);
 	}
 
 	@Override
