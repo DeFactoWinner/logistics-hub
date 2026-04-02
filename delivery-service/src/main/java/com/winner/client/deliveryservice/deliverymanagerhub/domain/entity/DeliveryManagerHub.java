@@ -1,9 +1,15 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.domain.entity;
 
+import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.ALREADY_REGISTERED_HUB_DELIVERY_MANAGER;
+import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.HUB_DELIVERY_MANAGER_OVER_CAPACITY;
+
 import com.winner.client.deliveryservice.common.constants.DeliveryManagerStatus;
+import com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode;
+import com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.AssignmentOrder;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.DeliveryId;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.DeliveryManagerUserId;
+import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -49,7 +55,10 @@ public class DeliveryManagerHub {
 
 	protected DeliveryManagerHub() {}
 
-	public static DeliveryManagerHub create(UUID userId, Long assignmentOrder) {
+	public static DeliveryManagerHub create(UUID userId, Long assignmentOrder, Long curCount) {
+		if (curCount >= 10) {
+			throw new BusinessException(HUB_DELIVERY_MANAGER_OVER_CAPACITY);
+		}
 		DeliveryManagerHub manager = new DeliveryManagerHub();
 		manager.userId = new DeliveryManagerUserId(userId);
 		manager.assignmentOrder = new AssignmentOrder(assignmentOrder);
