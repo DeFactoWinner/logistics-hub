@@ -39,4 +39,9 @@ public class DeliveryManagerCompanyJpaRepository implements
 	public Optional<DeliveryManagerCompany> findById(UUID id) {
 		return jpaRepository.findById(id);
 	}
+
+	@Override
+	public Optional<DeliveryManagerCompany> findByUserId(UUID userId) {
+		return jpaRepository.findByUserId_Value(userId);
+	}
 }

@@ -11,4 +11,5 @@ public interface DeliveryManagerCompanyRepository {
 	Optional<DeliveryManagerCompany> findLastAssignmentOrderByHubId(UUID hubId);
 	Long countByHubId(UUID hubId);
 	Optional<DeliveryManagerCompany> findById(UUID userId);
+	Optional<DeliveryManagerCompany> findByUserId(UUID userId);
 }
