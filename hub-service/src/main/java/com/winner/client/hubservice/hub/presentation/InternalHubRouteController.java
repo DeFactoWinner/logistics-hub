@@ -1,11 +1,16 @@
 package com.winner.client.hubservice.hub.presentation;
 
+import com.winner.client.hubservice.hub.application.HubPathService;
 import com.winner.client.hubservice.hub.application.HubRouteService;
 import com.winner.client.hubservice.hub.application.dto.HubRouteResult;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class InternalHubRouteController {
 
     private final HubRouteService hubRouteService;
+    private final HubPathService hubPathService;
 
     @GetMapping
     public List<HubRouteResult> getRoutes(
@@ -20,5 +26,13 @@ public class InternalHubRouteController {
         @RequestParam UUID toHubId
     ) {
         return hubRouteService.searchRoutes(fromHubId, toHubId);
+    }
+
+    @GetMapping("/shortest")
+    public ResponseEntity<Double> getShortestPath(
+        @RequestParam UUID from,
+        @RequestParam UUID to
+    ) {
+        return ResponseEntity.ok(hubPathService.findShortestDistance(from, to));
     }
 }
