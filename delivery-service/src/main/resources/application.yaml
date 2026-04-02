@@ -16,7 +16,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        default_schema: ${POSTGRES_DEFAULT_SCHEMA}
+        default_schema: delivery_db
         format_sql: true
         jdbc.time_zone: Asia/Seoul
   sql:

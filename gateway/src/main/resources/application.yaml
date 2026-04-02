@@ -1,5 +1,31 @@
 spring:
   application:
     name: gateway
+  profiles:
+    include:
+      - router
   main:
     web-application-type: reactive
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST}
+      port: 6379
+      password: ${SPRING_DATA_REDIS_PASSWORD}
+      database: 0
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          
+server:
+  port: 17002
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:17001/eureka/
+    register-with-eureka: true
+    fetch-registry: true
