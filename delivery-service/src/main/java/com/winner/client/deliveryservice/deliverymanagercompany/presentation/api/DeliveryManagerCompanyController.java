@@ -3,12 +3,14 @@ package com.winner.client.deliveryservice.deliverymanagercompany.presentation.ap
 import static com.winner.client.global.response.CommonSuccessCode.OK;
 
 import com.winner.client.deliveryservice.deliverymanagercompany.application.DeliveryManagerCompanyReadService;
+import com.winner.client.deliveryservice.deliverymanagercompany.application.DeliveryManagerCompanyWriteService;
 import com.winner.client.deliveryservice.deliverymanagercompany.presentation.responses.DeliveryManagerCompanyInfo;
 import com.winner.client.global.response.ApiResponse;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DeliveryManagerCompanyController {
 
 	private final DeliveryManagerCompanyReadService deliveryManagerCompanyReadService;
+	private final DeliveryManagerCompanyWriteService deliveryManagerCompanyWriteService;
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ApiResponse<DeliveryManagerCompanyInfo>> getDeliveryManagerCompany(
@@ -28,4 +31,11 @@ public class DeliveryManagerCompanyController {
 			DeliveryManagerCompanyInfo.from(deliveryManagerCompanyReadService.getDetail(id))));
 	}
 
+	@PatchMapping("/{id}")
+	public ResponseEntity<ApiResponse<DeliveryManagerCompanyInfo>> switchStatus(
+		@PathVariable UUID id
+	) {
+		return ResponseEntity.ok().body(ApiResponse.success(OK,
+			DeliveryManagerCompanyInfo.from(deliveryManagerCompanyWriteService.switchStatus(id))));
+	}
 }
