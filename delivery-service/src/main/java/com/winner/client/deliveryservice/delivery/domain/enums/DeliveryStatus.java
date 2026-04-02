@@ -45,4 +45,13 @@ public enum DeliveryStatus {
   public boolean canTransitionTo(DeliveryStatus next) {
     return next != null && nextStates().contains(next);
   }
+
+  public static DeliveryStatus from(String value) {
+    if (value == null || value.isBlank()) return null;
+    try {
+      return DeliveryStatus.valueOf(value.toUpperCase());
+    } catch (IllegalArgumentException e) {
+      return null;
+    }
+  }
 }

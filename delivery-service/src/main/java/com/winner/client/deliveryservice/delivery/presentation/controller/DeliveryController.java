@@ -3,8 +3,11 @@ package com.winner.client.deliveryservice.delivery.presentation.controller;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryCommandService;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryQueryService;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryCommandResponse;
+import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryInfoResponse;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.GetDeliveryResponse;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.ListDeliveryRouteResponse;
+import com.winner.client.global.pagination.CommonPageRequest;
+import com.winner.client.global.pagination.PageResponse;
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import java.util.UUID;
@@ -13,8 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,6 +28,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class DeliveryController {
   private final DeliveryQueryService deliveryQueryService;
   private final DeliveryCommandService deliveryCommandService;
+
+  @GetMapping
+  public ResponseEntity<ApiResponse<PageResponse<DeliveryInfoResponse>>> getMyDeliveries(
+      CommonPageRequest pageRequest,
+      @RequestParam(value = "keyword", required = false) String keyword,
+      @RequestParam(value = "delivery-status", required = false) String deliveryStatus,
+      @RequestHeader("X-User-Id") UUID userId,
+      @RequestHeader("X-User-Role") String userRole,
+      @RequestHeader("X-Reference-Id") UUID referenceId
+  ) {
+    PageResponse<DeliveryInfoResponse> response =
+        deliveryQueryService.getDeliveryPage(pageRequest, keyword, deliveryStatus, userId, userRole, referenceId);
+    return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
+        .body(ApiResponse.success(CommonSuccessCode.OK, response));
+  }
 
   @GetMapping("/{deliveryId}")
   public ResponseEntity<ApiResponse<GetDeliveryResponse>> getDeliveryDetail(@PathVariable UUID deliveryId) {
