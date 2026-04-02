@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class ApiResponse<T> {
+
   private String code;
   private String message;
   private T data;
@@ -36,5 +37,9 @@ public class ApiResponse<T> {
 
   public static <T> ApiResponse<T> error(ErrorCode errorCode, String customMessage) {
     return new ApiResponse<>(errorCode, customMessage, null);
+  }
+
+  public static <T> ApiResponse<T> error(ErrorCode errorCode, T data) {
+    return new ApiResponse<>(errorCode, data);
   }
 }
