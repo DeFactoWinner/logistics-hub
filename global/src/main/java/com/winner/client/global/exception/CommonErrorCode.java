@@ -13,6 +13,7 @@ public enum CommonErrorCode implements ErrorCode {
   FORBIDDEN("ERROR_003", HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
   NOT_FOUND("ERROR_004", HttpStatus.NOT_FOUND, "리소스를 찾을 수 없습니다."),
   INTERNAL_SERVER_ERROR("ERROR_005", HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다."),
+  METHOD_NOT_ALLOWED("ERROR_006", HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않는 메서드입니다."),
   ;
 
   private final String code;
