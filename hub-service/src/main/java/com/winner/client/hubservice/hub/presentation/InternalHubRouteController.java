@@ -29,10 +29,10 @@ public class InternalHubRouteController {
     }
 
     @GetMapping("/shortest")
-    public ResponseEntity<Double> getShortestPath(
+    public ResponseEntity<?> getShortestPath(
         @RequestParam UUID from,
         @RequestParam UUID to
     ) {
-        return ResponseEntity.ok(hubPathService.findShortestDistance(from, to));
+        return ResponseEntity.ok(hubPathService.findShortestPath(from, to));
     }
 }
