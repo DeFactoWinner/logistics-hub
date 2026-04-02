@@ -14,7 +14,6 @@ public class DeliveryManagerCompanyJpaRepository implements
 
 	private final SpringDataDeliveryManagerRepository jpaRepository;
 
-
 	@Override
 	public DeliveryManagerCompany save(DeliveryManagerCompany deliveryManagerCompany) {
 		return jpaRepository.save(deliveryManagerCompany);
@@ -36,12 +35,7 @@ public class DeliveryManagerCompanyJpaRepository implements
 	}
 
 	@Override
-	public Optional<DeliveryManagerCompany> findById(UUID id) {
-		return jpaRepository.findById(id);
-	}
-
-	@Override
-	public Optional<DeliveryManagerCompany> findByUserId(UUID userId) {
-		return jpaRepository.findByUserId_Value(userId);
+	public Optional<DeliveryManagerCompany> findByUserIdAndDeletedByNull(UUID userId) {
+		return jpaRepository.findByUserId_ValueAndDeletedByNull(userId);
 	}
 }
