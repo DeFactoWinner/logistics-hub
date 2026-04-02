@@ -10,4 +10,5 @@ public interface DeliveryManagerHubRepository {
 	boolean existByUserId(UUID userId);
 	Long countByDeletedByIsNull();
 	Optional<DeliveryManagerHub> findFirstByOrderByAssignmentOrderDesc();
+	Optional<DeliveryManagerHub> findByUserId(UUID userId);
 }
