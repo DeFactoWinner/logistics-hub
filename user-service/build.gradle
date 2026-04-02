@@ -30,18 +30,11 @@ repositories {
 dependencies {
 
     implementation project(':global')
+    implementation project(path: ':global', configuration: 'jwtLib')
 
     // Web & Validation
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-    // Security & Auth
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-
-    // JWT
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
     // DB
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -69,4 +62,29 @@ dependencyManagement {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+tasks.withType(Test).configureEach {
+    systemProperty "file.encoding", "UTF-8"
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+
+    def envFile = rootProject.file('.env')
+    if (envFile.exists()) {
+        envFile.eachLine { line ->
+            if (line.trim() && !line.startsWith('#')) {
+                def (key, value) = line.tokenize('=')
+                environment key.trim(), value.trim()
+            }
+        }
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+        exceptionFormat = "full"
+    }
 }
