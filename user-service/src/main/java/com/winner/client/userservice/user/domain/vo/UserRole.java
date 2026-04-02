@@ -26,5 +26,7 @@ public class UserRole {
         && referenceId == null) {
       throw new BusinessException(UserErrorCode.MISSING_REFERENCE_ID);
     }
+    this.role = roleType;
+    this.referenceId = referenceId;
   }
 }
