@@ -25,7 +25,7 @@ public class DeliveryManagerHubWriteService {
 
 		Long curCount = repository.count();
 
-		Long nextAssignmentOrder = repository.findFirstAssignmentOrderOrderByDesc()
+		Long nextAssignmentOrder = repository.findFirstByOrderByAssignmentOrderDesc()
 			.map(last -> last.getAssignmentOrder() + 1)
 			.orElse(1L);
 

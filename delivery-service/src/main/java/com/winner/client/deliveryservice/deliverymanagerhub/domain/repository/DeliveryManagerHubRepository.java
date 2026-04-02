@@ -9,5 +9,5 @@ public interface DeliveryManagerHubRepository {
 	DeliveryManagerHub save(DeliveryManagerHub deliveryManagerHub);
 	boolean existByUserId(UUID userId);
 	Long count();
-	Optional<DeliveryManagerHub> findFirstAssignmentOrderOrderByDesc();
+	Optional<DeliveryManagerHub> findFirstByOrderByAssignmentOrderDesc();
 }

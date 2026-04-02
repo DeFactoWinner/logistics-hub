@@ -29,7 +29,7 @@ public class DeliveryManagerHubJpaRepository implements DeliveryManagerHubReposi
 	}
 
 	@Override
-	public Optional<DeliveryManagerHub> findFirstAssignmentOrderOrderByDesc() {
+	public Optional<DeliveryManagerHub> findFirstByOrderByAssignmentOrderDesc() {
 		return repository.findFirstByOrderByAssignmentOrder_ValueDesc();
 	}
 }
