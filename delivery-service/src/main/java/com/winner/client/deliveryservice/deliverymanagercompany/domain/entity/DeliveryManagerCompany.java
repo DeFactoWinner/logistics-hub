@@ -80,6 +80,13 @@ public class DeliveryManagerCompany extends BaseAuditEntity {
 		this.hubId = new HubId(newHubId);
 	}
 
+	public void switchStatus() {
+		switch (this.deliveryManagerStatus) {
+			case AVAILABLE -> this.deliveryManagerStatus = DeliveryManagerStatus.OFF_DUTY;
+			case OFF_DUTY -> this.deliveryManagerStatus = DeliveryManagerStatus.AVAILABLE;
+		}
+	}
+
 	public UUID getUserId() { return userId.getValue(); }
 	public UUID getHubId() { return hubId.getValue(); }
 	public Long getAssignmentOrder() { return assignmentOrder.getValue(); }
