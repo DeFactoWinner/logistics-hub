@@ -34,4 +34,9 @@ public class DeliveryManagerCompanyJpaRepository implements
 	public Long countByHubId(UUID hubId) {
 		return jpaRepository.countByHubId_Value(hubId);
 	}
+
+	@Override
+	public Optional<DeliveryManagerCompany> findById(UUID id) {
+		return jpaRepository.findById(id);
+	}
 }
