@@ -30,4 +30,9 @@ public class CurrentHubRoute {
       throw new IllegalArgumentException("현재 허브와 다음 허브는 동일할 수 없습니다.");
     }
   }
+
+  public boolean isRelatedTo(UUID hubId) {
+    if (hubId == null) return false;
+    return curHubId.equals(hubId) || nextHubId.equals(hubId);
+  }
 }
