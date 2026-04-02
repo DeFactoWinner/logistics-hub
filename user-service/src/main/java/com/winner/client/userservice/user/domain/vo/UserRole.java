@@ -1,6 +1,6 @@
 package com.winner.client.userservice.user.domain.vo;
 
-import com.winner.client.userservice.common.exception.BusinessException;
+import com.winner.client.global.exception.BusinessException;
 import com.winner.client.userservice.common.exception.UserErrorCode;
 import com.winner.client.userservice.user.domain.enums.RoleType;
 import jakarta.persistence.Column;
