@@ -23,19 +23,19 @@ public class DeliveryManagerCompanyController {
 	private final DeliveryManagerCompanyReadService deliveryManagerCompanyReadService;
 	private final DeliveryManagerCompanyWriteService deliveryManagerCompanyWriteService;
 
-	@GetMapping("/{id}")
+	@GetMapping("/{userId}")
 	public ResponseEntity<ApiResponse<DeliveryManagerCompanyInfo>> getDeliveryManagerCompany(
-		@PathVariable UUID id
+		@PathVariable UUID userId
 	) {
 		return ResponseEntity.ok().body(ApiResponse.success(OK,
-			DeliveryManagerCompanyInfo.from(deliveryManagerCompanyReadService.getDetail(id))));
+			DeliveryManagerCompanyInfo.from(deliveryManagerCompanyReadService.getDetail(userId))));
 	}
 
-	@PatchMapping("/{id}")
+	@PatchMapping("/{userId}")
 	public ResponseEntity<ApiResponse<DeliveryManagerCompanyInfo>> switchStatus(
-		@PathVariable UUID id
+		@PathVariable UUID userId
 	) {
 		return ResponseEntity.ok().body(ApiResponse.success(OK,
-			DeliveryManagerCompanyInfo.from(deliveryManagerCompanyWriteService.switchStatus(id))));
+			DeliveryManagerCompanyInfo.from(deliveryManagerCompanyWriteService.switchStatus(userId))));
 	}
 }

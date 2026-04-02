@@ -1,5 +1,7 @@
 package com.winner.client.deliveryservice.deliverymanagercompany.presentation.internal;
 
+import static com.winner.client.global.response.CommonSuccessCode.DELETED;
+
 import com.winner.client.deliveryservice.deliverymanagercompany.application.DeliveryManagerCompanyWriteService;
 import com.winner.client.deliveryservice.deliverymanagercompany.presentation.requests.DeliveryManagerCompanyRegistrationRequest;
 import com.winner.client.deliveryservice.deliverymanagercompany.presentation.responses.DeliveryManagerCompanyInfo;
@@ -41,8 +43,8 @@ public class InternalDeliveryManagerCompanyController {
 		@PathVariable UUID userId
 	) {
 		deliveryManagerCompanyWriteService.deactivate(userId);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-			ApiResponse.success(CommonSuccessCode.DELETED, null)
+		return ResponseEntity.status(DELETED.getStatus()).body(
+			ApiResponse.success(DELETED, null)
 		);
 	}
 }
