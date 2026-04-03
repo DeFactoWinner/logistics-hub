@@ -2,7 +2,7 @@ package com.winner.client.hubservice.hub.presentation.dto;
 
 import java.util.List;
 
-public record ShortestPathResponse(
-    int count,
-    List<HubNodeResponse> nodes
+public record HubRoutePathResponse(
+    List<HubNodeInfo> nodes,
+    int count
 ) {}

@@ -3,7 +3,7 @@ package com.winner.client.hubservice.hub.presentation;
 import com.winner.client.hubservice.hub.application.HubPathService;
 import com.winner.client.hubservice.hub.application.HubRouteService;
 import com.winner.client.hubservice.hub.application.dto.HubRouteResult;
-import com.winner.client.hubservice.hub.presentation.dto.ShortestPathResponse;
+import com.winner.client.hubservice.hub.presentation.dto.HubRoutePathResponse;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +30,12 @@ public class InternalHubRouteController {
     }
 
     @GetMapping("/shortest")
-    public ResponseEntity<ShortestPathResponse> getShortestPath(
-        @RequestParam UUID from,
-        @RequestParam UUID to
+    public ResponseEntity<HubRoutePathResponse> getShortestPath(
+        @RequestParam UUID fromHubId,
+        @RequestParam UUID toHubId
     ) {
-        return ResponseEntity.ok(hubPathService.findShortestPath(from, to));
+        return ResponseEntity.ok(
+            hubPathService.findShortestPathSteps(fromHubId, toHubId)
+        );
     }
 }
