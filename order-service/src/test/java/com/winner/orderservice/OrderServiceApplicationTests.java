@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 		RedisAutoConfiguration.class,
 		RedisRepositoriesAutoConfiguration.class
 })
-class OrderserviceApplicationTests {
+class OrderServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

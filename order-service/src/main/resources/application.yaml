@@ -1,14 +1,10 @@
 spring:
   application:
     name: order-service
-
-  eureka:
-    client:
-      enabled: ${EUREKA_CLIENT_ENABLED:true}
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT:5432}/${POSTGRES_DB}?currentSchema=${POSTGRES_ORDER_SCHEMA:order_service}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:logistics}?currentSchema=${POSTGRES_ORDER_SCHEMA:order_service}
     driver-class-name: org.postgresql.Driver
-    username: ${POSTGRES_USER}
+    username: ${POSTGRES_USER:winner}
     password: ${POSTGRES_PASSWORD}
   sql:
     init:
@@ -20,15 +16,17 @@ spring:
     properties:
       hibernate:
         format_sql: ${JPA_FORMAT_SQL:true}
-        default_schema: order_db
+        default_schema: ${POSTGRES_ORDER_SCHEMA:order_service}
     show-sql: ${JPA_SHOW_SQL:false}
-
+    open-in-view: false
+    defer-datasource-initialization: true
   data:
     redis:
-      host: ${SPRING_DATA_REDIS_HOST}
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
       port: ${SPRING_DATA_REDIS_PORT:6379}
       password: ${SPRING_DATA_REDIS_PASSWORD}
+
 eureka:
   client:
-    register-with-eureka: ${EUREKA_CLIENT_ENABLED:true}
-    fetch-registry: ${EUREKA_CLIENT_ENABLED:true}
+    register-with-eureka: ${EUREKA_CLIENT_ENABLED:false}
+    fetch-registry: ${EUREKA_CLIENT_ENABLED:false}
