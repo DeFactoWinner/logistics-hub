@@ -1,7 +1,7 @@
-package com.winner.client.deliveryservice.deliverymanagercompany.presentation.requests;
+package com.winner.client.deliveryservice.deliverymanagercompany.presentation.dto.requests;
 
 
-import com.winner.client.deliveryservice.deliverymanagercompany.application.command.DeliveryManagerCompanyRegistrationCommand;
+import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.command.DeliveryManagerCompanyRegistrationCommand;
 import java.util.UUID;
 
 public record DeliveryManagerCompanyRegistrationRequest (

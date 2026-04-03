@@ -3,8 +3,8 @@ package com.winner.client.deliveryservice.deliverymanagercompany.presentation.in
 import static com.winner.client.global.response.CommonSuccessCode.DELETED;
 
 import com.winner.client.deliveryservice.deliverymanagercompany.application.DeliveryManagerCompanyWriteService;
-import com.winner.client.deliveryservice.deliverymanagercompany.presentation.requests.DeliveryManagerCompanyRegistrationRequest;
-import com.winner.client.deliveryservice.deliverymanagercompany.presentation.responses.DeliveryManagerCompanyInfo;
+import com.winner.client.deliveryservice.deliverymanagercompany.presentation.dto.requests.DeliveryManagerCompanyRegistrationRequest;
+import com.winner.client.deliveryservice.deliverymanagercompany.presentation.dto.responses.DeliveryManagerCompanyInfo;
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import java.util.UUID;

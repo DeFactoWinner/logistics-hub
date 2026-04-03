@@ -4,11 +4,11 @@ import static com.winner.client.deliveryservice.common.exception.deliverymanager
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.NOT_FOUND_AVAILABLE_HUB_DELIVERY_MANAGERS;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.NOT_FOUND_HUB_DELIVERY_MANAGER;
 
-import com.winner.client.deliveryservice.deliverymanagerhub.application.commnad.AssignEventCommand;
-import com.winner.client.deliveryservice.deliverymanagerhub.application.commnad.DeliveryManagerHubRegistrationCommand;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.AssignEventCommand;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.DeliveryManagerHubRegistrationCommand;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryDeliveryManagerHubUsecase;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryMessagePort;
-import com.winner.client.deliveryservice.deliverymanagerhub.application.result.DeliveryManagerHubInfoResult;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryManagerHubInfoResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.entity.DeliveryManagerHub;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.repository.DeliveryManagerHubRepository;
 import com.winner.client.global.exception.BusinessException;

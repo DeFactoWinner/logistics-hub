@@ -1,8 +1,8 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.presentation.internal;
 
 import com.winner.client.deliveryservice.deliverymanagerhub.application.DeliveryManagerHubWriteService;
-import com.winner.client.deliveryservice.deliverymanagerhub.presentation.requests.DeliveryManagerHubRegistrationRequest;
-import com.winner.client.deliveryservice.deliverymanagerhub.presentation.responses.DeliveryManagerHubInfo;
+import com.winner.client.deliveryservice.deliverymanagerhub.presentation.dto.requests.DeliveryManagerHubRegistrationRequest;
+import com.winner.client.deliveryservice.deliverymanagerhub.presentation.dto.responses.DeliveryManagerHubInfo;
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import java.util.UUID;

@@ -4,7 +4,7 @@ import static com.winner.client.global.response.CommonSuccessCode.OK;
 
 import com.winner.client.deliveryservice.deliverymanagercompany.application.DeliveryManagerCompanyReadService;
 import com.winner.client.deliveryservice.deliverymanagercompany.application.DeliveryManagerCompanyWriteService;
-import com.winner.client.deliveryservice.deliverymanagercompany.presentation.responses.DeliveryManagerCompanyInfo;
+import com.winner.client.deliveryservice.deliverymanagercompany.presentation.dto.responses.DeliveryManagerCompanyInfo;
 import com.winner.client.global.response.ApiResponse;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

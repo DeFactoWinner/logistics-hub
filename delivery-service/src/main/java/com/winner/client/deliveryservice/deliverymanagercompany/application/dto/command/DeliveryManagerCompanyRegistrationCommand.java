@@ -1,4 +1,4 @@
-package com.winner.client.deliveryservice.deliverymanagercompany.application.command;
+package com.winner.client.deliveryservice.deliverymanagercompany.application.dto.command;
 
 import java.util.UUID;
 
