@@ -1,6 +1,6 @@
 package com.winner.client.companyservice.company.domain.vo;
 
-import com.winner.client.companyservice.common.exception.BusinessException;
+import com.winner.client.global.exception.BusinessException;
 import com.winner.client.companyservice.common.exception.CompanyErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

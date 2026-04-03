@@ -1,7 +1,7 @@
 package com.winner.client.companyservice.company.infrastructure.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.winner.client.companyservice.common.exception.BusinessException;
+import com.winner.client.global.exception.BusinessException;
 import com.winner.client.companyservice.common.exception.CompanyErrorCode;
 import com.winner.client.companyservice.company.infrastructure.service.GeocodingService;
 import lombok.extern.slf4j.Slf4j;

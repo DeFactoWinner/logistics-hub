@@ -1,5 +1,7 @@
 package com.winner.client.companyservice.company.domain.entity;
 
+import com.winner.client.global.exception.BusinessException;
+import com.winner.client.companyservice.common.exception.CompanyErrorCode;
 import com.winner.client.companyservice.company.domain.vo.CompanyAddress;
 import com.winner.client.companyservice.company.domain.vo.CompanyLocation;
 import com.winner.client.companyservice.company.domain.vo.HubId;
@@ -8,6 +10,8 @@ import com.winner.client.global.entity.BaseAuditEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -41,6 +45,7 @@ public class Company extends BaseAuditEntity {
   @Column(name = "name", nullable = false)
   private String companyName;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "type", nullable = false)
   private Type type;
 
@@ -65,6 +70,9 @@ public class Company extends BaseAuditEntity {
   public static Company create(String companyName, Type type, HubId hubId,
       CompanyLocation location, CompanyAddress address){
 
+    if(companyName == null || companyName.isBlank()){
+      throw new BusinessException(CompanyErrorCode.NAME_REQUIRED);
+    }
     return new Company(companyName, type, hubId, location, address);
   }
 
