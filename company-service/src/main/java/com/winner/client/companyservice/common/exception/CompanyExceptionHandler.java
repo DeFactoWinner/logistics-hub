@@ -1,5 +1,6 @@
 package com.winner.client.companyservice.common.exception;
 
+import com.winner.client.global.exception.BusinessException;
 import com.winner.client.global.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,4 +19,12 @@ public class CompanyExceptionHandler {
         .status(HttpStatus.CONFLICT)
         .body(ApiResponse.error(CompanyErrorCode.DUPLICATE_COMPANY));
   }
+
+  @ExceptionHandler(BusinessException.class)
+  public ResponseEntity<ApiResponse<Void>> handleBusinessException(BusinessException e) {
+    return ResponseEntity
+        .status(e.getErrorCode().getStatus())
+        .body(ApiResponse.error(e.getErrorCode()));
+  }
+
 }
