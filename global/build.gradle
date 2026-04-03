@@ -54,7 +54,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    // 2. 외부(gateway 등)에서 골라 잡을 수 있게 바구니에 담기
     securityLib 'org.springframework.boot:spring-boot-starter-security'
     securityLib 'org.springframework.boot:spring-boot-starter-web'
 
