@@ -47,6 +47,7 @@ clean {
 
 dependencies {
     implementation project(':global')
+    implementation project(path: ':global', configuration: 'querydslLib ')
     annotationProcessor project(':global')
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
