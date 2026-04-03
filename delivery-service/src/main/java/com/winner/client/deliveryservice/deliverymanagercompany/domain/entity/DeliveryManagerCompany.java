@@ -7,6 +7,7 @@ import com.winner.client.deliveryservice.common.constants.DeliveryManagerStatus;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.vo.AssignmentOrder;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.vo.DeliveryManagerUserId;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.vo.HubId;
+import com.winner.client.deliveryservice.deliverymanagercompany.domain.vo.DeliveryId;
 import com.winner.client.global.entity.BaseAuditEntity;
 import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.Column;
@@ -42,6 +43,9 @@ public class DeliveryManagerCompany extends BaseAuditEntity {
 	private HubId hubId;
 
 	@Embedded
+	private DeliveryId deliveryId;
+
+	@Embedded
 	private AssignmentOrder assignmentOrder;
 
 	@Getter
@@ -60,6 +64,7 @@ public class DeliveryManagerCompany extends BaseAuditEntity {
 		DeliveryManagerCompany manager = new DeliveryManagerCompany();
 		manager.userId = new DeliveryManagerUserId(userId);
 		manager.hubId = new HubId(hubId);
+		manager.deliveryId = new DeliveryId(null);
 		manager.assignmentOrder = new AssignmentOrder(assignmentOrder);
 		manager.deliveryManagerStatus = DeliveryManagerStatus.AVAILABLE;
 		return manager;
@@ -98,5 +103,6 @@ public class DeliveryManagerCompany extends BaseAuditEntity {
 
 	public UUID getUserId() { return userId.getValue(); }
 	public UUID getHubId() { return hubId.getValue(); }
+	public UUID getDeliveryId() { return deliveryId.getValue(); }
 	public Long getAssignmentOrder() { return assignmentOrder.getValue(); }
 }
