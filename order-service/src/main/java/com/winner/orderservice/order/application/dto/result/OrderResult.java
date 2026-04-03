@@ -18,6 +18,8 @@ public record OrderResult(
     String deliveryAddressDetail,
     String comment,
     OrderStatus status,
+    LocalDateTime createdAt,
+    LocalDateTime updatedAt,
     LocalDateTime orderedAt
 ) {
   public static OrderResult from(Order order) {
@@ -34,6 +36,8 @@ public record OrderResult(
         order.getSnapshot().getDeliveryAddressDetail(),
         order.getOrderDetail().getComment(),
         order.getStatus(),
+        order.getCreatedAt(),
+        order.getUpdatedAt(),
         order.getOrderedAt()
     );
   }
