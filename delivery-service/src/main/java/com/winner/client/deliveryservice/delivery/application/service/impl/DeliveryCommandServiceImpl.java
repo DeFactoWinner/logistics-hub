@@ -1,12 +1,20 @@
 package com.winner.client.deliveryservice.delivery.application.service.impl;
 
 import com.winner.client.deliveryservice.common.exception.delivery.DeliveryErrorCode;
+import com.winner.client.deliveryservice.delivery.application.dto.command.CreateDeliveryCommand;
+import com.winner.client.deliveryservice.delivery.application.dto.command.CreateDeliveryRouteCommand;
+import com.winner.client.deliveryservice.delivery.application.dto.external.HubRouteInfo;
+import com.winner.client.deliveryservice.delivery.application.dto.result.CreateDeliveryResult;
+import com.winner.client.deliveryservice.delivery.application.port.HubRoutePort;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryCommandService;
 import com.winner.client.deliveryservice.delivery.application.validator.DeliveryAccessValidator;
 import com.winner.client.deliveryservice.delivery.domain.entity.Delivery;
+import com.winner.client.deliveryservice.delivery.domain.entity.DeliveryRoute;
 import com.winner.client.deliveryservice.delivery.domain.repository.DeliveryRepository;
+import com.winner.client.deliveryservice.delivery.domain.repository.DeliveryRouteRepository;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryCommandResponse;
 import com.winner.client.global.exception.BusinessException;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +26,33 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeliveryCommandServiceImpl implements DeliveryCommandService {
 
   private final DeliveryRepository deliveryRepository;
+  private final DeliveryRouteRepository deliveryRouteRepository;
+  private final HubRoutePort hubRoutePort;
   private final DeliveryAccessValidator validator;
+
+  @Override
+  public CreateDeliveryResult createDelivery(CreateDeliveryCommand command) {
+    if(deliveryRepository.findByOrdersId(command.ordersId())){
+      throw new BusinessException(DeliveryErrorCode.ALREADY_DELIVERY_ASSIGNED);
+    }
+
+    Delivery delivery =
+        Delivery.create(command.ordersId(), command.hubRoute(),
+            command.receiver(), command.address(), null);
+
+    HubRouteInfo hubRouteInfo = hubRoutePort.
+        getHubRoutes(delivery.getHubRoute().getOriginHubId(), delivery.getHubRoute().getDestinationHubId());
+
+    List<CreateDeliveryRouteCommand> routeCommands = CreateDeliveryRouteCommand.of(delivery, hubRouteInfo);
+    routeCommands.forEach(routeCommand -> {
+      DeliveryRoute route =
+          DeliveryRoute.create(routeCommand);
+      deliveryRouteRepository.save(route);
+    });
+
+    deliveryRepository.save(delivery);
+    return CreateDeliveryResult.from(delivery);
+  }
 
   @Override
   public DeliveryCommandResponse startHubWaiting(

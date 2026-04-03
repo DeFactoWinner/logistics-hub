@@ -22,4 +22,9 @@ public class DeliveryRouteJpaRepository implements DeliveryRouteRepository {
   public Optional<DeliveryRoute> findById(UUID id) {
     return routeJpaRepository.findById(id);
   }
+
+  @Override
+  public void save(DeliveryRoute route) {
+    routeJpaRepository.save(route);
+  }
 }

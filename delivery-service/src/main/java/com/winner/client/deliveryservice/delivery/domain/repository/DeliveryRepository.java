@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface DeliveryRepository{
   Optional<Delivery> findByIdWithRoutes(UUID id);
   Optional<Delivery> findById(UUID id);
+  void save(Delivery delivery);
+  boolean findByOrdersId(UUID ordersId);
 }
