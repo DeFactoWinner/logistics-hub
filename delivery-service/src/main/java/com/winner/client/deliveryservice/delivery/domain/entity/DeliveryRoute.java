@@ -83,6 +83,10 @@ public class DeliveryRoute {
   @Column(name = "delivery_manager_id", nullable = false)
   private UUID deliveryManagerId;
 
+  @Column(name = "delivery_manager_name")
+  private String DeliveryManagerName;
+
+
   private static void validateSeq(int seq) {
     if (seq < 0) {
       throw new IllegalArgumentException("순번은 0 이상이어야 합니다.");
@@ -127,19 +131,18 @@ public class DeliveryRoute {
   }
 
   public DeliveryRoute(Delivery delivery, int seq, CurrentHubRoute currentHubRoute,
-      Distance estimatedDistance, Duration estimatedArrivalTime, UUID deliveryManagerId) {
+      Distance estimatedDistance, Duration estimatedArrivalTime) {
     this.delivery = delivery;
     this.seq = seq;
     this.currentHubRoute = currentHubRoute;
     this.estimatedDistance = estimatedDistance;
     this.estimatedArrivalTime = estimatedArrivalTime;
     this.status = DeliveryRouteStatus.WAITING;
-    this.deliveryManagerId = deliveryManagerId;
   }
 
   public static DeliveryRoute create(Delivery delivery, int seq, CurrentHubRoute currentHubRoute,
-      Distance estimatedDistance, Duration estimatedArrivalTime, UUID deliveryManagerId){
+      Distance estimatedDistance, Duration estimatedArrivalTime){
     validateSeq(seq);
-    return new DeliveryRoute(delivery, seq, currentHubRoute, estimatedDistance, estimatedArrivalTime, deliveryManagerId);
+    return new DeliveryRoute(delivery, seq, currentHubRoute, estimatedDistance, estimatedArrivalTime);
   }
 }

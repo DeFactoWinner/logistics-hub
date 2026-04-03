@@ -71,6 +71,9 @@ public class Delivery extends BaseAuditEntity {
   @Column(name = "delivery_manager_id")
   private UUID deliveryManagerId;
 
+  @Column(name = "delivery_manager_name")
+  private String DeliveryManagerName;
+
   @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<DeliveryRoute> routes = new ArrayList<>();
 
@@ -127,19 +130,18 @@ public class Delivery extends BaseAuditEntity {
 
   private Delivery(
       UUID ordersId, HubRoute hubRoute, Receiver receiver,
-      Address address, Location location, UUID deliveryManagerId) {
+      Address address, Location location) {
     this.ordersId = ordersId;
     this.hubRoute = hubRoute;
     this.receiver = receiver;
     this.address = address;
     this.location = location;
     this.status = DeliveryStatus.CREATED;
-    this.deliveryManagerId = deliveryManagerId;
   }
 
   public static Delivery create(
       UUID ordersId, HubRoute hubRoute, Receiver receiver,
-      Address address, Location location, UUID deliveryManagerId) {
-    return new Delivery(ordersId, hubRoute, receiver, address, location, deliveryManagerId);
+      Address address, Location location) {
+    return new Delivery(ordersId, hubRoute, receiver, address, location);
   }
 }

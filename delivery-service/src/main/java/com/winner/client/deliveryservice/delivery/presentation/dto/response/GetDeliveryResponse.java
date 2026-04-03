@@ -1,33 +1,49 @@
 package com.winner.client.deliveryservice.delivery.presentation.dto.response;
 
-import com.winner.client.deliveryservice.delivery.domain.entity.Delivery;
-import com.winner.client.deliveryservice.delivery.domain.enums.DeliveryStatus;
+import com.winner.client.deliveryservice.delivery.application.dto.result.FindDeliveryResult;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record GetDeliveryResponse(
-    UUID deliveryId, UUID orderId,
-    HubInfo originHubInfo, HubInfo destinationHubInfo,
-    DeliveryStatus deliveryStatus,
-    String receiver, String slackId,
-    String roadAddress, String detailAddress,
-    UUID deliveryManagerId,
-    LocalDateTime createdAt, LocalDateTime updatedAt
+    UUID deliveryId,
+    UUID orderId,
+
+    UUID originHubId,
+    String originHubName,
+    UUID destinationHubId,
+    String destinationHubName,
+
+    String status,
+    String receiver,
+    String slackId,
+    String roadAddress,
+    String detailAddress,
+
+    String deliveryManagerName,
+    LocalDateTime createdAt,
+    LocalDateTime updatedAt
 ) {
-  public static GetDeliveryResponse from(Delivery delivery) {
+  public static GetDeliveryResponse from(FindDeliveryResult query) {
     return new GetDeliveryResponse(
-        delivery.getId(),
-        delivery.getOrdersId(),
-        new HubInfo(delivery.getHubRoute().getOriginHubId(), delivery.getOriginHubName()),
-        new HubInfo(delivery.getHubRoute().getDestinationHubId(), delivery.getDestinationHubName()),
-        delivery.getStatus(),
-        delivery.getReceiver().getReceiver(),
-        delivery.getReceiver().getSlackId(),
-        delivery.getAddress().getRoadAddress(),
-        delivery.getAddress().getDetailAddress(),
-        delivery.getDeliveryManagerId(),
-        delivery.getCreatedAt(),
-        delivery.getUpdatedAt()
+        query.deliveryId(),
+        query.orderId(),
+
+        query.hubRoute().getOriginHubId(),
+        query.originHubName(),
+        query.hubRoute().getDestinationHubId(),
+        query.destinationHubName(),
+
+        query.status().name(),
+
+        query.receiver().getReceiver(),
+        query.receiver().getSlackId(),
+
+        query.address().getRoadAddress(),
+        query.address().getDetailAddress(),
+
+        query.deliveryManagerName(),
+        query.createdAt(),
+        query.updatedAt()
     );
   }
 }
