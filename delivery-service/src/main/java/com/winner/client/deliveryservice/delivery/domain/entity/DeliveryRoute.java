@@ -1,6 +1,7 @@
 package com.winner.client.deliveryservice.delivery.domain.entity;
 
 import com.winner.client.deliveryservice.common.exception.delivery.DeliveryErrorCode;
+import com.winner.client.deliveryservice.delivery.application.dto.command.CreateDeliveryRouteCommand;
 import com.winner.client.deliveryservice.delivery.domain.enums.DeliveryRouteStatus;
 import com.winner.client.deliveryservice.delivery.domain.vo.CurrentHubRoute;
 import com.winner.client.deliveryservice.delivery.domain.vo.Distance;
@@ -131,18 +132,26 @@ public class DeliveryRoute {
   }
 
   public DeliveryRoute(Delivery delivery, int seq, CurrentHubRoute currentHubRoute,
-      Distance estimatedDistance, Duration estimatedArrivalTime) {
+      String curHubName, String nextHubName, Distance estimatedDistance, Duration estimatedArrivalTime) {
     this.delivery = delivery;
     this.seq = seq;
     this.currentHubRoute = currentHubRoute;
+    this.curHubName = curHubName;
+    this.nextHubName = nextHubName;
     this.estimatedDistance = estimatedDistance;
     this.estimatedArrivalTime = estimatedArrivalTime;
     this.status = DeliveryRouteStatus.WAITING;
   }
 
-  public static DeliveryRoute create(Delivery delivery, int seq, CurrentHubRoute currentHubRoute,
-      Distance estimatedDistance, Duration estimatedArrivalTime){
-    validateSeq(seq);
-    return new DeliveryRoute(delivery, seq, currentHubRoute, estimatedDistance, estimatedArrivalTime);
+  public static DeliveryRoute create(CreateDeliveryRouteCommand command) {
+    return new DeliveryRoute(
+        command.delivery(),
+        command.sequence(),
+        command.currentHubRoute(),
+        command.curHubName(),
+        command.nextHubName(),
+        command.estimatedDistance(),
+        command.estimatedArrivalTime()
+    );
   }
 }

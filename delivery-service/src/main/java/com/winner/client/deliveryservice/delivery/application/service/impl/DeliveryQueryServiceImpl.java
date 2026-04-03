@@ -49,12 +49,8 @@ public class DeliveryQueryServiceImpl implements DeliveryQueryService {
   }
 
   @Override
-  public Page<SearchDeliveryResult>  getDeliveryPage(
-      CommonPageRequest pageRequest, String keyword, String deliveryStatus,
-      UUID userId, String userRole, UUID referenceId) {
-    SearchDeliveryQuery searchQuery =
-        SearchDeliveryQuery.of(userId, userRole, referenceId, keyword, deliveryStatus, pageRequest);
-    Page<Delivery> deliveryPage = deliveryCustomRepository.getAllDeliveries(searchQuery);
+  public Page<SearchDeliveryResult>  getDeliveryPage(SearchDeliveryQuery query) {
+    Page<Delivery> deliveryPage = deliveryCustomRepository.getAllDeliveries(query);
     return deliveryPage.map(SearchDeliveryResult::from);
   }
 
