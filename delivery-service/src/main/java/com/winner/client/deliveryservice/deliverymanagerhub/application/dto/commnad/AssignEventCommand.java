@@ -1,4 +1,4 @@
-package com.winner.client.deliveryservice.deliverymanagerhub.application.commnad;
+package com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad;
 
 import java.util.UUID;
 
