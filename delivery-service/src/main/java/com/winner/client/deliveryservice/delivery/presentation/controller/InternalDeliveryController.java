@@ -1,9 +1,10 @@
 package com.winner.client.deliveryservice.delivery.presentation.controller;
 
 import com.winner.client.deliveryservice.delivery.application.dto.command.CreateDeliveryCommand;
+import com.winner.client.deliveryservice.delivery.application.dto.result.CreateDeliveryResult;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryCommandService;
 import com.winner.client.deliveryservice.delivery.presentation.dto.request.CreateDeliveryRequest;
-import java.util.UUID;
+import com.winner.client.deliveryservice.delivery.presentation.dto.response.CreateDeliveryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +18,9 @@ public class InternalDeliveryController {
   private final DeliveryCommandService deliveryCommandService;
 
   @PostMapping
-  public UUID createDelivery(CreateDeliveryRequest request) {
+  public CreateDeliveryResponse createDelivery(CreateDeliveryRequest request) {
     CreateDeliveryCommand command = CreateDeliveryCommand.from(request);
-    return deliveryCommandService.createDelivery(command);
+    CreateDeliveryResult result = deliveryCommandService.createDelivery(command);
+    return CreateDeliveryResponse.from(result);
   }
 }
