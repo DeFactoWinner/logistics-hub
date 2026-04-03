@@ -14,10 +14,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 class JwtTokenProviderTest {
 
-  private JwtTokenProvider jwtTokenProvider;
-
   private final Long TEST_ACCESS_TIME = 3600000L;
   private final Long TEST_REFRESH_TIME = 604800000L;
+  private JwtTokenProvider jwtTokenProvider;
 
   @BeforeEach
   void setUp() {
@@ -41,7 +40,7 @@ class JwtTokenProviderTest {
     String role = "ROLE_USER";
     UUID referenceId = UUID.randomUUID();
 
-    String token = jwtTokenProvider.createAccessToken(userId, role, referenceId);
+    String token = jwtTokenProvider.createAccessToken(userId, role, referenceId, false);
     Claims claims = jwtTokenProvider.getClaims(token);
 
     assertThat(token).isNotNull();
@@ -53,7 +52,8 @@ class JwtTokenProviderTest {
   @Test
   @DisplayName("유효한 토큰 검증 성공")
   void validateToken_Success() {
-    String token = jwtTokenProvider.createAccessToken(UUID.randomUUID(), "USER", UUID.randomUUID());
+    String token = jwtTokenProvider.createAccessToken(UUID.randomUUID(), "USER", UUID.randomUUID(),
+        false);
     boolean isValid = jwtTokenProvider.validateToken(token);
     assertThat(isValid).isTrue();
   }
@@ -62,7 +62,8 @@ class JwtTokenProviderTest {
   @DisplayName("만료된 토큰 검증 시 예외 발생")
   void validateToken_Expired() {
     ReflectionTestUtils.setField(jwtTokenProvider, "accessExpirationTime", 0L);
-    String expiredToken = jwtTokenProvider.createAccessToken(UUID.randomUUID(), "USER", UUID.randomUUID());
+    String expiredToken = jwtTokenProvider.createAccessToken(UUID.randomUUID(), "USER",
+        UUID.randomUUID(), false);
 
     assertThatThrownBy(() -> jwtTokenProvider.validateToken(expiredToken))
         .isInstanceOf(BusinessException.class);
@@ -79,7 +80,8 @@ class JwtTokenProviderTest {
   @Test
   @DisplayName("토큰의 남은 유효 시간 계산 성공")
   void getRemainingTime_Success() {
-    String token = jwtTokenProvider.createAccessToken(UUID.randomUUID(), "USER", UUID.randomUUID());
+    String token = jwtTokenProvider.createAccessToken(UUID.randomUUID(), "USER", UUID.randomUUID(),
+        false);
 
     long remainingTime = jwtTokenProvider.getRemainingTime(token);
 
