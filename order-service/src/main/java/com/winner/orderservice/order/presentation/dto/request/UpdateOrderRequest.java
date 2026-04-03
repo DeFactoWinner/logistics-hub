@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public record UpdateOrderRequest(
-    @NotNull @Min(1) Long count,
+    @Min(1) Long count,
     String comment
 ) {}
 
