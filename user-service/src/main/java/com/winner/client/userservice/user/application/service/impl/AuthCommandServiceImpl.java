@@ -25,7 +25,7 @@ public class AuthCommandServiceImpl implements AuthCommandService {
 
   @Transactional
   public SignupResult signup(SignupCommand command) {
-    if (userRepository.existsByUsername(command.username())) {
+    if (userRepository.findByUsernameAndDeletedAtNull(command.username())) {
       throw new BusinessException(UserErrorCode.DUPLICATE_USERNAME);
     }
     User user = User.create(
