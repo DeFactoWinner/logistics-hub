@@ -1,5 +1,7 @@
 package com.winner.client.hubservice.hub.application;
 
+import com.winner.client.hubservice.common.exception.hub.HubErrorCode;
+import com.winner.client.hubservice.common.exception.hub.HubException;
 import com.winner.client.hubservice.hub.application.dto.CreateHubCommand;
 import com.winner.client.hubservice.hub.application.dto.HubResult;
 import com.winner.client.hubservice.hub.domain.entity.Hub;
@@ -25,13 +27,17 @@ public class HubService {
             command.getLng()
         );
 
+        if (hubRepository.existsByName(command.getName())) {
+            throw new HubException(HubErrorCode.DUPLICATE_HUB);
+        }
+
         Hub hub = Hub.create(command.getName(), location);
         return hubRepository.save(hub).getId();
     }
 
     public HubResult getHub(UUID hubId) {
         Hub hub = hubRepository.findById(hubId)
-            .orElseThrow(()-> new IllegalArgumentException("허브를 찾을 수 없습니다. ID: " + hubId));
+            .orElseThrow(()-> new HubException(HubErrorCode.HUB_NOT_FOUND));
 
         return HubResult.builder()
             .id(hub.getId())
