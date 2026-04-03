@@ -34,32 +34,28 @@ public class DeliveryQueryServiceImpl implements DeliveryQueryService {
   private final DeliveryCustomRepository deliveryCustomRepository;
 
   @Override
-  public GetDeliveryResponse getDeliveryDetail(UUID deliveryId) {
+  public FindDeliveryResult getDeliveryDetail(UUID deliveryId) {
     Delivery delivery = deliveryRepository.findById(deliveryId)
         .orElseThrow(() -> new BusinessException(DeliveryErrorCode.NOT_FOUND_DELIVERY));
-    return GetDeliveryResponse.from(FindDeliveryResult.from(delivery));
+    return FindDeliveryResult.from(delivery);
   }
 
   @Override
-  public ListDeliveryRouteResponse getDeliveryRoutes(UUID deliveryId) {
+  public List<FindDeliveryRouteResult> getDeliveryRoutes(UUID deliveryId) {
     validateDeliveryExists(deliveryId);
     List<DeliveryRoute> routes = deliveryRouteRepository.findAllByDeliveryId(deliveryId);
 
-    return ListDeliveryRouteResponse.from(
-        routes.stream()
-        .map(FindDeliveryRouteResult::from).toList());
+    return routes.stream().map(FindDeliveryRouteResult::from).toList();
   }
 
   @Override
-  public PageResponse<DeliveryInfoResponse> getDeliveryPage(
+  public Page<SearchDeliveryResult>  getDeliveryPage(
       CommonPageRequest pageRequest, String keyword, String deliveryStatus,
       UUID userId, String userRole, UUID referenceId) {
     SearchDeliveryQuery searchQuery =
         SearchDeliveryQuery.of(userId, userRole, referenceId, keyword, deliveryStatus, pageRequest);
     Page<Delivery> deliveryPage = deliveryCustomRepository.getAllDeliveries(searchQuery);
-    Page<SearchDeliveryResult> resultPage = deliveryPage.map(SearchDeliveryResult::from);
-    Page<DeliveryInfoResponse> infoPage = resultPage.map(DeliveryInfoResponse::from);
-    return PageResponse.of(infoPage);
+    return deliveryPage.map(SearchDeliveryResult::from);
   }
 
   @Override
@@ -69,10 +65,10 @@ public class DeliveryQueryServiceImpl implements DeliveryQueryService {
   }
 
   @Override
-  public GetDeliveryRouteResponse getDeliveryRoute(UUID deliveryRouteId) {
+  public FindDeliveryRouteResult getDeliveryRoute(UUID deliveryRouteId) {
     DeliveryRoute route = deliveryRouteRepository.findById(deliveryRouteId)
         .orElseThrow(() -> new BusinessException(DeliveryErrorCode.NOT_FOUND_DELIVERY_ROUTE));
-    return GetDeliveryRouteResponse.from(FindDeliveryRouteResult.from(route));
+    return FindDeliveryRouteResult.from(route);
   }
 
 
