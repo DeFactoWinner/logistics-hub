@@ -7,7 +7,6 @@ import com.winner.client.deliveryservice.delivery.presentation.dto.request.Creat
 import java.util.UUID;
 
 public record CreateDeliveryCommand(
-    UUID deliveryId,
     UUID ordersId,
     HubRoute hubRoute,
     String originHubName,
@@ -17,7 +16,6 @@ public record CreateDeliveryCommand(
 ) {
   public static CreateDeliveryCommand from(CreateDeliveryRequest request) {
     return new CreateDeliveryCommand(
-        request.deliveryId(),
         request.ordersId(),
 
         new HubRoute(request.originHubId(), request.destinationHubId()),
