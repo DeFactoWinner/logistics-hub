@@ -20,7 +20,7 @@ class JwtTokenProviderTest {
 
   @BeforeEach
   void setUp() {
-    jwtTokenProvider = new JwtTokenProvider();
+    jwtTokenProvider = new JwtTokenProvider(null);
 
     String envSecret = System.getenv("JWT_SECRET");
 

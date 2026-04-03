@@ -2,6 +2,7 @@ package com.winner.client.global.config.jwt;
 
 import com.winner.client.global.exception.BusinessException;
 import com.winner.client.global.exception.JwtTokenErrorCode;
+import com.winner.client.global.variable.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,28 +14,26 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
+@EnableConfigurationProperties(JwtProperties.class)
 public class JwtTokenProvider {
 
-  @Value("${jwt.secret}")
-  private String secret;
-  @Value("${jwt.access_expiration_time}")
-  private Long accessExpirationTime;
-  @Value("${jwt.refresh_expiration_time}")
-  private Long refreshExpirationTime;
+  private final JwtProperties jwtProperties;
   private SecretKey secretKey;
 
   @PostConstruct
   public void init() {
-    this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    this.secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
   }
 
   public String createAccessToken(UUID userId, String role, UUID referenceId, boolean userStatus) {
     Date now = new Date();
-    Date expirationDate = new Date(now.getTime() + accessExpirationTime);
+    Date expirationDate = new Date(now.getTime() + jwtProperties.getAccessExpirationTime());
 
     return Jwts.builder()
         .subject(String.valueOf(userId))
@@ -59,7 +58,7 @@ public class JwtTokenProvider {
 
   public String createRefreshToken(UUID userId) {
     Date now = new Date();
-    Date expiryDate = new Date(now.getTime() + refreshExpirationTime);
+    Date expiryDate = new Date(now.getTime() + jwtProperties.getAccessExpirationTime());
 
     return Jwts.builder()
         .subject(String.valueOf(userId))
@@ -93,5 +92,9 @@ public class JwtTokenProvider {
     } catch (IllegalArgumentException e) {
       throw new BusinessException(JwtTokenErrorCode.EMPTY_CLAIMS);
     }
+  }
+
+  public UUID getUserId(String token) {
+    return UUID.fromString(getClaims(token).getSubject());
   }
 }
