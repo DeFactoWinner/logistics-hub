@@ -36,6 +36,10 @@ public class Stock extends BaseAuditEntity {
     this.quantity = quantity;
   }
 
+  public static Stock create(ProductId productId) {
+    return new Stock(productId, new Quantity(0));
+  }
+
   public void increase(int amount) {
     quantity = quantity.add(amount);
   }
