@@ -59,9 +59,9 @@ public record OrderResponse(
         .deliveryAddressDetail(result.deliveryAddressDetail())
         .comment(result.comment())
         .status(result.status())
+        .orderedAt(result.orderedAt())
         .createdAt(result.createdAt())
         .updatedAt(result.updatedAt())
-        .orderedAt(result.orderedAt())
         .build();
   }
 }
