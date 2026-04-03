@@ -10,6 +10,5 @@ public interface DeliveryManagerCompanyRepository {
 	boolean existByUserId(UUID userId);
 	Optional<DeliveryManagerCompany> findLastAssignmentOrderByHubId(UUID hubId);
 	Long countByHubId(UUID hubId);
-	Optional<DeliveryManagerCompany> findById(UUID userId);
-	Optional<DeliveryManagerCompany> findByUserId(UUID userId);
+	Optional<DeliveryManagerCompany> findByUserIdAndDeletedByNull(UUID userId);
 }
