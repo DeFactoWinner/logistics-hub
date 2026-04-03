@@ -1,6 +1,7 @@
 package com.winner.client.companyservice.company.application.service.impl;
 
-import com.winner.client.companyservice.common.exception.BusinessException;
+import com.winner.client.companyservice.company.presentation.dto.response.ListCompanyResponse;
+import com.winner.client.global.exception.BusinessException;
 import com.winner.client.companyservice.common.exception.CompanyErrorCode;
 import com.winner.client.companyservice.company.application.service.CompanyQueryService;
 import com.winner.client.companyservice.company.domain.repository.CompanyRepository;
@@ -21,10 +22,13 @@ public class CompanyQueryServiceImpl implements CompanyQueryService {
   private final CompanyRepository companyRepository;
 
   @Override
-  public List<CompanyResponse> getCompanyList() {
-    return companyRepository.findAll().stream()
+  public ListCompanyResponse getCompanyList() {
+
+    List<CompanyResponse> companyResponses = companyRepository.findAll().stream()
         .map(CompanyResponse::from)
         .toList();
+
+    return ListCompanyResponse.of(companyResponses, (long)companyResponses.size());
   }
 
   @Override
@@ -42,10 +46,13 @@ public class CompanyQueryServiceImpl implements CompanyQueryService {
   }
 
   @Override
-  public List<CompanyResponse> getCompanyListByCompanyName(String companyName) {
-    return companyRepository.findByCompanyName(companyName).stream()
-            .map(CompanyResponse::from)
-            .toList();
+  public ListCompanyResponse getCompanyListByCompanyName(String companyName) {
+
+    List<CompanyResponse> companyResponses = companyRepository.findAll().stream()
+        .map(CompanyResponse::from)
+        .toList();
+
+    return ListCompanyResponse.of(companyResponses, (long)companyResponses.size());
   }
 
 }

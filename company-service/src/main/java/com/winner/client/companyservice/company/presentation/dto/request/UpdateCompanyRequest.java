@@ -9,9 +9,4 @@ public record UpdateCompanyRequest(
     UUID hubId
 ) {
 
-  public static UpdateCompanyRequest from(
-      String name, String address, String addressDetail, UUID hubId) {
-    return new UpdateCompanyRequest(name, address, addressDetail, hubId);
-  }
-
 }

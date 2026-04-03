@@ -5,6 +5,7 @@ import com.winner.client.companyservice.company.application.service.CompanyQuery
 import com.winner.client.companyservice.company.presentation.dto.request.CreateCompanyRequest;
 import com.winner.client.companyservice.company.presentation.dto.request.UpdateCompanyRequest;
 import com.winner.client.companyservice.company.presentation.dto.response.CompanyResponse;
+import com.winner.client.companyservice.company.presentation.dto.response.ListCompanyResponse;
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import java.util.List;
@@ -51,9 +52,9 @@ public class CompanyController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<CompanyResponse>>> getCompanyList() {
+  public ResponseEntity<ApiResponse<ListCompanyResponse>> getCompanyList() {
 
-    List<CompanyResponse> result = companyQueryService.getCompanyList();
+    ListCompanyResponse result = companyQueryService.getCompanyList();
 
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,result));
   }
@@ -74,9 +75,9 @@ public class CompanyController {
   }
 
   @GetMapping("/search")
-  public ResponseEntity<ApiResponse<List<CompanyResponse>>> getCompanyByName(@RequestParam String companyName) {
+  public ResponseEntity<ApiResponse<ListCompanyResponse>> getCompanyByName(@RequestParam String companyName) {
 
-    List<CompanyResponse> result = companyQueryService.getCompanyListByCompanyName(companyName);
+    ListCompanyResponse result = companyQueryService.getCompanyListByCompanyName(companyName);
 
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,result));
   }

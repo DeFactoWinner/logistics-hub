@@ -22,10 +22,4 @@ public record CreateCompanyRequest(
     Type type
 ) {
 
-  public static CreateCompanyRequest from(
-      String name, String address, String addressDetail, UUID hubId, Type type) {
-    return new CreateCompanyRequest(name, address, addressDetail, hubId, type);
-  }
-
-
 }

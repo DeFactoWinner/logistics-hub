@@ -1,6 +1,6 @@
 package com.winner.client.companyservice.company.application.service.impl;
 
-import com.winner.client.companyservice.common.exception.BusinessException;
+import com.winner.client.global.exception.BusinessException;
 import com.winner.client.companyservice.common.exception.CompanyErrorCode;
 import com.winner.client.companyservice.company.application.service.CompanyCommandService;
 import com.winner.client.companyservice.company.domain.entity.Company;

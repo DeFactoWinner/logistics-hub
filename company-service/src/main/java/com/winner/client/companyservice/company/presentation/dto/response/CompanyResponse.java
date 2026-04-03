@@ -5,6 +5,7 @@ import com.winner.client.companyservice.company.domain.vo.Type;
 import java.util.UUID;
 
 public record CompanyResponse(
+    UUID companyId,
     String name,
     String address,
     String addressDetail,
@@ -14,6 +15,7 @@ public record CompanyResponse(
 
   public static CompanyResponse from(Company company){
     return new CompanyResponse(
+        company.getId(),
         company.getCompanyName(),
         company.getAddress().getAddress(),
         company.getAddress().getAddressDetail(),
