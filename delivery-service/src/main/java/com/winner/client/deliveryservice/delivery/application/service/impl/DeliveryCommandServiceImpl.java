@@ -4,9 +4,9 @@ import com.winner.client.deliveryservice.common.exception.delivery.DeliveryError
 import com.winner.client.deliveryservice.delivery.application.dto.command.CreateDeliveryCommand;
 import com.winner.client.deliveryservice.delivery.application.dto.command.CreateDeliveryRouteCommand;
 import com.winner.client.deliveryservice.delivery.application.dto.external.HubRouteInfo;
+import com.winner.client.deliveryservice.delivery.application.dto.result.CreateDeliveryResult;
 import com.winner.client.deliveryservice.delivery.application.port.HubRoutePort;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryCommandService;
-import com.winner.client.deliveryservice.delivery.application.service.DeliveryRouteCommandService;
 import com.winner.client.deliveryservice.delivery.application.validator.DeliveryAccessValidator;
 import com.winner.client.deliveryservice.delivery.domain.entity.Delivery;
 import com.winner.client.deliveryservice.delivery.domain.entity.DeliveryRoute;
@@ -31,7 +31,11 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
   private final DeliveryAccessValidator validator;
 
   @Override
-  public UUID createDelivery(CreateDeliveryCommand command) {
+  public CreateDeliveryResult createDelivery(CreateDeliveryCommand command) {
+    if(deliveryRepository.findByOrdersId(command.ordersId())){
+      throw new BusinessException(DeliveryErrorCode.ALREADY_DELIVERY_ASSIGNED);
+    }
+
     Delivery delivery =
         Delivery.create(command.ordersId(), command.hubRoute(),
             command.receiver(), command.address(), null);
@@ -47,7 +51,7 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
     });
 
     deliveryRepository.save(delivery);
-    return delivery.getId();
+    return CreateDeliveryResult.from(delivery);
   }
 
   @Override
