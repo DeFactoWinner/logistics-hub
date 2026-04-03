@@ -1,4 +1,4 @@
-package com.winner.client.deliveryservice.deliverymanagercompany.infrastructure;
+package com.winner.client.deliveryservice.deliverymanagercompany.infrastructure.repositroy;
 
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.entity.DeliveryManagerCompany;
 import java.util.Optional;
