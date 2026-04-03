@@ -53,13 +53,9 @@ public class AuthCommandServiceImpl implements AuthCommandService {
     if (!user.isCorrectPassword(command.password(), passwordEncoder)) {
       throw new BusinessException(UserErrorCode.LOGIN_FAILED);
     }
-    System.out.println(user);
-    System.out.println(user.getApprovalStatus().name());
-
     if (!user.isApprove()) {
       throw new BusinessException(UserErrorCode.USER_NOT_APPROVED);
     }
-
     String accessToken = jwtTokenProvider.createAccessToken(
         user.getId(),
         user.getRoleName(),
