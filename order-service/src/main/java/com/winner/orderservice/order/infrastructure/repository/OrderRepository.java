@@ -15,8 +15,5 @@ public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecific
 
   @Query("SELECT o FROM Order o WHERE o.id = :id AND o.deletedAt IS NULL")
   Optional<Order> findActiveById(@Param("id") UUID id);
-
-  @Query("SELECT o FROM Order o WHERE o.deletedAt IS NULL AND o.status = :status")
-  Page<Order> findAllActiveByStatus(@Param("status") OrderStatus status, Pageable pageable);
 }
 

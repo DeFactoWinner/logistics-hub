@@ -7,19 +7,13 @@ import com.winner.orderservice.order.presentation.dto.request.CreateOrderRequest
 import com.winner.orderservice.order.presentation.dto.request.UpdateOrderRequest;
 import com.winner.orderservice.order.presentation.dto.response.OrderResponse;
 import com.winner.orderservice.order.application.service.OrderCommandService;
-import com.winner.orderservice.order.application.service.OrderQueryService;
 import com.winner.orderservice.order.application.dto.command.CreateOrderCommand;
 import com.winner.orderservice.order.application.dto.command.UpdateOrderCommand;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
   private final OrderCommandService orderCommandService;
-  private final OrderQueryService orderQueryService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<OrderResponse>> createOrder(
