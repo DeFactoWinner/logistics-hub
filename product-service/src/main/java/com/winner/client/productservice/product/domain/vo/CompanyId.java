@@ -1,5 +1,7 @@
 package com.winner.client.productservice.product.domain.vo;
 
+import com.winner.client.global.exception.BusinessException;
+import com.winner.client.productservice.common.exception.ProductErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.UUID;
@@ -26,7 +28,7 @@ public class CompanyId {
 
   private void validate(UUID companyId) {
     if (companyId == null) {
-      throw new IllegalArgumentException("id는 필수값입니다.");
+      throw new BusinessException(ProductErrorCode.COMPANY_ID_REQUIRED);
     }
   }
 
