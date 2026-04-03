@@ -1,4 +1,4 @@
-package com.winner.client.deliveryservice.deliverymanagercompany.application.result;
+package com.winner.client.deliveryservice.deliverymanagercompany.application.dto.result;
 
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.entity.DeliveryManagerCompany;
 import java.time.LocalDateTime;
