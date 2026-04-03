@@ -4,7 +4,6 @@ import com.winner.client.global.exception.BusinessException;
 import com.winner.client.userservice.common.exception.UserErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import java.util.regex.Pattern;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class PhoneNumber {
 
-  private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("^\\d+$");
   @Column(name = "phone_number", length = 13, nullable = false)
   private String number;
 
@@ -23,7 +21,7 @@ public class PhoneNumber {
   }
 
   private static void validate(String phoneNumber) {
-    if (phoneNumber == null || !PHONE_NUMBER_PATTERN.matcher(phoneNumber).matches()) {
+    if (phoneNumber == null) {
       throw new BusinessException(UserErrorCode.INVALID_INPUT_VALUE);
     }
     try {

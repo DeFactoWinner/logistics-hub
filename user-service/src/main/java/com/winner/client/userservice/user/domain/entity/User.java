@@ -1,6 +1,8 @@
 package com.winner.client.userservice.user.domain.entity;
 
 import com.winner.client.global.entity.BaseAuditEntity;
+import com.winner.client.global.exception.BusinessException;
+import com.winner.client.userservice.common.exception.UserErrorCode;
 import com.winner.client.userservice.user.domain.enums.ApprovalStatusType;
 import com.winner.client.userservice.user.domain.enums.UserStatusType;
 import com.winner.client.userservice.user.domain.vo.Password;
@@ -52,16 +54,50 @@ public class User extends BaseAuditEntity {
   @Embedded
   private UserRole userRole;
 
-  public User(String username, String name, Password passwordHash, PhoneNumber phoneNumber) {
-    this.name = name;
-    this.passwordHash = passwordHash;
-    this.approvalStatus = ApprovalStatusType.PENDING;
-    this.userStatus = UserStatusType.INACTIVE;
+  public static User create(
+      String username, String name, Password passwordHash,
+      PhoneNumber phoneNumber, String slackId, UserRole userRole
+  ) {
+    User user = new User();
+    user.username = username;
+    user.name = name;
+    user.passwordHash = passwordHash;
+    user.phoneNumber = phoneNumber;
+    user.userRole = userRole;
+    user.slackId = slackId;
+    user.approvalStatus = ApprovalStatusType.PENDING;
+    user.userStatus = UserStatusType.INACTIVE;
+    return user;
   }
 
-  public User encodePassword(final PasswordEncoder encoder) {
-    this.passwordHash = Password.encode(passwordHash.getValue(), encoder);
-    return this;
+  public void assignRole(UserRole userRole) {
+    this.userRole = userRole;
+  }
+
+  public boolean isApprove() {
+    return approvalStatus == ApprovalStatusType.APPROVED;
+  }
+
+  public boolean isActive() {
+    return userStatus == UserStatusType.ACTIVE;
+  }
+
+  public String getRoleName() {
+    if (userRole == null || userRole.getRole() == null) {
+      throw new BusinessException(UserErrorCode.INVALID_ROLE);
+    }
+    return userRole.getRole().name();
+  }
+
+  public UUID getReferenceId() {
+    if (userRole == null) {
+      return null;
+    }
+    return userRole.getReferenceId();
+  }
+
+  public boolean isCorrectPassword(String password, PasswordEncoder passwordEncoder) {
+    return passwordHash.matches(password, passwordEncoder);
   }
 
   public void approve() {
