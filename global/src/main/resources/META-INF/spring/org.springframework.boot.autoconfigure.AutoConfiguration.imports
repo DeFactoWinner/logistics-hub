@@ -1,0 +1,3 @@
+com.winner.client.global.config.GlobalWebConfig
+com.winner.client.global.config.JpaAuditingConfig
+com.winner.client.global.config.QuerydslConfig
