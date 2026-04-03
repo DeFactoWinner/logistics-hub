@@ -69,6 +69,7 @@ public class Order extends BaseAuditEntity {
     validateNotNull(snapshot);
     validateNotNull(orderDetail);
     validateNotNull(hubId);
+    validateNotNull(orderedAt);
 
     Order order = new Order();
     order.participants = participants;
