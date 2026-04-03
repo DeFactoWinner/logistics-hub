@@ -1,4 +1,4 @@
-package com.winner.client.deliveryservice.deliverymanagercompany.presentation.requests;
+package com.winner.client.deliveryservice.deliverymanagercompany.presentation.dto.requests;
 
 
 import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.command.DeliveryManagerCompanyRegistrationCommand;
