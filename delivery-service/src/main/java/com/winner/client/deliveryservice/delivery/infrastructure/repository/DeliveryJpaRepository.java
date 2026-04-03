@@ -27,4 +27,9 @@ public class DeliveryJpaRepository implements DeliveryRepository {
   public void save(Delivery delivery) {
     deliveryJpaRepository.save(delivery);
   }
+
+  @Override
+  public boolean findByOrdersId(UUID ordersId) {
+    return deliveryJpaRepository.existsByOrdersId(ordersId);
+  }
 }
