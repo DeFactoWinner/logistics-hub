@@ -1,6 +1,6 @@
 package com.winner.client.deliveryservice.delivery.presentation.controller;
 
-import com.winner.client.deliveryservice.delivery.application.dto.result.FindDeliveryResult;
+import com.winner.client.deliveryservice.delivery.application.dto.query.SearchDeliveryQuery;
 import com.winner.client.deliveryservice.delivery.application.dto.result.SearchDeliveryResult;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryCommandService;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryQueryService;
@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,8 +40,10 @@ public class DeliveryController {
       @RequestHeader("X-User-Role") String userRole,
       @RequestHeader("X-Reference-Id") UUID referenceId
   ) {
-    Page<SearchDeliveryResult> resultPage =
-        deliveryQueryService.getDeliveryPage(pageRequest, keyword, deliveryStatus, userId, userRole, referenceId);
+    SearchDeliveryQuery query =
+        SearchDeliveryQuery.of(userId, userRole, referenceId, keyword, deliveryStatus, pageRequest);
+
+    Page<SearchDeliveryResult> resultPage = deliveryQueryService.getDeliveryPage(query);
     Page<DeliveryInfoResponse> infoPage = resultPage.map(DeliveryInfoResponse::from);
     PageResponse<DeliveryInfoResponse> response = PageResponse.of(infoPage);
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
