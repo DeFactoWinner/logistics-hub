@@ -1,6 +1,8 @@
 package com.winner.client.productservice.product.domain.entity;
 
 import com.winner.client.global.entity.BaseAuditEntity;
+import com.winner.client.global.exception.BusinessException;
+import com.winner.client.productservice.common.exception.ProductErrorCode;
 import com.winner.client.productservice.product.domain.vo.CompanyId;
 import com.winner.client.productservice.product.domain.vo.HubId;
 import com.winner.client.productservice.product.domain.vo.StatusEnum;
@@ -12,13 +14,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
-@Table(name = "p_products")
+@Table(name = "p_products",
+uniqueConstraints = {
+    @UniqueConstraint(name = "uk_product_name_company_id", columnNames = {"name","company_id"})
+})
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -57,7 +63,7 @@ public class Product extends BaseAuditEntity {
   public static Product create(String name, CompanyId companyId, HubId hubId, String description) {
 
     if(name == null || name.isBlank()){
-      throw new IllegalArgumentException("이름은 필수입니다.");
+      throw new BusinessException(ProductErrorCode.COMPANY_ID_REQUIRED);
     }
 
     return new Product(name,companyId,hubId,description,StatusEnum.INACTIVE);
