@@ -19,6 +19,11 @@ public class HubId {
     validate(hubId);
     this.hubId = hubId;
   }
+
+  public static HubId of(UUID hubId){
+    return new HubId(hubId);
+  }
+
   private void validate(UUID hubId) {
     if (hubId == null) {
       throw new IllegalArgumentException("id는 필수값입니다.");

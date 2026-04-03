@@ -19,6 +19,11 @@ public class CompanyId {
     validate(companyId);
     this.companyId = companyId;
   }
+
+  public static CompanyId of(UUID companyId){
+    return new CompanyId(companyId);
+  }
+
   private void validate(UUID companyId) {
     if (companyId == null) {
       throw new IllegalArgumentException("id는 필수값입니다.");
