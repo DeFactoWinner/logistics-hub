@@ -1,4 +1,4 @@
-package com.winner.client.deliveryservice.deliverymanagerhub.infrastructure;
+package com.winner.client.deliveryservice.deliverymanagerhub.infrastructure.repository;
 
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.entity.DeliveryManagerHub;
 import java.util.List;
