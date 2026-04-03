@@ -1,6 +1,7 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.domain.repository;
 
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.entity.DeliveryManagerHub;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,4 +12,5 @@ public interface DeliveryManagerHubRepository {
 	Long countByDeletedByIsNull();
 	Optional<DeliveryManagerHub> findFirstByOrderByAssignmentOrderDesc();
 	Optional<DeliveryManagerHub> findByUserId(UUID userId);
+	List<DeliveryManagerHub> findAllAvailableManagers();
 }
