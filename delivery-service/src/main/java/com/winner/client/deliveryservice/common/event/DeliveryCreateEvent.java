@@ -1,5 +1,6 @@
 package com.winner.client.deliveryservice.common.event;
 
+import com.winner.client.deliveryservice.deliverymanagerhub.application.commnad.AssignEventCommand;
 import java.util.UUID;
 
 public record DeliveryCreateEvent(
@@ -7,4 +8,7 @@ public record DeliveryCreateEvent(
 	UUID orderId
 ) {
 
+	public AssignEventCommand toCommand() {
+		return new AssignEventCommand(this.deliveryId, this.orderId);
+	}
 }

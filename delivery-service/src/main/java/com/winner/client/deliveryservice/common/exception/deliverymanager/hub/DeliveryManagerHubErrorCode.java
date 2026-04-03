@@ -15,7 +15,9 @@ public enum DeliveryManagerHubErrorCode implements ErrorCode {
 	NOT_FOUND_HUB_DELIVERY_MANAGER("ERROR_653", HttpStatus.NOT_FOUND,
 		"존재하지 않는 허브배송담당자 입니다."),
 	DELIVERY_MANAGER_IN_PROGRESS("ERROR_654", HttpStatus.BAD_REQUEST,
-		"업무 진행 중엔 탈퇴가 불가능 합니다.")
+		"업무 진행 중엔 탈퇴가 불가능 합니다."),
+	NOT_FOUND_AVAILABLE_HUB_DELIVERY_MANAGERS("ERROR_655", HttpStatus.NOT_FOUND,
+		"배정 가능한 허브 배송담당자를 찾을 수 없습니다."),
 	;
 
 	private final String code;
