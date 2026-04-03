@@ -22,4 +22,9 @@ public class DeliveryJpaRepository implements DeliveryRepository {
   public Optional<Delivery> findById(UUID id) {
     return deliveryJpaRepository.findById(id);
   }
+
+  @Override
+  public void save(Delivery delivery) {
+    deliveryJpaRepository.save(delivery);
+  }
 }
