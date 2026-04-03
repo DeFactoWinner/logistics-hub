@@ -1,5 +1,7 @@
 package com.winner.client.deliveryservice.delivery.presentation.controller;
 
+import com.winner.client.deliveryservice.delivery.application.dto.result.FindDeliveryResult;
+import com.winner.client.deliveryservice.delivery.application.dto.result.SearchDeliveryResult;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryCommandService;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryQueryService;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryCommandResponse;
@@ -12,6 +14,7 @@ import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/deliveries")
+@RequestMapping("/api/v1/deliveries")
 @RequiredArgsConstructor
 public class DeliveryController {
   private final DeliveryQueryService deliveryQueryService;
@@ -38,8 +41,10 @@ public class DeliveryController {
       @RequestHeader("X-User-Role") String userRole,
       @RequestHeader("X-Reference-Id") UUID referenceId
   ) {
-    PageResponse<DeliveryInfoResponse> response =
+    Page<SearchDeliveryResult> resultPage =
         deliveryQueryService.getDeliveryPage(pageRequest, keyword, deliveryStatus, userId, userRole, referenceId);
+    Page<DeliveryInfoResponse> infoPage = resultPage.map(DeliveryInfoResponse::from);
+    PageResponse<DeliveryInfoResponse> response = PageResponse.of(infoPage);
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }
@@ -47,7 +52,7 @@ public class DeliveryController {
   @GetMapping("/{deliveryId}")
   public ResponseEntity<ApiResponse<GetDeliveryResponse>> getDeliveryDetail(@PathVariable UUID deliveryId) {
     GetDeliveryResponse response =
-        deliveryQueryService.getDeliveryDetail(deliveryId);
+        GetDeliveryResponse.from(deliveryQueryService.getDeliveryDetail(deliveryId));
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }
@@ -55,7 +60,7 @@ public class DeliveryController {
   @GetMapping("/{deliveryId}/routes")
   public ResponseEntity<ApiResponse<ListDeliveryRouteResponse>> getDeliveryRoutes(@PathVariable UUID deliveryId){
     ListDeliveryRouteResponse response =
-        deliveryQueryService.getDeliveryRoutes(deliveryId);
+        ListDeliveryRouteResponse.from(deliveryQueryService.getDeliveryRoutes(deliveryId));
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }
