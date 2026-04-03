@@ -1,8 +1,11 @@
 package com.winner.client.userservice.user.application.service.impl;
 
+import com.winner.client.global.config.jwt.JwtTokenProvider;
 import com.winner.client.global.exception.BusinessException;
 import com.winner.client.userservice.common.exception.UserErrorCode;
+import com.winner.client.userservice.user.application.command.LoginCommand;
 import com.winner.client.userservice.user.application.command.SignupCommand;
+import com.winner.client.userservice.user.application.result.LoginResult;
 import com.winner.client.userservice.user.application.result.SignupResult;
 import com.winner.client.userservice.user.application.service.AuthCommandService;
 import com.winner.client.userservice.user.domain.entity.User;
@@ -22,10 +25,11 @@ public class AuthCommandServiceImpl implements AuthCommandService {
 
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
+  private final JwtTokenProvider jwtTokenProvider;
 
   @Transactional
   public SignupResult signup(SignupCommand command) {
-    if (userRepository.findByUsernameAndDeletedAtNull(command.username())) {
+    if (userRepository.existsByUsernameAndDeletedAtNull(command.username())) {
       throw new BusinessException(UserErrorCode.DUPLICATE_USERNAME);
     }
     User user = User.create(
@@ -40,5 +44,25 @@ public class AuthCommandServiceImpl implements AuthCommandService {
         )
     );
     return SignupResult.from(userRepository.save(user));
+  }
+
+  public LoginResult login(LoginCommand command) {
+    User user = userRepository.findByUsernameAndDeletedAtNull(command.username())
+        .orElseThrow(() -> new BusinessException(UserErrorCode.USER_NOT_FOUND));
+
+    if (!user.isCorrectPassword(command.password(), passwordEncoder)) {
+      throw new BusinessException(UserErrorCode.LOGIN_FAILED);
+    }
+    if (!user.isApprove()) {
+      throw new BusinessException(UserErrorCode.USER_NOT_APPROVED);
+    }
+    String accessToken = jwtTokenProvider.createAccessToken(
+        user.getId(),
+        user.getRoleName(),
+        user.getReferenceId(),
+        user.isActive());
+
+    String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
+    return LoginResult.from(user.getId(), accessToken, refreshToken);
   }
 }

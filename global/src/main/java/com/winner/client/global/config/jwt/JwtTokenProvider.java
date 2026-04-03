@@ -6,7 +6,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -33,18 +32,18 @@ public class JwtTokenProvider {
     this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
   }
 
-  public String createAccessToken(UUID userId, String role, UUID referenceId,boolean userStatus) {
+  public String createAccessToken(UUID userId, String role, UUID referenceId, boolean userStatus) {
     Date now = new Date();
     Date expirationDate = new Date(now.getTime() + accessExpirationTime);
 
     return Jwts.builder()
-        .setSubject(String.valueOf(userId))
+        .subject(String.valueOf(userId))
         .claim("role", role)
         .claim("referenceId", referenceId)
-        .claim("status",userStatus)
-        .setIssuedAt(now)
-        .setExpiration(expirationDate)
-        .signWith(secretKey, SignatureAlgorithm.HS256)
+        .claim("status", userStatus)
+        .issuedAt(now)
+        .expiration(expirationDate)
+        .signWith(secretKey)
         .compact();
   }
 
@@ -52,7 +51,7 @@ public class JwtTokenProvider {
     try {
       Date expiration = getClaims(token).getExpiration();
       long now = new Date().getTime();
-      return expiration.getTime() - now;
+      return Math.max(0, expiration.getTime() - now);
     } catch (Exception e) {
       return 0;
     }
@@ -63,24 +62,27 @@ public class JwtTokenProvider {
     Date expiryDate = new Date(now.getTime() + refreshExpirationTime);
 
     return Jwts.builder()
-        .setSubject(String.valueOf(userId))
-        .setIssuedAt(now)
-        .setExpiration(expiryDate)
-        .signWith(secretKey, SignatureAlgorithm.HS256)
+        .subject(String.valueOf(userId))
+        .issuedAt(now)
+        .expiration(expiryDate)
+        .signWith(secretKey)
         .compact();
   }
 
   public Claims getClaims(String token) {
-    return Jwts.parserBuilder()
-        .setSigningKey(secretKey)
+    return Jwts.parser()
+        .verifyWith(secretKey)
         .build()
-        .parseClaimsJws(token)
-        .getBody();
+        .parseSignedClaims(token)
+        .getPayload();
   }
 
   public boolean validateToken(String token) {
     try {
-      Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+      Jwts.parser()
+          .verifyWith(secretKey)
+          .build()
+          .parseSignedClaims(token);
       return true;
     } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
       throw new BusinessException(JwtTokenErrorCode.INVALID_SIGNATURE);
