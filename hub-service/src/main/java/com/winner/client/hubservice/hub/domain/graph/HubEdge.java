@@ -6,10 +6,12 @@ public class HubEdge {
 
     private final UUID to;
     private final double distance;
+    private final double time;
 
-    public HubEdge(UUID to, double distance) {
+    public HubEdge(UUID to, double distance, double time) {
         this.to = to;
         this.distance = distance;
+        this.time = time;
     }
 
     public UUID getTo() {
@@ -18,5 +20,9 @@ public class HubEdge {
 
     public double getDistance() {
         return distance;
+    }
+
+    public double getTime() {
+        return time;
     }
 }

@@ -13,18 +13,22 @@ public class DijkstraPathFinder {
 
     public Result findShortestPath(HubGraph graph, UUID start, UUID end) {
 
-        Map<UUID, Double> distance = new HashMap<>();
+        if (start.equals(end)) {
+            return new Result(List.of(start), 0.0);
+        }
+
+        Map<UUID, Double> timeMap = new HashMap<>();
         Map<UUID, UUID> prev = new HashMap<>();
 
         PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingDouble(n -> n.dist));
 
-        distance.put(start, 0.0);
+        timeMap.put(start, 0.0);
         pq.offer(new Node(start, 0.0));
 
         while (!pq.isEmpty()) {
             Node current = pq.poll();
 
-            if (current.dist > distance.getOrDefault(current.id, Double.MAX_VALUE)) {
+            if (current.dist > timeMap.getOrDefault(current.id, Double.MAX_VALUE)) {
                 continue;
             }
 
@@ -33,14 +37,18 @@ public class DijkstraPathFinder {
             }
 
             for (HubEdge edge : graph.getEdges(current.id)) {
-                double newDist = current.dist + edge.getDistance();
+                double newDist = current.dist + edge.getTime();
 
-                if (newDist < distance.getOrDefault(edge.getTo(), Double.MAX_VALUE)) {
-                    distance.put(edge.getTo(), newDist);
+                if (newDist < timeMap.getOrDefault(edge.getTo(), Double.MAX_VALUE)) {
+                    timeMap.put(edge.getTo(), newDist);
                     prev.put(edge.getTo(), current.id);
                     pq.offer(new Node(edge.getTo(), newDist));
                 }
             }
+        }
+
+        if (!timeMap.containsKey(end)) {
+            return new Result(Collections.emptyList(), -1.0);
         }
 
         List<UUID> path = new ArrayList<>();
@@ -53,17 +61,17 @@ public class DijkstraPathFinder {
 
         Collections.reverse(path);
 
-        return new Result(path, distance.getOrDefault(end, -1.0));
+        return new Result(path, timeMap.get(end));
     }
 
     public static class Result {
 
         public final List<UUID> path;
-        public final double distance;
+        public final double totalTime;
 
-        public Result(List<UUID> path, double distance) {
+        public Result(List<UUID> path, double totalTime) {
             this.path = path;
-            this.distance = distance;
+            this.totalTime = totalTime;
         }
     }
 

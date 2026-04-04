@@ -9,5 +9,5 @@ public record HubNodeInfo(
     String toHubName,
     int sequence,
     double estimatedDistance,
-    int estimatedArrivalTime
+    double estimatedArrivalTime
 ) {}

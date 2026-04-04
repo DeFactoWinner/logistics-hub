@@ -42,7 +42,7 @@ public class HubRouteService {
                 .fromHubId(route.getRouteInfo().getFromHubId())
                 .toHubId(route.getRouteInfo().getToHubId())
                 .distance(route.getDistance().getValue())
-                .duration(route.getDuration().getMinutes())
+                .duration(route.getDuration().getValue())
                 .build())
             .toList();
     }
@@ -55,7 +55,7 @@ public class HubRouteService {
                 .fromHubId(route.getRouteInfo().getFromHubId())
                 .toHubId(route.getRouteInfo().getToHubId())
                 .distance(route.getDistance().getValue())
-                .duration(route.getDuration().getMinutes())
+                .duration(route.getDuration().getValue())
                 .build())
             .toList();
     }
