@@ -75,6 +75,10 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       DeliveryResponse delivery = deliveryFeignClient.createDelivery(deliveryReq).getData();
       order.linkDelivery(delivery.deliveryId());
       order.confirm();
+      if(delivery.assignedDeliveryPersonId() != null) {
+        order.startShipping();
+      }
+
     } catch (Exception e) {
       log.error("배송 생성 실패 orderId={}", order.getId(), e);
       try {
