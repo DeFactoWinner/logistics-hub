@@ -15,12 +15,14 @@ import java.util.Date;
 import java.util.UUID;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 @EnableConfigurationProperties(JwtProperties.class)
+@ConditionalOnProperty(name = "app.jwt.secret")
 public class JwtTokenProvider {
 
   private final JwtProperties jwtProperties;
