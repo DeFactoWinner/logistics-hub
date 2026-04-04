@@ -8,7 +8,7 @@ spring:
     password: ${POSTGRES_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     defer-datasource-initialization: true
     show-sql: false
     open-in-view: false
@@ -20,4 +20,20 @@ spring:
         jdbc.time_zone: Asia/Seoul
   sql:
     init:
-      mode: always
+      mode: never
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:17001/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+kakao :
+  api :
+    key : ${KAKAO_API_KEY}

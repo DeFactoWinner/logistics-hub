@@ -4,6 +4,8 @@ spring:
   profiles:
     include:
       - router
+      - jwt
+      - auth
   main:
     web-application-type: reactive
 
@@ -19,7 +21,7 @@ spring:
           max-active: 8
           max-idle: 8
           min-idle: 0
-          
+
 server:
   port: 17002
 

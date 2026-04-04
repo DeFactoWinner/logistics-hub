@@ -3,8 +3,8 @@ package com.winner.client.deliveryservice.deliverymanagercompany.application;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode.ALREADY_REGISTERED_COMPANY_DELIVERY_MANAGER;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode.NOT_FOUND_COMPANY_DELIVERY_MANAGER;
 
-import com.winner.client.deliveryservice.deliverymanagercompany.application.command.DeliveryManagerCompanyRegistrationCommand;
-import com.winner.client.deliveryservice.deliverymanagercompany.application.result.DeliveryManagerCompanyInfoResult;
+import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.command.DeliveryManagerCompanyRegistrationCommand;
+import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.result.DeliveryManagerCompanyInfoResult;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.entity.DeliveryManagerCompany;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.repository.DeliveryManagerCompanyRepository;
 import com.winner.client.global.exception.BusinessException;

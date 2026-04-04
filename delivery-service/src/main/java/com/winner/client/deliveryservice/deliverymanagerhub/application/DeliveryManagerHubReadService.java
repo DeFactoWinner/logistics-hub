@@ -2,7 +2,7 @@ package com.winner.client.deliveryservice.deliverymanagerhub.application;
 
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.NOT_FOUND_HUB_DELIVERY_MANAGER;
 
-import com.winner.client.deliveryservice.deliverymanagerhub.application.result.DeliveryManagerHubInfoResult;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryManagerHubInfoResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.repository.DeliveryManagerHubRepository;
 import com.winner.client.global.exception.BusinessException;
 import java.util.UUID;
