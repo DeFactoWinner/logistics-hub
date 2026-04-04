@@ -1,8 +1,8 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.application.message;
 
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryAssignResult;
 import java.util.UUID;
 
 public interface DeliveryMessagePort {
-	void failEventPublish(String message);
-	void successEventPublish(UUID deliveryId, UUID orderId);
+	void assignEventPublish(DeliveryAssignResult result);
 }
