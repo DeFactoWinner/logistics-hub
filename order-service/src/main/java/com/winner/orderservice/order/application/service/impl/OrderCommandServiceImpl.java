@@ -8,6 +8,7 @@ import com.winner.orderservice.order.application.dto.command.CreateOrderCommand;
 import com.winner.orderservice.order.application.dto.command.UpdateOrderCommand;
 import com.winner.orderservice.order.application.dto.result.OrderResult;
 import com.winner.orderservice.order.domain.entity.Order;
+import com.winner.orderservice.order.domain.enums.OrderStatus;
 import com.winner.orderservice.order.domain.vo.OrderDetail;
 import com.winner.orderservice.order.domain.vo.OrderParticipants;
 import com.winner.orderservice.order.domain.vo.OrderSnapshot;
@@ -165,6 +166,37 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     }
 
     return OrderResult.from(order);
+  }
+
+  @Override
+  public void internalAssignDeliveryPerson(UUID orderId, UUID deliveryPersonId) {
+    Order order = findActive(orderId);
+    order.assignDeliveryPerson(deliveryPersonId);
+    if (order.getStatus() == OrderStatus.CONFIRMED) {
+      order.startShipping();
+    }
+  }
+
+  @Override
+  public void internalCompleteOrder(UUID orderId) {
+    Order order = findActive(orderId);
+    order.complete();
+  }
+
+  @Override
+  public void internalCancelOrder(UUID orderId) {
+    Order order = findActive(orderId);
+    order.cancel();
+
+    UUID productId = order.getOrderDetail().getProductId();
+    Long count = order.getOrderDetail().getCount();
+    UUID deliveryId = order.getDeliveryId();
+
+    try {
+      productFeignClient.modifyStock(productId, new ModifyStockRequest(count));
+    } catch (Exception e) {
+      log.error("취소 재고 복원 실패 — 수동 처리 필요 orderId={}, productId={}", orderId, productId, e);
+    }
   }
 
   private Order findActive(UUID orderId) {
