@@ -13,6 +13,8 @@ import com.winner.orderservice.order.application.service.OrderQueryService;
 import com.winner.orderservice.order.application.dto.command.CreateOrderCommand;
 import com.winner.orderservice.order.application.dto.command.SearchOrderCommand;
 import com.winner.orderservice.order.application.dto.command.UpdateOrderCommand;
+import com.winner.client.global.pagination.CommonPageRequest;
+import com.winner.client.global.pagination.PageResponse;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -59,13 +61,13 @@ public class OrderController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<Page<OrderSummaryResponse>>> getOrders(
+  public ResponseEntity<ApiResponse<PageResponse<OrderSummaryResponse>>> getOrders(
       @ParameterObject OrderSearchCondition condition,
-      @PageableDefault(size = 10) Pageable pageable,
+      CommonPageRequest pageRequest,
       UserContext ctx
   ) {
-    return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,
-        orderQueryService.getOrders(SearchOrderCommand.from(condition), pageable, ctx).map(OrderSummaryResponse::fromResult)));
+    Page<OrderSummaryResponse> page = orderQueryService.getOrders(SearchOrderCommand.from(condition), pageRequest.toPageable(), ctx).map(OrderSummaryResponse::fromResult);
+    return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK, PageResponse.of(page)));
   }
 
   @PatchMapping("/{orderId}")

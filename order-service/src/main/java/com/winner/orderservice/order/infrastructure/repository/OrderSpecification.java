@@ -1,8 +1,8 @@
 package com.winner.orderservice.order.infrastructure.repository;
 
-import com.winner.orderservice.common.PageableUtils;
 import com.winner.orderservice.order.application.dto.command.SearchOrderCommand;
 import com.winner.orderservice.order.domain.entity.Order;
+import com.winner.client.global.pagination.PageSizePolicy;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,8 @@ public class OrderSpecification {
   }
 
   public static Pageable toPageable(Pageable original, SearchOrderCommand cond) {
-    int normalizedSize = PageableUtils.normalizeSize(original.getPageSize());
+    int normalizedSize = PageSizePolicy.normalize(original.getPageSize());
+
     String sortField = cond.resolvedSortBy();
     Sort sort = cond.isAscending()
         ? Sort.by(sortField).ascending()
