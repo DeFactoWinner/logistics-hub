@@ -1,5 +1,6 @@
 package com.winner.client.productservice.product.presentation;
 
+import com.winner.client.global.pagination.CommonPageRequest;
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import com.winner.client.productservice.product.application.service.ProductCommandService;
@@ -13,13 +14,10 @@ import com.winner.client.productservice.product.presentation.dto.response.Create
 import com.winner.client.productservice.product.presentation.dto.response.GetProductDetailResponse;
 import com.winner.client.productservice.product.presentation.dto.response.ListProductResponse;
 import com.winner.client.productservice.stock.application.service.StockQueryService;
-import com.winner.client.productservice.stock.application.service.dto.result.StockResult;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,10 +55,10 @@ public class ProductController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<ListProductResponse>> getProductList(Pageable Pageable){
-    Page<ProductDetailResult> result = productQueryService.getProductsDetailList(Pageable);
+  public ResponseEntity<ApiResponse<ListProductResponse>> getProductList(CommonPageRequest pageable){
+    Page<ProductDetailResult> result = productQueryService.getProductsDetailList(pageable);
 
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,
-        ListProductResponse.of(result,(long)result.getTotalElements())));
+        ListProductResponse.of(result)));
   }
 }

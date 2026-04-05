@@ -4,12 +4,13 @@ import com.winner.client.productservice.stock.application.service.StockCommandSe
 import com.winner.client.productservice.stock.application.service.dto.command.CreateStockCommand;
 import com.winner.client.productservice.stock.domain.entity.Stock;
 import com.winner.client.productservice.stock.domain.repository.StockRepository;
-import com.winner.client.productservice.stock.infrastructure.repository.StockRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class StockCommandServiceImpl implements StockCommandService {
 
   private final StockRepository stockRepository;
