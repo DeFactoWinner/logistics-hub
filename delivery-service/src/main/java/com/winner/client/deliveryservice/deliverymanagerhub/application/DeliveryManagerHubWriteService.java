@@ -67,7 +67,8 @@ public class DeliveryManagerHubWriteService implements DeliveryDeliveryManagerHu
 		try {
 			DeliveryManagerHub manager = selectAvailableManager();
 			manager.assignDelivery(command.deliveryId());
-			deliveryMessagePort.assignEventPublish(DeliveryAssignResult.success(command));
+			deliveryMessagePort
+				.assignEventPublish(DeliveryAssignResult.success(command, manager.getName()));
 		} catch (BusinessException e) {
 			log.warn("DeliveryManager assignment failure : {}", e.getMessage());
 			deliveryMessagePort.assignEventPublish(DeliveryAssignResult.fail(e.getMessage()));

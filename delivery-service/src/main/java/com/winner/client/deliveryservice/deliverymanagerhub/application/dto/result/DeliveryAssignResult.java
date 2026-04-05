@@ -12,12 +12,14 @@ public class DeliveryAssignResult {
 
 	private final boolean success;
 	private final String errorMessage;
+	private final String deliveryManagerName;
 	private final UUID deliveryId;
 	private final UUID orderId;
 
-	public static DeliveryAssignResult success(AssignEventCommand command) {
+	public static DeliveryAssignResult success(AssignEventCommand command, String deliveryManagerName) {
 		return DeliveryAssignResult.builder()
 			.success(true)
+			.deliveryManagerName(deliveryManagerName)
 			.deliveryId(command.deliveryId())
 			.orderId(command.orderId())
 			.build();
