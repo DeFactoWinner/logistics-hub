@@ -75,6 +75,7 @@ public class DeliveryManagerCompany extends BaseAuditEntity {
 		if (!this.deliveryManagerStatus.isAvailable()) {
 			throw new BusinessException(NOT_AVAILABLE);
 		}
+		this.deliveryId = new DeliveryId(deliveryId);
 		this.deliveryManagerStatus = DeliveryManagerStatus.IN_DELIVERY;
 	}
 
