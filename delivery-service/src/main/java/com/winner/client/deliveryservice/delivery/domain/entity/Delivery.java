@@ -128,6 +128,15 @@ public class Delivery extends BaseAuditEntity {
     return hubRoute.isRelatedTo(hubId);
   }
 
+  public boolean isSameHub() {
+    return hubRoute.isSameHub();
+  }
+
+  public void updateDeliveryManagerInfo(UUID deliveryManagerId, String DeliveryManagerName) {
+    this.deliveryManagerId = deliveryManagerId;
+    this.DeliveryManagerName = DeliveryManagerName;
+  }
+
   private Delivery(
       UUID ordersId, HubRoute hubRoute, Receiver receiver,
       Address address, Location location) {
