@@ -2,7 +2,7 @@ package com.winner.client.deliveryservice.deliverymanagerhub.infrastructure.mess
 
 import com.winner.client.deliveryservice.common.event.deliverymanager.hub.AssignHubDeliveryManagerFailEvent;
 import com.winner.client.deliveryservice.common.event.deliverymanager.hub.AssignHubDeliveryManagerSuccessEvent;
-import com.winner.client.deliveryservice.common.event.DeliveryCompleteEvent;
+import com.winner.client.deliveryservice.common.event.deliverymanager.hub.DeliveryCompleteEvent;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryAssignResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryCompleteResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryMessagePort;
