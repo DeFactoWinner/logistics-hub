@@ -28,4 +28,8 @@ public class HubRoute {
     if (hubId == null) return false;
     return originHubId.equals(hubId) || destinationHubId.equals(hubId);
   }
+
+  public boolean isSameHub() {
+    return originHubId.equals(destinationHubId);
+  }
 }

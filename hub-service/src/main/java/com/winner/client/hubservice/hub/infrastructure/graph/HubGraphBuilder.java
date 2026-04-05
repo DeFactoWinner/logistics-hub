@@ -26,15 +26,16 @@ public class HubGraphBuilder {
             var to = routeInfo.getToHubId();
 
             double distance = route.getDistance().getValue();
+            double time = route.getDuration().getValue();
 
             graph.addEdge(
                 from,
-                new HubEdge(to, distance)
+                new HubEdge(to, distance, time)
             );
 
             graph.addEdge(
                 to,
-                new HubEdge(from, distance)
+                new HubEdge(from, distance, time)
             );
         }
 

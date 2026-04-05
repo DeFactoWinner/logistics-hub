@@ -4,5 +4,6 @@ import java.util.List;
 
 public record HubRoutePathResponse(
     List<HubNodeInfo> nodes,
-    int count
+    int count,
+    double totalTime
 ) {}

@@ -2,8 +2,8 @@ package com.winner.client.deliveryservice.deliverymanagerhub.infrastructure.mess
 
 import com.winner.client.deliveryservice.common.event.AssignFailEvent;
 import com.winner.client.deliveryservice.common.event.AssignSuccessEvent;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryAssignResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryMessagePort;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -12,15 +12,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DeliveryMessagePortImpl implements DeliveryMessagePort {
 
-	private final ApplicationEventPublisher	publisher;
+	private final ApplicationEventPublisher publisher;
 
 	@Override
-	public void failEventPublish(String message) {
-		publisher.publishEvent(AssignFailEvent.from(message));
-	}
-
-	@Override
-	public void successEventPublish(UUID deliveryId, UUID orderId) {
-		publisher.publishEvent(AssignSuccessEvent.of(deliveryId, orderId));
+	public void assignEventPublish(DeliveryAssignResult result) {
+		if (result.isSuccess()) {
+			publisher.publishEvent(
+				AssignSuccessEvent.of(result.getDeliveryId(), result.getOrderId())
+			);
+		} else {
+			publisher.publishEvent(AssignFailEvent.from(result.getErrorMessage()));
+		}
 	}
 }

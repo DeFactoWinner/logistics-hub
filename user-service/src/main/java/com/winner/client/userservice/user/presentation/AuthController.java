@@ -4,8 +4,9 @@ import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import com.winner.client.userservice.user.application.service.AuthCommandService;
 import com.winner.client.userservice.user.presentation.request.LoginRequest;
+import com.winner.client.userservice.user.presentation.request.RefreshTokenRequest;
 import com.winner.client.userservice.user.presentation.request.SignupRequest;
-import com.winner.client.userservice.user.presentation.response.LoginResponse;
+import com.winner.client.userservice.user.presentation.response.AuthTokenResponse;
 import com.winner.client.userservice.user.presentation.response.SignupResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<ApiResponse<LoginResponse>> login
+  public ResponseEntity<ApiResponse<AuthTokenResponse>> login
       (@Valid @RequestBody LoginRequest loginRequest) {
     return ResponseEntity
         .status(
@@ -48,8 +49,28 @@ public class AuthController {
         .body(
             ApiResponse.success(
                 CommonSuccessCode.OK,
-                LoginResponse.from(
+                AuthTokenResponse.from(
                     authCommandService.login(LoginRequest.toCommand(loginRequest))
+                )
+            )
+        );
+  }
+
+  @PostMapping("/token/refresh")
+  public ResponseEntity<ApiResponse<AuthTokenResponse>> refreshToken(
+      @Valid @RequestBody RefreshTokenRequest tokenRequest
+  ) {
+    return ResponseEntity
+        .status(
+            CommonSuccessCode.OK.getStatus()
+        )
+        .body(
+            ApiResponse.success(
+                CommonSuccessCode.OK,
+                AuthTokenResponse.from(
+                    authCommandService.refreshToken(
+                        RefreshTokenRequest.toCommand(tokenRequest)
+                    )
                 )
             )
         );

@@ -3,7 +3,11 @@ package com.winner.client.productservice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(
+		scanBasePackages = {
+				"com.winner.client.productservice",
+				"com.winner.client.global"}
+)
 public class ProductServiceApplication {
 
 	public static void main(String[] args) {
