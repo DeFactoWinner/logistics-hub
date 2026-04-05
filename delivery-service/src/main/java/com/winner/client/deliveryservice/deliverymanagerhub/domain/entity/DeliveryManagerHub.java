@@ -1,6 +1,8 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.domain.entity;
 
+import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.DELIVERY_ID_MISMATCH;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.DELIVERY_MANAGER_IN_PROGRESS;
+import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.DELIVERY_NOT_FOUND;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.HUB_DELIVERY_MANAGER_OVER_CAPACITY;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.NOT_AVAILABLE;
 
@@ -75,7 +77,13 @@ public class DeliveryManagerHub extends BaseAuditEntity {
 		this.deliveryManagerStatus = DeliveryManagerStatus.IN_DELIVERY;
 	}
 
-	public void completeDelivery() {
+	public void completeDelivery(UUID deliveryId) {
+		if (!getNullSafeDeliveryId().isAssigned()) {
+			throw new BusinessException(DELIVERY_NOT_FOUND);
+		}
+		if (!this.deliveryId.isMatched(deliveryId)) {
+			throw new BusinessException(DELIVERY_ID_MISMATCH);
+		}
 		this.lastDeliveryCompletedTime = LocalDateTime.now();
 		this.deliveryManagerStatus = DeliveryManagerStatus.AVAILABLE;
 		this.deliveryId = new DeliveryId(null);
@@ -100,6 +108,10 @@ public class DeliveryManagerHub extends BaseAuditEntity {
 	public String getName() { return user.getName(); }
 	public Long getAssignmentOrder() { return assignmentOrder.getValue(); }
 	public UUID getDeliveryId() {
-		return deliveryId != null ? deliveryId.getValue() : new DeliveryId(null).getValue();
+		return getNullSafeDeliveryId().getValue();
+	}
+
+	private DeliveryId getNullSafeDeliveryId() {
+		return deliveryId != null ? this.deliveryId : new DeliveryId(null);
 	}
 }

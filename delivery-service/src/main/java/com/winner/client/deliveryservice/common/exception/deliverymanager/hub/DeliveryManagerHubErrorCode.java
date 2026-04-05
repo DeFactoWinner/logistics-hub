@@ -23,9 +23,12 @@ public enum DeliveryManagerHubErrorCode implements ErrorCode {
 	USER_NAME_CANNOT_BE_NULL("ERROR_657", HttpStatus.BAD_REQUEST,
 		"유저 이름은 null 일 수 없습니다."),
 	NOT_AVAILABLE("ERROR_658", HttpStatus.CONFLICT,
-		"배송 가능상태가 아닙니다.")
+		"배송 가능상태가 아닙니다."),
+	DELIVERY_NOT_FOUND("ERROR_659", HttpStatus.BAD_REQUEST,
+		"진행중인 배송이 없습니다."),
+	DELIVERY_ID_MISMATCH("ERROR_660", HttpStatus.BAD_REQUEST,
+		"배정된 배송 건이 아니므로 완료할 수 없습니다.")
 	;
-
 
 	private final String code;
 	private final HttpStatus status;

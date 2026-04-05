@@ -2,7 +2,9 @@ package com.winner.client.deliveryservice.deliverymanagerhub.infrastructure.mess
 
 import com.winner.client.deliveryservice.common.event.AssignFailEvent;
 import com.winner.client.deliveryservice.common.event.AssignSuccessEvent;
+import com.winner.client.deliveryservice.common.event.DeliveryCompleteEvent;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryAssignResult;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryCompleteResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryMessagePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -23,5 +25,10 @@ public class DeliveryMessagePortImpl implements DeliveryMessagePort {
 		} else {
 			publisher.publishEvent(AssignFailEvent.from(result.getErrorMessage()));
 		}
+	}
+
+	@Override
+	public void deliveryCompleteEventPublish(DeliveryCompleteResult result) {
+		publisher.publishEvent(DeliveryCompleteEvent.from(result));
 	}
 }
