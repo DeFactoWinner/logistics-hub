@@ -21,7 +21,7 @@ public class DeliveryManagerCompanyJpaRepository implements
 
 	@Override
 	public boolean existByUserId(UUID userId) {
-		return jpaRepository.existsByUserId_Value(userId);
+		return jpaRepository.existsByUser_UserId(userId);
 	}
 
 	@Override
@@ -36,6 +36,6 @@ public class DeliveryManagerCompanyJpaRepository implements
 
 	@Override
 	public Optional<DeliveryManagerCompany> findByUserIdAndDeletedByNull(UUID userId) {
-		return jpaRepository.findByUserId_ValueAndDeletedByNull(userId);
+		return jpaRepository.findByUser_UserIdAndDeletedByNull(userId);
 	}
 }

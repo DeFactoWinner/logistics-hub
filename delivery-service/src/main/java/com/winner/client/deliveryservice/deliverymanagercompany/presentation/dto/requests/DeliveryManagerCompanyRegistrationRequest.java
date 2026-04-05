@@ -6,11 +6,12 @@ import java.util.UUID;
 
 public record DeliveryManagerCompanyRegistrationRequest (
 	UUID userId,
-	UUID hubId
+	UUID hubId,
+	String name
 ) {
 
-	public static DeliveryManagerCompanyRegistrationCommand toCommand(UUID userId, UUID hubId) {
-		return new DeliveryManagerCompanyRegistrationCommand(userId, hubId);
+	public DeliveryManagerCompanyRegistrationCommand toCommand() {
+		return new DeliveryManagerCompanyRegistrationCommand(userId, hubId, name);
 	}
 
 }

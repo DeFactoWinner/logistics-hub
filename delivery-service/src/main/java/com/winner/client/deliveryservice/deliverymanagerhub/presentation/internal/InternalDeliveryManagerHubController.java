@@ -30,8 +30,7 @@ public class InternalDeliveryManagerHubController {
 			.status(CommonSuccessCode.CREATED.getStatus()).body(
 				ApiResponse.success(CommonSuccessCode.CREATED,
 					DeliveryManagerHubInfo.from(
-					deliveryManagerHubWriteService.registration(
-						DeliveryManagerHubRegistrationRequest.toCommand(request.userId())))));
+					deliveryManagerHubWriteService.registration(request.toCommand()))));
 	}
 
 	@DeleteMapping("/{userId}")

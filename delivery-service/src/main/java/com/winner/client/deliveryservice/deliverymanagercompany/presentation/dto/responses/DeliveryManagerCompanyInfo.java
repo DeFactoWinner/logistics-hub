@@ -10,6 +10,7 @@ public record DeliveryManagerCompanyInfo(
 	UUID userId,
 	UUID hubId,
 	UUID deliveryId,
+	String name,
 	String status,
 	Long assignmentOrder,
 	LocalDateTime lastDeliveryCompletedTime
@@ -20,6 +21,7 @@ public record DeliveryManagerCompanyInfo(
 			.userId(result.userId())
 			.hubId(result.hubId())
 			.deliveryId(result.deliveryId())
+			.name(result.name())
 			.status(result.status())
 			.assignmentOrder(result.assignmentOrder())
 			.lastDeliveryCompletedTime(result.lastDeliveryCompletedTime())

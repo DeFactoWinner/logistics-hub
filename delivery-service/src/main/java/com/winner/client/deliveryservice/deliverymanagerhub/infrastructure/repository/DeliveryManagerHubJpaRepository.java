@@ -21,7 +21,7 @@ public class DeliveryManagerHubJpaRepository implements DeliveryManagerHubReposi
 
 	@Override
 	public boolean existByUserId(UUID userId) {
-		return repository.existsByUserId_Value(userId);
+		return repository.existsByUser_UserId(userId);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class DeliveryManagerHubJpaRepository implements DeliveryManagerHubReposi
 
 	@Override
 	public Optional<DeliveryManagerHub> findByUserId(UUID userId) {
-		return repository.findByUserId_ValueAndDeletedByNull(userId);
+		return repository.findByUser_UserIdAndDeletedByNull(userId);
 	}
 
 	@Override
