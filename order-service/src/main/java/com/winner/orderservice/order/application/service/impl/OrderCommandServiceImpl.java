@@ -73,7 +73,12 @@ public class OrderCommandServiceImpl implements OrderCommandService {
           command.deliveryAddress(),
           command.deliveryAddressDetail()
       );
-      DeliveryResponse delivery = deliveryFeignClient.createDelivery(deliveryReq).getData();
+      var deliveryResponse = deliveryFeignClient.createDelivery(deliveryReq);
+      if (deliveryResponse == null || deliveryResponse.getData() == null) {
+        throw new IllegalStateException("Delivery service returned null response or data");
+      }
+      DeliveryResponse delivery = deliveryResponse.getData();
+
       order.linkDelivery(delivery.deliveryId());
       order.confirm();
       if(delivery.assignedDeliveryPersonId() != null) {
