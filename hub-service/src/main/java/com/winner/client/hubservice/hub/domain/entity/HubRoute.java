@@ -1,5 +1,6 @@
 package com.winner.client.hubservice.hub.domain.entity;
 
+import com.winner.client.global.entity.BaseAuditEntity;
 import com.winner.client.hubservice.hub.domain.vo.Distance;
 import com.winner.client.hubservice.hub.domain.vo.Duration;
 import com.winner.client.hubservice.hub.domain.vo.RouteInfo;
@@ -23,7 +24,7 @@ import org.hibernate.annotations.UuidGenerator;
         columnNames = {"from_hub_id", "to_hub_id"}
     )
 )
-public class HubRoute {
+public class HubRoute extends BaseAuditEntity {
 
     @Id
     @GeneratedValue

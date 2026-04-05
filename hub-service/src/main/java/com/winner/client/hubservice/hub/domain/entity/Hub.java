@@ -1,5 +1,6 @@
 package com.winner.client.hubservice.hub.domain.entity;
 
+import com.winner.client.global.entity.BaseAuditEntity;
 import com.winner.client.hubservice.common.exception.hub.HubErrorCode;
 import com.winner.client.hubservice.common.exception.hub.HubException;
 import com.winner.client.hubservice.hub.domain.vo.HubLocation;
@@ -16,7 +17,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 @Getter
 @Table(name = "p_hubs")
-public class Hub {
+public class Hub extends BaseAuditEntity {
 
     @Id
     @GeneratedValue
@@ -24,7 +25,7 @@ public class Hub {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Embedded
