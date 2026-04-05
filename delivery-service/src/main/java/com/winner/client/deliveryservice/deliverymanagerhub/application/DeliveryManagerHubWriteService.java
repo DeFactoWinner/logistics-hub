@@ -6,6 +6,7 @@ import static com.winner.client.deliveryservice.common.exception.deliverymanager
 
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.AssignEventCommand;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.DeliveryManagerHubRegistrationCommand;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryAssignResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryDeliveryManagerHubUsecase;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryMessagePort;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryManagerHubInfoResult;
@@ -66,12 +67,10 @@ public class DeliveryManagerHubWriteService implements DeliveryDeliveryManagerHu
 		try {
 			DeliveryManagerHub manager = selectAvailableManager();
 			manager.assignDelivery(command.deliveryId());
-			log.info("AssignHubDeliveryManager: {}, deliveryId: {}"
-				, manager.getUserId(), manager.getDeliveryId());
-			deliveryMessagePort.successEventPublish(command.deliveryId(), command.orderId());
+			deliveryMessagePort.assignEventPublish(DeliveryAssignResult.success(command));
 		} catch (BusinessException e) {
 			log.warn("DeliveryManager assignment failure : {}", e.getMessage());
-			deliveryMessagePort.failEventPublish(e.getMessage());
+			deliveryMessagePort.assignEventPublish(DeliveryAssignResult.fail(e.getMessage()));
 		}
 	}
 
