@@ -1,5 +1,7 @@
 package com.winner.client.deliveryservice.delivery.domain.vo;
 
+import com.winner.client.deliveryservice.common.exception.delivery.DeliveryErrorCode;
+import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -15,15 +17,15 @@ public class Address {
   private String detailAddress;
 
   public Address(String roadAddress, String detailAddress) {
-    validateNotEmpty(roadAddress, "도로명 주소");
-    validateNotEmpty(detailAddress, "상세 주소");
+    validateNotEmpty(roadAddress);
+    validateNotEmpty(detailAddress);
     this.roadAddress = roadAddress;
     this.detailAddress = detailAddress;
   }
 
-  private void validateNotEmpty(String value, String fieldName) {
+  private void validateNotEmpty(String value) {
     if (value == null || value.trim().isEmpty()) {
-      throw new IllegalArgumentException(fieldName + "는 비워둘 수 없습니다.");
+      throw new BusinessException(DeliveryErrorCode.FIELD_CANNOT_BE_EMPTY_ADDRESS);
     }
   }
 }

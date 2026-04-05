@@ -8,10 +8,10 @@ import lombok.Getter;
 @Getter
 public class ApiResponse<T> {
 
-  private String code;
-  private String message;
-  private T data;
-  private LocalDateTime timestamp;
+  private final String code;
+  private final String message;
+  private final T data;
+  private final LocalDateTime timestamp;
 
   private ApiResponse(BaseCode baseCode, T data) {
     this.code = baseCode.getCode();
@@ -25,6 +25,11 @@ public class ApiResponse<T> {
     this.message = customMessage;
     this.data = data;
     this.timestamp = LocalDateTime.now();
+  }
+
+  public static <T> ApiResponse<T> success(CommonSuccessCode successCode, String customMessage,
+      T data) {
+    return new ApiResponse<>(successCode, customMessage, data);
   }
 
   public static <T> ApiResponse<T> success(CommonSuccessCode successCode, T data) {

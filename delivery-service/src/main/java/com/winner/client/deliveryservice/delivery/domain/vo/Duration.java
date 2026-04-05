@@ -1,5 +1,7 @@
 package com.winner.client.deliveryservice.delivery.domain.vo;
 
+import com.winner.client.deliveryservice.common.exception.delivery.DeliveryErrorCode;
+import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -15,7 +17,7 @@ public class Duration {
 
   public Duration(int minutes) {
     if (minutes <= 0) {
-      throw new IllegalArgumentException("소요 시간은 0보다 커야 합니다.");
+      throw new BusinessException(DeliveryErrorCode.INVALID_DURATION);
     }
     this.minutes = minutes;
   }

@@ -1,5 +1,7 @@
 package com.winner.client.deliveryservice.delivery.domain.vo;
 
+import com.winner.client.deliveryservice.common.exception.delivery.DeliveryErrorCode;
+import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.UUID;
@@ -27,7 +29,7 @@ public class CurrentHubRoute {
 
   private static void validateDifferentHubs(UUID curHubId, UUID nextHubId) {
     if (curHubId.equals(nextHubId)) {
-      throw new IllegalArgumentException("현재 허브와 다음 허브는 동일할 수 없습니다.");
+      throw new BusinessException(DeliveryErrorCode.SAME_HUB_NOT_ALLOWED);
     }
   }
 
