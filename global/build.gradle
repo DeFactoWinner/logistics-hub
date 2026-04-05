@@ -85,6 +85,7 @@ dependencies {
 
     feignLib 'io.github.openfeign:feign-hc5:13.2.1'
     feignLib 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    feignLib 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
 
     securityLib 'org.springframework.boot:spring-boot-starter-security'
     securityLib 'org.springframework.boot:spring-boot-starter-web'
@@ -105,7 +106,6 @@ tasks.withType(Test).configureEach {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
-
 tasks.named('test') {
     useJUnitPlatform()
 
