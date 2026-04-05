@@ -39,8 +39,7 @@ public class UserValidatorFilter implements GlobalFilter, Ordered {
     } catch (BusinessException e) {
       return Mono.error(e);
     }
-
-    if ("false".equalsIgnoreCase(statusHeader)) {
+    if (!"true".equalsIgnoreCase(statusHeader)) {
       boolean isStatusAllowed = authProperties.getStatusAllowList().stream()
           .anyMatch(p -> pathMatcher.match(p.trim(), path));
 
