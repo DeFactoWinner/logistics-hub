@@ -7,6 +7,7 @@ import static com.winner.client.deliveryservice.common.exception.deliverymanager
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.AssignEventCommand;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.DeliveryManagerHubRegistrationCommand;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryAssignResult;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryCompleteResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryDeliveryManagerHubUsecase;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryMessagePort;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryManagerHubInfoResult;
@@ -81,5 +82,12 @@ public class DeliveryManagerHubWriteService implements DeliveryDeliveryManagerHu
 			.stream()
 			.findFirst()
 			.orElseThrow(() -> new BusinessException(NOT_FOUND_AVAILABLE_HUB_DELIVERY_MANAGERS));
+	}
+
+	public void completion(UUID userId, UUID deliveryId) {
+		DeliveryManagerHub manager = repository.findByUserId(userId)
+			.orElseThrow(() -> new BusinessException(NOT_FOUND_HUB_DELIVERY_MANAGER));
+		manager.completeDelivery(deliveryId);
+		deliveryMessagePort.deliveryCompleteEventPublish(DeliveryCompleteResult.of(userId, deliveryId));
 	}
 }

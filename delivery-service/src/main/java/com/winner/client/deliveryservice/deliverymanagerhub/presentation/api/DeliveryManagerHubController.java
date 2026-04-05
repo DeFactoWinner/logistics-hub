@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,5 +39,15 @@ public class DeliveryManagerHubController {
 	) {
 		return ResponseEntity.ok().body(ApiResponse.success(OK,
 			DeliveryManagerHubInfo.from(deliveryManagerHubWriteService.switchStatus(userId))));
+	}
+
+	@PatchMapping("/{deliveryId}/completion")
+	public ResponseEntity<ApiResponse<Void>> completionDelivery(
+		@RequestHeader("X-User-Id") UUID userId,
+		@PathVariable UUID deliveryId
+	) {
+		deliveryManagerHubWriteService.completion(userId, deliveryId);
+		return ResponseEntity.status(OK.getStatus())
+			.body(ApiResponse.success(OK, null));
 	}
 }
