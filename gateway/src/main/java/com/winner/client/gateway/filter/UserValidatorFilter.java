@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class UserStatusRoutingFilter implements GlobalFilter, Ordered {
+public class UserValidatorFilter implements GlobalFilter, Ordered {
 
   private final AuthProperties authProperties;
   private final AntPathMatcher pathMatcher = new AntPathMatcher();
@@ -24,19 +24,43 @@ public class UserStatusRoutingFilter implements GlobalFilter, Ordered {
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     String path = exchange.getRequest().getURI().getPath();
+    log.info("[권한 필터] 검증 시작 - Path: {}", path);
 
+    String skipAuth = exchange.getRequest().getHeaders().getFirst("X-Auth-Skip");
+    if ("true".equalsIgnoreCase(skipAuth)) {
+      return chain.filter(exchange);
+    }
+
+    String userRole = exchange.getRequest().getHeaders().getFirst("X-User-Role");
     String statusHeader = exchange.getRequest().getHeaders().getFirst("X-User-Status");
 
+    try {
+      checkAccessControl(path, userRole);
+    } catch (BusinessException e) {
+      return Mono.error(e);
+    }
+
     if ("false".equalsIgnoreCase(statusHeader)) {
-      boolean isAllowed = authProperties.getStatusAllowList().stream()
+      boolean isStatusAllowed = authProperties.getStatusAllowList().stream()
           .anyMatch(p -> pathMatcher.match(p.trim(), path));
 
-      if (!isAllowed) {
-        return Mono.error(new BusinessException(GatewayErrorCode.INTERNAL_ERROR));
+      if (!isStatusAllowed) {
+        return Mono.error(new BusinessException(GatewayErrorCode.INVALID_ROLE));
       }
     }
 
     return chain.filter(exchange);
+  }
+
+  private void checkAccessControl(String path, String userRole) {
+    authProperties.getAccessControl().stream()
+        .filter(ac -> pathMatcher.match(ac.path(), path))
+        .findFirst()
+        .ifPresent(ac -> {
+          if (ac.roles() != null && !ac.roles().contains(userRole)) {
+            throw new BusinessException(GatewayErrorCode.INVALID_ROLE);
+          }
+        });
   }
 
   @Override

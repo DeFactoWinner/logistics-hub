@@ -29,15 +29,28 @@ public class GlobalErrorExceptionHandler implements ErrorWebExceptionHandler {
     }
 
     ErrorCode errorCode = GatewayErrorCode.INTERNAL_ERROR;
-
     if (ex instanceof BusinessException ce) {
       errorCode = ce.getErrorCode();
+    } else if (ex instanceof org.springframework.cloud.gateway.support.NotFoundException) {
+      errorCode = GatewayErrorCode.SERVICE_UNAVAILABLE;
+    } else if (ex instanceof org.springframework.web.server.ResponseStatusException rse) {
+      if (rse.getStatusCode() == org.springframework.http.HttpStatus.NOT_FOUND) {
+        errorCode = GatewayErrorCode.ROUTE_NOT_FOUND;
+      }
+    } else if (ex.getCause() instanceof java.net.ConnectException) {
+      errorCode = GatewayErrorCode.GATEWAY_TIMEOUT;
     }
+    exchange.getResponse().setStatusCode(errorCode.getStatus());
+
+    exchange.getResponse().getHeaders()
+        .setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 
     ApiResponse<Void> errorResponse = ApiResponse.error(errorCode);
+
     try {
       byte[] bytes = objectMapper.writeValueAsBytes(errorResponse);
       DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
+
       return exchange.getResponse().writeWith(Mono.just(buffer));
     } catch (JsonProcessingException e) {
       return exchange.getResponse().setComplete();
