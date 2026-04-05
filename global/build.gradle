@@ -33,7 +33,11 @@ configurations {
         canBeResolved = true
         canBeConsumed = true
     }
-    implementation.extendsFrom(jwtLib, securityLib, feignLib)
+    redisLib {
+        canBeResolved = true
+        canBeConsumed = true
+    }
+    implementation.extendsFrom(jwtLib, securityLib, feignLib, redisLib)
 }
 
 dependencyManagement {
@@ -61,6 +65,9 @@ clean {
 dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    redisLib 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+    redisLib 'io.projectreactor:reactor-test'
 
     compileOnly 'org.springframework:spring-web'
     compileOnly 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -99,6 +106,7 @@ artifacts {
     jwtLib jar
     securityLib jar
     feignLib jar
+    redisLib jar
 }
 tasks.withType(Test).configureEach {
     systemProperty "file.encoding", "UTF-8"
