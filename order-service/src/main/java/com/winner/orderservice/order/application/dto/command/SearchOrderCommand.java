@@ -4,6 +4,7 @@ import com.winner.orderservice.order.domain.enums.OrderStatus;
 import com.winner.orderservice.order.presentation.dto.request.OrderSearchCondition;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import org.springframework.data.domain.Sort.Direction;
 
 public record SearchOrderCommand(
     OrderStatus status,
@@ -14,7 +15,7 @@ public record SearchOrderCommand(
     UUID deliveryId,
     UUID assignedDeliveryPersonId,
     String sortBy,
-    String sortDirection
+    Direction sortDirection
 ) {
   public static SearchOrderCommand from(OrderSearchCondition condition) {
     return new SearchOrderCommand(
@@ -26,7 +27,7 @@ public record SearchOrderCommand(
         condition.deliveryId(),
         condition.assignedDeliveryPersonId(),
         condition.resolvedSortBy(),
-        condition.isAscending() ? "asc" : "desc"
+        condition.isAscending() ? Direction.ASC : Direction.DESC
     );
   }
 
@@ -40,6 +41,6 @@ public record SearchOrderCommand(
   }
 
   public boolean isAscending() {
-    return "asc".equalsIgnoreCase(sortDirection);
+    return Direction.ASC.equals(sortDirection);
   }
 }
