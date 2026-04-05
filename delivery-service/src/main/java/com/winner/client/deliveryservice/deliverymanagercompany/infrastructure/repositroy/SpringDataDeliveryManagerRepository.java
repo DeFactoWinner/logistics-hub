@@ -10,7 +10,7 @@ public interface SpringDataDeliveryManagerRepository
 	extends JpaRepository<DeliveryManagerCompany, UUID> {
 
 	Optional<DeliveryManagerCompany> findTopByHubId_ValueOrderByAssignmentOrder_ValueDesc(UUID hubId);
-	boolean existsByUserId_Value(UUID userId);
+	boolean existsByUser_UserId(UUID userId);
 	Long countByHubId_ValueAndDeletedByIsNull(UUID hubId);
-	Optional<DeliveryManagerCompany> findByUserId_ValueAndDeletedByNull(UUID userId);
+	Optional<DeliveryManagerCompany> findByUser_UserIdAndDeletedByNull(UUID userId);
 }
