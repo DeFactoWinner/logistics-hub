@@ -1,5 +1,6 @@
 package com.winner.client.hubservice.hub.application.dto;
 
+import com.winner.client.hubservice.hub.presentation.dto.UpdateHubRequest;
 import lombok.Getter;
 
 @Getter
@@ -15,5 +16,14 @@ public class UpdateHubCommand {
         this.address = address;
         this.lat = lat;
         this.lng = lng;
+    }
+
+    public static UpdateHubCommand from(UpdateHubRequest request) {
+        return new UpdateHubCommand(
+            request.getName(),
+            request.getAddress(),
+            request.getLat(),
+            request.getLng()
+        );
     }
 }

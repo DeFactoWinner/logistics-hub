@@ -53,12 +53,7 @@ public class HubController {
 
     @PatchMapping("/{hubId}")
     public void updateHub(@PathVariable UUID hubId, @RequestBody UpdateHubRequest request) {
-        UpdateHubCommand command = new UpdateHubCommand(
-            request.getName(),
-            request.getAddress(),
-            request.getLat(),
-            request.getLng()
-        );
+        UpdateHubCommand command = UpdateHubCommand.from(request);
 
         hubService.updateHub(hubId, command);
     }
