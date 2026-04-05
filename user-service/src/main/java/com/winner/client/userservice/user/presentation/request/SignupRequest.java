@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Length;
 public record SignupRequest(
     @Length(min = 4, max = 10)
     @NotBlank(message = "아이디는 필수입니다.")
-    String username,
+    String userName,
     @Length(min = 8, max = 15)
     @Pattern(
         regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&]).{8,}$",
@@ -39,7 +39,7 @@ public record SignupRequest(
         .referenceId(request.referenceId)
         .role(request.role)
         .slackId(request.slackId)
-        .username(request.username)
+        .userName(request.userName)
         .build();
   }
 }

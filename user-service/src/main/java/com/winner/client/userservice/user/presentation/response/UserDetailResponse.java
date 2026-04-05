@@ -8,7 +8,7 @@ import lombok.Builder;
 @Builder
 public record UserDetailResponse(
     UUID userId,
-    String username,
+    String userName,
     String name,
     String phoneNumber,
     String approvalStatus,
@@ -23,7 +23,7 @@ public record UserDetailResponse(
 
     return UserDetailResponse.builder()
         .userId(command.userId())
-        .username(command.username())
+        .userName(command.userName())
         .name(command.name())
         .phoneNumber(command.phoneNumber().getNumber())
         .approvalStatus(command.approvalStatus().name())

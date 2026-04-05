@@ -12,7 +12,7 @@ import lombok.Builder;
 @Builder
 public record UserDetailResult(
     UUID userId,
-    String username,
+    String userName,
     String name,
     PhoneNumber phoneNumber,
     String slackId,
@@ -25,7 +25,7 @@ public record UserDetailResult(
   public static UserDetailResult from(User user) {
     return UserDetailResult.builder()
         .userId(user.getId())
-        .username(user.getUsername())
+        .userName(user.getUserName())
         .name(user.getName())
         .phoneNumber(user.getPhoneNumber())
         .slackId(user.getSlackId())
