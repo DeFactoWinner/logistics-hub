@@ -2,12 +2,16 @@ package com.winner.client.userservice.user.application.service.impl;
 
 import com.winner.client.global.exception.BusinessException;
 import com.winner.client.userservice.common.exception.UserErrorCode;
+import com.winner.client.userservice.user.application.dto.query.AdminUserPageQuery;
+import com.winner.client.userservice.user.application.dto.query.ManagerUserPageQuery;
 import com.winner.client.userservice.user.application.dto.result.UserDetailResult;
+import com.winner.client.userservice.user.application.dto.result.UserSearchResult;
 import com.winner.client.userservice.user.application.service.UserQueryService;
 import com.winner.client.userservice.user.domain.entity.User;
 import com.winner.client.userservice.user.domain.repository.UserRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,5 +25,17 @@ public class UserQueryServiceImpl implements UserQueryService {
     User user = userRepository.findByIdAndDeletedAtNull(userId)
         .orElseThrow(() -> new BusinessException(UserErrorCode.USER_NOT_FOUND));
     return UserDetailResult.from(user);
+  }
+
+  @Override
+  public Page<UserSearchResult> queryUsersByManage(ManagerUserPageQuery query) {
+    Page<User> userPage = userRepository.findAllByManagerScope(query);
+    return userPage.map(UserSearchResult::from);
+  }
+
+  @Override
+  public Page<UserSearchResult> queryUsersByAdmin(AdminUserPageQuery query) {
+    Page<User> userPage = userRepository.findAllByAdminCondition(query);
+    return userPage.map(UserSearchResult::from);
   }
 }
