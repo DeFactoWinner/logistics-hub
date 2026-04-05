@@ -44,4 +44,12 @@ public class Hub extends BaseAuditEntity {
     public static Hub create(String name, HubLocation location) {
         return new Hub(name, location);
     }
+
+    public void update(String name, HubLocation location) {
+        if (name == null || name.isBlank()) {
+            throw new HubException(HubErrorCode.INVALID_HUB_NAME);
+        }
+        this.name = name;
+        this.location = location;
+    }
 }

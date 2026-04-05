@@ -4,6 +4,7 @@ import com.winner.client.hubservice.common.exception.hub.HubErrorCode;
 import com.winner.client.hubservice.common.exception.hub.HubException;
 import com.winner.client.hubservice.hub.application.dto.CreateHubCommand;
 import com.winner.client.hubservice.hub.application.dto.HubResult;
+import com.winner.client.hubservice.hub.application.dto.UpdateHubCommand;
 import com.winner.client.hubservice.hub.domain.entity.Hub;
 import com.winner.client.hubservice.hub.domain.repository.HubRepository;
 import com.winner.client.hubservice.hub.domain.vo.HubLocation;
@@ -36,7 +37,7 @@ public class HubService {
     }
 
     public HubResult getHub(UUID hubId) {
-        Hub hub = hubRepository.findById(hubId)
+        Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId)
             .orElseThrow(()-> new HubException(HubErrorCode.HUB_NOT_FOUND));
 
         return HubResult.builder()
@@ -46,5 +47,24 @@ public class HubService {
             .lat(hub.getLocation().getLat())
             .lng(hub.getLocation().getLng())
             .build();
+    }
+
+    @Transactional
+    public void updateHub(UUID hubId, UpdateHubCommand command) {
+        Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId)
+            .orElseThrow(()-> new HubException(HubErrorCode.HUB_NOT_FOUND));
+
+        if (!hub.getName().equals(command.getName()) &&
+            hubRepository.existsByNameAndDeletedAtIsNull(command.getName())) {
+            throw new HubException(HubErrorCode.DUPLICATE_HUB);
+        }
+
+        HubLocation location = new HubLocation(
+            command.getAddress(),
+            command.getLat(),
+            command.getLng()
+        );
+
+        hub.update(command.getName(), location);
     }
 }
