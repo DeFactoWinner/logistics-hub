@@ -9,7 +9,6 @@ public interface DeliveryRouteCommandService {
   DeliveryRouteCommandResponse updateActualDeliveryRouteInfo(
       UUID deliveryRouteId, UpdateDeliveryRequest request, UUID userId);
 
-  DeliveryRouteCommandResponse assignRoute(UUID routeId, String userRole, UUID referenceId);
   DeliveryRouteCommandResponse startProgress(UUID routeId, UUID userId, String userRole, UUID referenceId);
   DeliveryRouteCommandResponse completeRoute(UUID routeId, UUID userId, String userRole, UUID referenceId);
 }

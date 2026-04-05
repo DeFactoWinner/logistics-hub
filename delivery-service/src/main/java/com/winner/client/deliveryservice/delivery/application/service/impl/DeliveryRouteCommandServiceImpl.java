@@ -35,14 +35,6 @@ public class DeliveryRouteCommandServiceImpl implements DeliveryRouteCommandServ
   }
 
   @Override
-  public DeliveryRouteCommandResponse assignRoute(UUID routeId, String userRole, UUID referenceId) {
-    DeliveryRoute route = findById(routeId);
-    validator.validateRouteHubAdminAccess(route, userRole, referenceId);
-    route.assign();
-    return DeliveryRouteCommandResponse.from(route);
-  }
-
-  @Override
   public DeliveryRouteCommandResponse startProgress(UUID routeId, UUID userId, String userRole, UUID referenceId) {
     DeliveryRoute route = findById(routeId);
     validator.validateRouteDeliveryManagerAccess(route, userId, userRole, referenceId);

@@ -44,18 +44,6 @@ public class DeliveryRouteController {
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }
 
-  @PatchMapping("/{routeId}/assigned")
-  public ResponseEntity<ApiResponse<DeliveryRouteCommandResponse>> assignRoute(
-      @PathVariable UUID routeId,
-      @RequestHeader("X-User-Role") String userRole,
-      @RequestHeader("X-Reference-Id") UUID referenceId
-  ){
-    DeliveryRouteCommandResponse response =
-        deliveryRouteCommandService.assignRoute(routeId, userRole, referenceId);
-    return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
-        .body(ApiResponse.success(CommonSuccessCode.OK, response));
-  }
-
   @PatchMapping("{routeId}/in-progress")
   public ResponseEntity<ApiResponse<DeliveryRouteCommandResponse>> startProgress(
       @PathVariable UUID routeId,

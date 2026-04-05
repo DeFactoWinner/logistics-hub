@@ -7,13 +7,6 @@ public enum DeliveryRouteStatus {
   WAITING {
     @Override
     public Set<DeliveryRouteStatus> nextStates() {
-      return Set.of(ASSIGNED, CANCELLED);
-    }
-  },
-
-  ASSIGNED {
-    @Override
-    public Set<DeliveryRouteStatus> nextStates() {
       return Set.of(IN_PROGRESS, CANCELLED);
     }
   },

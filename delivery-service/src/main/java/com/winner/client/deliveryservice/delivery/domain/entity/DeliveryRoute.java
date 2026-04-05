@@ -106,10 +106,6 @@ public class DeliveryRoute {
     this.status = next;
   }
 
-  public void assign() {
-    changeStatus(DeliveryRouteStatus.ASSIGNED);
-  }
-
   public void startProgress() {
     changeStatus(DeliveryRouteStatus.IN_PROGRESS);
   }
