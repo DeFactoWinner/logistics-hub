@@ -2,11 +2,13 @@ package com.winner.client.deliveryservice.deliverymanagerhub.domain.entity;
 
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.DELIVERY_MANAGER_IN_PROGRESS;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.HUB_DELIVERY_MANAGER_OVER_CAPACITY;
+import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.NOT_AVAILABLE;
+import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.USER_ID_CANNOT_BE_NULL;
 
 import com.winner.client.deliveryservice.common.constants.DeliveryManagerStatus;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.AssignmentOrder;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.DeliveryId;
-import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.DeliveryManagerUserId;
+import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.DeliveryManagerUser;
 import com.winner.client.global.entity.BaseAuditEntity;
 import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.Column;
@@ -34,7 +36,7 @@ public class DeliveryManagerHub extends BaseAuditEntity {
 	private UUID id;
 
 	@Embedded
-	private DeliveryManagerUserId userId;
+	private DeliveryManagerUser user;
 
 	@Embedded
 	private AssignmentOrder assignmentOrder;
@@ -54,12 +56,12 @@ public class DeliveryManagerHub extends BaseAuditEntity {
 
 	protected DeliveryManagerHub() {}
 
-	public static DeliveryManagerHub create(UUID userId, Long assignmentOrder, Long curCount) {
+	public static DeliveryManagerHub create(UUID userId, String name, Long assignmentOrder, Long curCount) {
 		if (curCount >= 10) {
 			throw new BusinessException(HUB_DELIVERY_MANAGER_OVER_CAPACITY);
 		}
 		DeliveryManagerHub manager = new DeliveryManagerHub();
-		manager.userId = new DeliveryManagerUserId(userId);
+		manager.user = new DeliveryManagerUser(userId, name);
 		manager.assignmentOrder = new AssignmentOrder(assignmentOrder);
 		manager.deliveryManagerStatus = DeliveryManagerStatus.AVAILABLE;
 		manager.deliveryId = new DeliveryId(null);
@@ -68,7 +70,7 @@ public class DeliveryManagerHub extends BaseAuditEntity {
 
 	public void assignDelivery(UUID deliveryId) {
 		if (!this.deliveryManagerStatus.isAvailable()) {
-			throw new IllegalStateException("배송 가능 상태가 아닙니다.");
+			throw new BusinessException(NOT_AVAILABLE);
 		}
 		this.deliveryId = new DeliveryId(deliveryId);
 		this.deliveryManagerStatus = DeliveryManagerStatus.IN_DELIVERY;
@@ -95,7 +97,10 @@ public class DeliveryManagerHub extends BaseAuditEntity {
 		super.softDelete(userId);
 	}
 
-	public UUID getUserId() { return userId.getValue(); }
+	public UUID getUserId() { return user.getUserId(); }
+	public String getName() { return user.getName(); }
 	public Long getAssignmentOrder() { return assignmentOrder.getValue(); }
-	public UUID getDeliveryId() { return deliveryId.getValue(); }
+	public UUID getDeliveryId() {
+		return deliveryId != null ? deliveryId.getValue() : new DeliveryId(null).getValue();
+	}
 }
