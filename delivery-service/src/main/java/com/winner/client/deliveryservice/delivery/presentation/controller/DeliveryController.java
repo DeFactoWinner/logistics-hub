@@ -66,18 +66,6 @@ public class DeliveryController {
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }
 
-  @PatchMapping("/{deliveryId}/hub-waiting")
-  public ResponseEntity<ApiResponse<DeliveryCommandResponse>> startHubWaiting(
-      @PathVariable UUID deliveryId,
-      @RequestHeader("X-User-Role") String userRole,
-      @RequestHeader("X-Reference-Id") UUID referenceId
-  ){
-    DeliveryCommandResponse response =
-        deliveryCommandService.startHubWaiting(deliveryId, userRole, referenceId);
-    return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
-        .body(ApiResponse.success(CommonSuccessCode.OK, response));
-  }
-
   @PatchMapping("/{deliveryId}/hub-moving")
   public ResponseEntity<ApiResponse<DeliveryCommandResponse>> startHubMoving(
       @PathVariable UUID deliveryId,
