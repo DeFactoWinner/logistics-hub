@@ -2,16 +2,19 @@ package com.winner.client.deliveryservice.delivery.application.service.impl;
 
 import com.winner.client.deliveryservice.common.exception.delivery.DeliveryErrorCode;
 import com.winner.client.deliveryservice.delivery.application.dto.command.CompanyDeliveryManagerAssignFailCommand;
+import com.winner.client.deliveryservice.delivery.application.dto.command.CompleteDeliveryCommand;
+import com.winner.client.deliveryservice.delivery.application.dto.command.CompleteDeliveryRouteCommand;
 import com.winner.client.deliveryservice.delivery.application.dto.command.DeliveryAssignCompleteCommand;
 import com.winner.client.deliveryservice.delivery.application.dto.command.DeliveryRouteAssignCompleteCommand;
 import com.winner.client.deliveryservice.delivery.application.dto.command.HubDeliveryManagerAssignFailCommand;
-import com.winner.client.deliveryservice.delivery.application.service.DeliveryMessageUsecase;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryAssignmentService;
+import com.winner.client.deliveryservice.delivery.application.service.DeliveryMessageUsecase;
 import com.winner.client.deliveryservice.delivery.domain.entity.Delivery;
 import com.winner.client.deliveryservice.delivery.domain.entity.DeliveryRoute;
 import com.winner.client.deliveryservice.delivery.domain.repository.DeliveryRepository;
 import com.winner.client.deliveryservice.delivery.domain.repository.DeliveryRouteRepository;
 import com.winner.client.global.exception.BusinessException;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,8 +31,16 @@ public class DeliveryMessageServiceImpl implements DeliveryMessageUsecase {
   @Override
   @Transactional
   public void completeHubDeliveryManagerAssign(DeliveryRouteAssignCompleteCommand command) {
-    DeliveryRoute route = findDeliveryRouteById(command.deliveryRouteId());
+    DeliveryRoute route = deliveryRouteRepository.findFirstPendingRoute(command.deliveryId())
+        .orElseThrow(() -> new BusinessException(DeliveryErrorCode.NOT_FOUND_DELIVERY_ROUTE));
+
     route.updateDeliveryManagerInfo(command.deliveryManagerId(), command.deliveryManagerName());
+    route.startProgress(); // PENDING → IN_PROGRESS
+
+    if (route.isFirstRoute()) {
+      Delivery delivery = route.getDelivery();
+      delivery.startHubMoving();
+    }
     // todo: order 배송 담당자 정보 update
   }
 
@@ -39,32 +50,50 @@ public class DeliveryMessageServiceImpl implements DeliveryMessageUsecase {
     Delivery delivery = findDeliveryById(command.deliveryId());
 
     delivery.updateDeliveryManagerInfo(command.deliveryManagerId(), command.deliveryManagerName());
+    delivery.startVendorMoving();
     // todo: order 배송 담당자 정보 update
   }
 
   @Override
-  public void retryHubDeliveryManagerAssign(HubDeliveryManagerAssignFailCommand command) {
-    DeliveryRoute failedRoute = findDeliveryRouteById(command.deliveryRouteId());
+  @Transactional
+  public void completeDeliveryRoute(CompleteDeliveryRouteCommand command) {
+    DeliveryRoute route = deliveryRouteRepository.findFirstInProgressRoute(command.deliveryId())
+        .orElseThrow(() -> new BusinessException(DeliveryErrorCode.NOT_FOUND_DELIVERY_ROUTE));
 
-    deliveryAssignmentService.retryHubDeliveryManager(failedRoute);
+    route.complete();
+
+    Optional<DeliveryRoute> nextPending = deliveryRouteRepository.findFirstPendingRoute(command.deliveryId());
+
+    if (nextPending.isPresent()) {
+      deliveryAssignmentService.retryHubDeliveryManager(command.deliveryId());
+    } else {
+      Delivery delivery = route.getDelivery();
+      deliveryAssignmentService.assignCompanyDeliveryManager(delivery);
+    }
+  }
+
+  @Override
+  @Transactional
+  public void completeDelivery(CompleteDeliveryCommand command) {
+    Delivery delivery = findDeliveryById(command.deliveryId());
+    delivery.complete();
+    // todo: order 배송 완료 status update
+  }
+
+  @Override
+  public void retryHubDeliveryManagerAssign(HubDeliveryManagerAssignFailCommand command) {
+    deliveryAssignmentService.retryHubDeliveryManager(command.deliveryId());
   }
 
   @Override
   public void retryCompanyDeliveryManagerAssign(CompanyDeliveryManagerAssignFailCommand command) {
     Delivery delivery = findDeliveryById(command.deliveryId());
-
     deliveryAssignmentService.assignCompanyDeliveryManager(delivery);
   }
 
   private Delivery findDeliveryById(UUID deliveryId) {
     return deliveryRepository.findById(deliveryId)
         .orElseThrow(()-> new BusinessException(DeliveryErrorCode.NOT_FOUND_DELIVERY));
-  }
-
-  private DeliveryRoute findDeliveryRouteById(UUID deliveryId) {
-    return deliveryRouteRepository.findById(deliveryId)
-        .orElseThrow(() -> new BusinessException(DeliveryErrorCode.NOT_FOUND_DELIVERY_ROUTE));
-
   }
 
 }
