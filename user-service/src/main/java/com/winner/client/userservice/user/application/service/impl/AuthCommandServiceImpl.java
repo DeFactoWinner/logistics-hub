@@ -35,7 +35,7 @@ public class AuthCommandServiceImpl implements AuthCommandService {
 
   @Transactional
   public SignupResult signup(SignupCommand command) {
-    if (userRepository.existsByUsernameAndDeletedAtNull(command.userName())) {
+    if (userRepository.existsByUserNameAndDeletedAtNull(command.userName())) {
       throw new BusinessException(UserErrorCode.DUPLICATE_USERNAME);
     }
     User user = User.create(
@@ -54,7 +54,7 @@ public class AuthCommandServiceImpl implements AuthCommandService {
 
   @Override
   public TokenResult login(LoginCommand command) {
-    User user = userRepository.findByUsernameAndDeletedAtNull(command.userName())
+    User user = userRepository.findByUserNameAndDeletedAtNull(command.userName())
         .orElseThrow(() -> new BusinessException(UserErrorCode.USER_NOT_FOUND));
 
     if (!user.isCorrectPassword(command.password(), passwordEncoder)) {

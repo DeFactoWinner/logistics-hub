@@ -8,9 +8,9 @@ public interface UserRepository {
 
   User save(User user);
 
-  boolean existsByUsernameAndDeletedAtNull(String username);
+  boolean existsByUserNameAndDeletedAtNull(String username);
 
   Optional<User> findByIdAndDeletedAtNull(UUID userId);
 
-  Optional<User> findByUsernameAndDeletedAtNull(String username);
+  Optional<User> findByUserNameAndDeletedAtNull(String username);
 }
