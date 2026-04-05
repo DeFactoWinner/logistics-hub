@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
     jwtTokenProvider.validateToken(token);
 
-    return redisTemplate.hasKey("logout:" + token)
+    return redisTemplate.hasKey("BL:" + token)
         .flatMap(isBlacklisted -> {
           if (Boolean.TRUE.equals(isBlacklisted)) {
             return Mono.error(new BusinessException(JwtTokenErrorCode.TOKEN_BLACKLISTED));
