@@ -78,6 +78,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       order.confirm();
       if(delivery.assignedDeliveryPersonId() != null) {
         order.startShipping();
+        order.assignDeliveryPerson(delivery.assignedDeliveryPersonId());
       }
 
     } catch (Exception e) {
