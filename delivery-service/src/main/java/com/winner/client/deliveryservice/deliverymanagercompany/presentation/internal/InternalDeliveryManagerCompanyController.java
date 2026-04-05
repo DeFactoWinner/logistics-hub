@@ -33,8 +33,7 @@ public class InternalDeliveryManagerCompanyController {
 				ApiResponse.success(CommonSuccessCode.CREATED,
 					DeliveryManagerCompanyInfo.from(
 					deliveryManagerCompanyWriteService.registration(
-						DeliveryManagerCompanyRegistrationRequest.toCommand(request.userId(),
-							request.hubId())))));
+						request.toCommand()))));
 	}
 
 	@DeleteMapping("/{userId}")

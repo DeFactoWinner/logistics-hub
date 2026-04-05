@@ -35,7 +35,7 @@ public class DeliveryManagerCompanyWriteService {
 
 		return DeliveryManagerCompanyInfoResult.from(
 			repository.save(
-				DeliveryManagerCompany.create(command.userId(), command.hubId(), nextAssignmentOrder, curCount)
+				DeliveryManagerCompany.create(command.userId(), command.name(), command.hubId(), nextAssignmentOrder, curCount)
 			));
 	}
 
