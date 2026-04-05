@@ -1,7 +1,7 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.infrastructure.message;
 
-import com.winner.client.deliveryservice.common.event.AssignFailEvent;
-import com.winner.client.deliveryservice.common.event.AssignSuccessEvent;
+import com.winner.client.deliveryservice.common.event.deliverymanager.hub.AssignFailEvent;
+import com.winner.client.deliveryservice.common.event.deliverymanager.hub.AssignSuccessEvent;
 import com.winner.client.deliveryservice.common.event.DeliveryCompleteEvent;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryAssignResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryCompleteResult;

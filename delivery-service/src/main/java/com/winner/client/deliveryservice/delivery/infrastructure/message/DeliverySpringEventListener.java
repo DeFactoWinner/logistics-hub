@@ -1,7 +1,7 @@
 package com.winner.client.deliveryservice.delivery.infrastructure.message;
 
-import com.winner.client.deliveryservice.common.event.AssignFailEvent;
-import com.winner.client.deliveryservice.common.event.AssignSuccessEvent;
+import com.winner.client.deliveryservice.common.event.deliverymanager.hub.AssignFailEvent;
+import com.winner.client.deliveryservice.common.event.deliverymanager.hub.AssignSuccessEvent;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryMessageUsecase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
