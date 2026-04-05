@@ -25,7 +25,7 @@ public class Hub extends BaseAuditEntity {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Embedded
@@ -51,5 +51,9 @@ public class Hub extends BaseAuditEntity {
         }
         this.name = name;
         this.location = location;
+    }
+
+    public void delete(UUID userId) {
+        super.softDelete(userId);
     }
 }

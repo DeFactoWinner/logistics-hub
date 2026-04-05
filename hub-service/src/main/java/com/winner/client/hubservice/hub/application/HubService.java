@@ -7,6 +7,7 @@ import com.winner.client.hubservice.hub.application.dto.HubResult;
 import com.winner.client.hubservice.hub.application.dto.UpdateHubCommand;
 import com.winner.client.hubservice.hub.domain.entity.Hub;
 import com.winner.client.hubservice.hub.domain.repository.HubRepository;
+import com.winner.client.hubservice.hub.domain.repository.HubRouteRepository;
 import com.winner.client.hubservice.hub.domain.vo.HubLocation;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class HubService {
 
     private final HubRepository hubRepository;
+    private final HubRouteRepository hubRouteRepository;
 
     @Transactional
     public UUID createHub(CreateHubCommand command) {
@@ -66,5 +68,20 @@ public class HubService {
         );
 
         hub.update(command.getName(), location);
+    }
+
+    @Transactional
+    public void deleteHub(UUID hubId, UUID userId) {
+        Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId)
+            .orElseThrow(()-> new HubException(HubErrorCode.HUB_NOT_FOUND));
+
+        hub.delete(userId);
+
+        var routes = hubRouteRepository
+            .findAllByRouteInfo_FromHubIdOrRouteInfo_ToHubIdAndDeletedAtIsNull(hubId, hubId);
+
+        for (var route : routes) {
+            route.delete(userId);
+        }
     }
 }

@@ -55,4 +55,8 @@ public class HubRoute extends BaseAuditEntity {
     public static HubRoute create(RouteInfo routeInfo, Distance distance, Duration duration) {
         return new HubRoute(routeInfo, distance, duration);
     }
+
+    public void delete(UUID userId) {
+        super.softDelete(userId);
+    }
 }
