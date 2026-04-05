@@ -5,6 +5,7 @@ import com.winner.client.hubservice.common.exception.hub.HubException;
 import com.winner.client.hubservice.hub.application.dto.CreateHubCommand;
 import com.winner.client.hubservice.hub.application.dto.HubResult;
 import com.winner.client.hubservice.hub.application.dto.UpdateHubCommand;
+import com.winner.client.hubservice.hub.application.port.UserPort;
 import com.winner.client.hubservice.hub.domain.entity.Hub;
 import com.winner.client.hubservice.hub.domain.repository.HubRepository;
 import com.winner.client.hubservice.hub.domain.repository.HubRouteRepository;
@@ -21,6 +22,7 @@ public class HubService {
 
     private final HubRepository hubRepository;
     private final HubRouteRepository hubRouteRepository;
+    private final UserPort userPort;
 
     @Transactional
     public UUID createHub(CreateHubCommand command) {
@@ -74,6 +76,9 @@ public class HubService {
     public void deleteHub(UUID hubId, UUID userId) {
         Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId)
             .orElseThrow(()-> new HubException(HubErrorCode.HUB_NOT_FOUND));
+
+        // TODO: 허브에 속한 사용자 목록 조회 후 전체 unassign 처리 필요
+        userPort.unassignUser(userId);
 
         hub.delete(userId);
 
