@@ -9,10 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface SpringDataDeliveryManagerHubRepository extends JpaRepository<DeliveryManagerHub, UUID> {
 
-	boolean existsByUserId_Value(UUID userId);
+	boolean existsByUser_UserId(UUID userId);
 	Optional<DeliveryManagerHub> findFirstByOrderByAssignmentOrder_ValueDesc();
 	Long countByDeletedByIsNull();
-	Optional<DeliveryManagerHub> findByUserId_ValueAndDeletedByNull(UUID userId);
+	Optional<DeliveryManagerHub> findByUser_UserIdAndDeletedByNull(UUID userId);
 	@Query("SELECT d FROM DeliveryManagerHub d " +
 		"WHERE d.deletedBy IS NULL " +
 		"AND d.deliveryManagerStatus = 'AVAILABLE'" +
