@@ -1,6 +1,5 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result;
 
-import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.AssignEventCommand;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,15 +12,15 @@ public class DeliveryAssignResult {
 	private final boolean success;
 	private final String errorMessage;
 	private final String deliveryManagerName;
+	private final UUID deliveryManagerId;
 	private final UUID deliveryId;
-	private final UUID orderId;
 
-	public static DeliveryAssignResult success(AssignEventCommand command, String deliveryManagerName) {
+	public static DeliveryAssignResult success(UUID deliveryId, UUID deliveryManagerId, String deliveryManagerName) {
 		return DeliveryAssignResult.builder()
 			.success(true)
 			.deliveryManagerName(deliveryManagerName)
-			.deliveryId(command.deliveryId())
-			.orderId(command.orderId())
+			.deliveryManagerId(deliveryManagerId)
+			.deliveryId(deliveryId)
 			.build();
 	}
 
