@@ -1,5 +1,6 @@
 package com.winner.client.hubservice.hub.domain.entity;
 
+import com.winner.client.global.entity.BaseAuditEntity;
 import com.winner.client.hubservice.common.exception.hub.HubErrorCode;
 import com.winner.client.hubservice.common.exception.hub.HubException;
 import com.winner.client.hubservice.hub.domain.vo.HubLocation;
@@ -16,7 +17,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 @Getter
 @Table(name = "p_hubs")
-public class Hub {
+public class Hub extends BaseAuditEntity {
 
     @Id
     @GeneratedValue
@@ -42,5 +43,17 @@ public class Hub {
 
     public static Hub create(String name, HubLocation location) {
         return new Hub(name, location);
+    }
+
+    public void update(String name, HubLocation location) {
+        if (name == null || name.isBlank()) {
+            throw new HubException(HubErrorCode.INVALID_HUB_NAME);
+        }
+        this.name = name;
+        this.location = location;
+    }
+
+    public void delete(UUID userId) {
+        super.softDelete(userId);
     }
 }
