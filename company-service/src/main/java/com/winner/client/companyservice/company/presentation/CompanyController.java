@@ -8,11 +8,14 @@ import com.winner.client.companyservice.company.presentation.dto.response.Compan
 import com.winner.client.companyservice.company.presentation.dto.response.ListCompanyResponse;
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
+import com.winner.client.global.security.CustomUserPrincipal;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -34,7 +37,8 @@ public class CompanyController {
 
   @PostMapping
   public ResponseEntity<ApiResponse<CompanyResponse>> createCompany(
-      @RequestBody CreateCompanyRequest companyRequestDto) {
+      @RequestBody CreateCompanyRequest companyRequestDto,
+      @AuthenticationPrincipal CustomUserPrincipal principal) {
 
     CompanyResponse result = companyCommandService.createCompany(companyRequestDto);
 
@@ -66,10 +70,12 @@ public class CompanyController {
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,result));
   }
 
+  @PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
   @DeleteMapping("/{companyId}")
-  public ResponseEntity<ApiResponse<Void>> deleteCompany(@PathVariable UUID companyId) {
+  public ResponseEntity<ApiResponse<Void>> deleteCompany(@PathVariable UUID companyId,
+      @AuthenticationPrincipal CustomUserPrincipal principal) {
 
-    companyCommandService.deleteCompany(companyId);
+    companyCommandService.deleteCompany(companyId,principal);
 
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,null));
   }
