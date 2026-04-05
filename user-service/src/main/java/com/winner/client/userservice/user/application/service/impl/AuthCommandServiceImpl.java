@@ -15,6 +15,8 @@ import com.winner.client.userservice.user.domain.repository.UserRepository;
 import com.winner.client.userservice.user.domain.vo.Password;
 import com.winner.client.userservice.user.domain.vo.PhoneNumber;
 import com.winner.client.userservice.user.domain.vo.UserRole;
+import com.winner.client.userservice.user.infrastructure.RedisTokenRepository;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +31,7 @@ public class AuthCommandServiceImpl implements AuthCommandService {
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
   private final JwtTokenProvider jwtTokenProvider;
+  private final RedisTokenRepository redisTokenRepository;
 
   @Transactional
   public SignupResult signup(SignupCommand command) {
@@ -71,7 +74,9 @@ public class AuthCommandServiceImpl implements AuthCommandService {
       throw new BusinessException(JwtTokenErrorCode.INVALID_TOKEN);
     }
     UUID userId = jwtTokenProvider.getUserId(refreshToken);
-    if (userId == null) {
+    String savedRefreshToken = redisTokenRepository.getRefreshToken(userId);
+
+    if (userId == null || !Objects.equals(savedRefreshToken, refreshToken)) {
       throw new BusinessException(JwtTokenErrorCode.INVALID_TOKEN);
     }
     User user = userRepository.findByIdAndDeletedAtNull(userId)
@@ -89,7 +94,8 @@ public class AuthCommandServiceImpl implements AuthCommandService {
 
     String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
     Long expiresIn = jwtTokenProvider.getRemainingTime(accessToken);
+
+    redisTokenRepository.saveRefreshToken(user.getId(), refreshToken);
     return TokenResult.from(user.getId(), accessToken, refreshToken, expiresIn);
   }
-
 }
