@@ -32,13 +32,13 @@ dependencies {
     implementation project(':global')
     implementation project(path: ':global', configuration: 'securityLib')
     implementation project(path: ':global', configuration: 'feignLib')
+    implementation project(path: ':global', configuration: 'redisLib')
 
     // Web & Validation
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // DB
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 

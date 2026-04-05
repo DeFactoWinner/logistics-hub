@@ -11,6 +11,8 @@ import com.winner.client.userservice.user.domain.vo.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -47,8 +49,12 @@ public class User extends BaseAuditEntity {
   @Column(length = 50)
   private String slackId;
 
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
   private UserStatusType userStatus;
 
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
   private ApprovalStatusType approvalStatus;
 
   @Embedded
