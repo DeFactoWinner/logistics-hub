@@ -4,7 +4,7 @@ import static com.winner.client.deliveryservice.common.exception.deliverymanager
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.NOT_FOUND_AVAILABLE_HUB_DELIVERY_MANAGERS;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.NOT_FOUND_HUB_DELIVERY_MANAGER;
 
-import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.AssignEventCommand;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.DeliveryManagerAssignEventCommand;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.DeliveryManagerHubRegistrationCommand;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryAssignResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryCompleteResult;
@@ -64,7 +64,7 @@ public class DeliveryManagerHubWriteService implements DeliveryDeliveryManagerHu
 	}
 
 	@Override
-	public void assignHubDeliveryManager(AssignEventCommand command) {
+	public void assignHubDeliveryManager(DeliveryManagerAssignEventCommand command) {
 		try {
 			DeliveryManagerHub manager = selectAvailableManager();
 			manager.assignDelivery(command.deliveryId());
