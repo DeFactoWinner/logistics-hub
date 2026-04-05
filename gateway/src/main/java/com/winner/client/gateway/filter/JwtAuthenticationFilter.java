@@ -42,11 +42,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
       return Mono.error(new BusinessException(GatewayErrorCode.UNAUTHORIZED));
     }
 
-    try {
-      jwtTokenProvider.validateToken(token);
-    } catch (Exception e) {
-      return Mono.error(new BusinessException(JwtTokenErrorCode.INVALID_TOKEN));
-    }
+    jwtTokenProvider.validateToken(token);
 
     return redisTemplate.hasKey("logout:" + token)
         .flatMap(isBlacklisted -> {

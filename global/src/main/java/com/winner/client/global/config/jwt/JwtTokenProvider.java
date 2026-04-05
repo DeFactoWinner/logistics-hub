@@ -60,7 +60,7 @@ public class JwtTokenProvider {
 
   public String createRefreshToken(UUID userId) {
     Date now = new Date();
-    Date expiryDate = new Date(now.getTime() + jwtProperties.getAccessExpirationTime());
+    Date expiryDate = new Date(now.getTime() + jwtProperties.getRefreshExpirationTime());
 
     return Jwts.builder()
         .subject(String.valueOf(userId))
