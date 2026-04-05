@@ -5,6 +5,8 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import com.winner.client.global.exception.BusinessException;
+import com.winner.orderservice.order.exception.OrderErrorCode;
 
 import java.util.UUID;
 
@@ -13,22 +15,22 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderParticipants {
 
-    @Column(name = "supplier_id", nullable = false, updatable = false)
-    private UUID supplierId;
+  @Column(name = "supplier_id", nullable = false, updatable = false)
+  private UUID supplierId;
 
-    @Column(name = "receiver_id", nullable = false, updatable = false)
-    private UUID receiverId;
+  @Column(name = "receiver_id", nullable = false, updatable = false)
+  private UUID receiverId;
 
-    public OrderParticipants(UUID supplierId, UUID receiverId) {
-        validateNotNull(supplierId, "공급 업체 ID");
-        validateNotNull(receiverId, "수령 업체 ID");
-        this.supplierId = supplierId;
-        this.receiverId = receiverId;
+  public OrderParticipants(UUID supplierId, UUID receiverId) {
+    validateNotNull(supplierId);
+    validateNotNull(receiverId);
+    this.supplierId = supplierId;
+    this.receiverId = receiverId;
+  }
+
+  private void validateNotNull(UUID value) {
+    if (value == null) {
+      throw new BusinessException(OrderErrorCode.INVALID_INPUT);
     }
-
-    private void validateNotNull(UUID value, String fieldName) {
-        if (value == null) {
-            throw new IllegalArgumentException(fieldName + "는 필수입니다.");
-        }
-    }
+  }
 }
