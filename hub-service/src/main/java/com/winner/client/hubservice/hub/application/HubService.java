@@ -27,7 +27,7 @@ public class HubService {
             command.getLng()
         );
 
-        if (hubRepository.existsByName(command.getName())) {
+        if (hubRepository.existsByNameAndDeletedAtIsNull(command.getName())) {
             throw new HubException(HubErrorCode.DUPLICATE_HUB);
         }
 
