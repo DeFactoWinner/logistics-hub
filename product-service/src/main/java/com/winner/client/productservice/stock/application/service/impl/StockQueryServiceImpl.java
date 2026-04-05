@@ -1,7 +1,7 @@
 package com.winner.client.productservice.stock.application.service.impl;
 
 import com.winner.client.global.exception.BusinessException;
-import com.winner.client.productservice.common.exception.ProductErrorCode;
+import com.winner.client.productservice.common.exception.StockErrorCode;
 import com.winner.client.productservice.stock.application.service.StockQueryService;
 import com.winner.client.productservice.stock.application.service.dto.result.StockResult;
 import com.winner.client.productservice.stock.domain.entity.Stock;
@@ -20,7 +20,7 @@ public class StockQueryServiceImpl implements StockQueryService {
   @Override
   public StockResult getStock(UUID productId) {
     Stock stock = stockRepository.findByProductIdAndDeletedAtIsNull(ProductId.of(productId))
-        .orElseThrow(() -> new BusinessException(ProductErrorCode.STOCK_NOT_FOUND));
+        .orElseThrow(() -> new BusinessException(StockErrorCode.STOCK_NOT_FOUND));
     return StockResult.from(stock);
   }
 

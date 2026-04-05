@@ -1,8 +1,8 @@
 package com.winner.client.productservice.product.application.service.impl;
 
 import com.winner.client.global.exception.BusinessException;
-import com.winner.client.global.pagination.CommonPageRequest;
 import com.winner.client.productservice.common.exception.ProductErrorCode;
+import com.winner.client.productservice.common.exception.StockErrorCode;
 import com.winner.client.productservice.product.application.service.ProductQueryService;
 import com.winner.client.productservice.product.application.service.dto.query.FindProductDetailQuery;
 import com.winner.client.productservice.product.application.service.dto.result.ProductDetailResult;
@@ -16,6 +16,7 @@ import com.winner.client.productservice.stock.domain.vo.ProductId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
   private final ProductRepository productRepository;
   private final StockRepository stockRepository;
+  private final ProductCommandServiceImpl productCommandServiceImpl;
 
   @Override
   public ProductResult getProduct(FindProductDetailQuery query) {
@@ -40,16 +42,15 @@ public class ProductQueryServiceImpl implements ProductQueryService {
         .orElseThrow(() -> new BusinessException((ProductErrorCode.PRODUCT_NOT_FOUND)));
 
     Stock stock = stockRepository.findByProductIdAndDeletedAtIsNull(ProductId.of(product.getId()))
-        .orElseThrow(() -> new BusinessException(ProductErrorCode.STOCK_NOT_FOUND));
+        .orElseThrow(() -> new BusinessException(StockErrorCode.STOCK_NOT_FOUND));
 
     return ProductDetailResult.of(product,stock);
   }
 
   @Override
-  public Page<ProductDetailResult> getProductsDetailList(CommonPageRequest pageable) {
+  public Page<ProductDetailResult> getProductsDetailList(Pageable pageable) {
 
     Page<ProductStockProjection> result = productRepository.findAllWithStock(pageable);
-
     return result.map(projection -> {
       Product p = projection.getProduct();
       Stock s = projection.getStock();
