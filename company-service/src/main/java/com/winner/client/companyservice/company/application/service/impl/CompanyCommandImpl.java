@@ -8,15 +8,12 @@ import com.winner.client.companyservice.company.domain.repository.CompanyReposit
 import com.winner.client.companyservice.company.domain.vo.CompanyAddress;
 import com.winner.client.companyservice.company.domain.vo.CompanyLocation;
 import com.winner.client.companyservice.company.domain.vo.HubId;
-import com.winner.client.companyservice.company.infrastructure.client.HubFeignClient;
-import com.winner.client.companyservice.company.infrastructure.client.dto.response.HubResponse;
 import com.winner.client.companyservice.company.infrastructure.service.GeocodingService;
 import com.winner.client.companyservice.company.presentation.dto.request.CreateCompanyRequest;
 import com.winner.client.companyservice.company.presentation.dto.request.UpdateCompanyRequest;
 import com.winner.client.companyservice.company.presentation.dto.response.CompanyResponse;
 import com.winner.client.global.exception.BusinessException;
 import com.winner.client.global.exception.CommonErrorCode;
-import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.security.CustomUserPrincipal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
