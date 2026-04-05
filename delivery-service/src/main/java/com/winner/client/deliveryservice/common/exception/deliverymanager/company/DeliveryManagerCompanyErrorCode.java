@@ -21,7 +21,9 @@ public enum DeliveryManagerCompanyErrorCode implements ErrorCode {
 	USER_NAME_CANNOT_BE_NULL("ERROR_606", HttpStatus.BAD_REQUEST,
 		"유저 이름은 null 일 수 없습니다."),
 	NOT_AVAILABLE("ERROR_607", HttpStatus.CONFLICT,
-		"배송 가능상태가 아닙니다.")
+		"배송 가능상태가 아닙니다."),
+	NOT_FOUND_AVAILABLE_COMPANY_DELIVERY_MANAGER("ERROR_608", HttpStatus.NOT_FOUND,
+		"배정 가능한 업체 배송담당자를 찾을 수 없습니다.")
 	;
 
 	private final String code;
