@@ -131,6 +131,11 @@ public class DeliveryRoute {
     this.actualArrivalTime = new Duration(actualArrivalTime);
   }
 
+  public void updateDeliveryManagerInfo(UUID deliveryManagerId, String DeliveryManagerName) {
+    this.deliveryManagerId = deliveryManagerId;
+    this.DeliveryManagerName = DeliveryManagerName;
+  }
+
   public DeliveryRoute(Delivery delivery, int seq, CurrentHubRoute currentHubRoute,
       String curHubName, String nextHubName, Distance estimatedDistance, Duration estimatedArrivalTime) {
     this.delivery = delivery;
