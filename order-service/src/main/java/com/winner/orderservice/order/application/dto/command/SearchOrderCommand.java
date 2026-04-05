@@ -25,13 +25,18 @@ public record SearchOrderCommand(
         condition.companyId(),
         condition.deliveryId(),
         condition.assignedDeliveryPersonId(),
-        condition.sortBy(),
-        condition.sortDirection()
+        condition.resolvedSortBy(),
+        condition.isAscending() ? "asc" : "desc"
     );
   }
 
   public String resolvedSortBy() {
-    return (sortBy != null && !sortBy.isBlank()) ? sortBy : "createdAt";
+    if (sortBy == null || sortBy.isBlank()) return "createdAt";
+    return switch (sortBy.trim().toLowerCase()) {
+      case "updatedat" -> "updatedAt";
+      case "orderedat" -> "orderedAt";
+      default -> "createdAt";
+    };
   }
 
   public boolean isAscending() {
