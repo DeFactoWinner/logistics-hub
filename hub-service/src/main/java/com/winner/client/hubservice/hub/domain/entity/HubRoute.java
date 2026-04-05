@@ -17,6 +17,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 @Getter
 @Table(
+    name = "p_hub_routes",
     uniqueConstraints = @UniqueConstraint(
         name = "uq_hub_route",
         columnNames = {"from_hub_id", "to_hub_id"}

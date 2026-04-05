@@ -12,5 +12,5 @@ public class HubRouteResponse {
     private UUID fromHubId;
     private UUID toHubId;
     private double distance;
-    private int duration;
+    private double duration;
 }

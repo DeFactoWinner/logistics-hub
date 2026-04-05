@@ -8,12 +8,14 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.Getter;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Getter
+@Table(name = "p_hubs")
 public class Hub {
 
     @Id
