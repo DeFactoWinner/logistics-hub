@@ -203,6 +203,14 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     } catch (Exception e) {
       log.error("취소 재고 복원 실패 — 수동 처리 필요 orderId={}, productId={}", orderId, productId, e);
     }
+
+    if (deliveryId != null) {
+      try {
+        deliveryFeignClient.cancelDelivery(deliveryId);
+      } catch (Exception e) {
+        log.error("배송 취소 실패 — 수동 처리 필요 orderId={}, deliveryId={}", orderId, deliveryId, e);
+      }
+    }
   }
 
   private Order findActive(UUID orderId) {
