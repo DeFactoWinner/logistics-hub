@@ -1,6 +1,5 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result;
 
-import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.AssignEventCommand;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Builder;
