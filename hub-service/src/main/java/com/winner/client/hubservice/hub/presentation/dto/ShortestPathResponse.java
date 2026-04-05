@@ -4,5 +4,6 @@ import java.util.List;
 
 public record ShortestPathResponse(
     int count,
-    List<HubNodeResponse> nodes
+    List<HubNodeResponse> nodes,
+    double totalTime
 ) {}

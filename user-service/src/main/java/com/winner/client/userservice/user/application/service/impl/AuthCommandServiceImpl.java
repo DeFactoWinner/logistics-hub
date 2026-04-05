@@ -2,17 +2,20 @@ package com.winner.client.userservice.user.application.service.impl;
 
 import com.winner.client.global.config.jwt.JwtTokenProvider;
 import com.winner.client.global.exception.BusinessException;
+import com.winner.client.global.exception.JwtTokenErrorCode;
 import com.winner.client.userservice.common.exception.UserErrorCode;
 import com.winner.client.userservice.user.application.command.LoginCommand;
+import com.winner.client.userservice.user.application.command.RefreshTokenCommand;
 import com.winner.client.userservice.user.application.command.SignupCommand;
-import com.winner.client.userservice.user.application.result.LoginResult;
 import com.winner.client.userservice.user.application.result.SignupResult;
+import com.winner.client.userservice.user.application.result.TokenResult;
 import com.winner.client.userservice.user.application.service.AuthCommandService;
 import com.winner.client.userservice.user.domain.entity.User;
 import com.winner.client.userservice.user.domain.repository.UserRepository;
 import com.winner.client.userservice.user.domain.vo.Password;
 import com.winner.client.userservice.user.domain.vo.PhoneNumber;
 import com.winner.client.userservice.user.domain.vo.UserRole;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional()
 public class AuthCommandServiceImpl implements AuthCommandService {
 
   private final PasswordEncoder passwordEncoder;
@@ -46,7 +49,8 @@ public class AuthCommandServiceImpl implements AuthCommandService {
     return SignupResult.from(userRepository.save(user));
   }
 
-  public LoginResult login(LoginCommand command) {
+  @Override
+  public TokenResult login(LoginCommand command) {
     User user = userRepository.findByUsernameAndDeletedAtNull(command.username())
         .orElseThrow(() -> new BusinessException(UserErrorCode.USER_NOT_FOUND));
 
@@ -56,6 +60,27 @@ public class AuthCommandServiceImpl implements AuthCommandService {
     if (!user.isApprove()) {
       throw new BusinessException(UserErrorCode.USER_NOT_APPROVED);
     }
+    return createTokenResultByUser(user);
+  }
+
+  @Override
+  public TokenResult refreshToken(RefreshTokenCommand command) {
+
+    String refreshToken = command.refreshToken();
+    if (!jwtTokenProvider.validateToken(refreshToken)) {
+      throw new BusinessException(JwtTokenErrorCode.INVALID_TOKEN);
+    }
+    UUID userId = jwtTokenProvider.getUserId(refreshToken);
+    if (userId == null) {
+      throw new BusinessException(JwtTokenErrorCode.INVALID_TOKEN);
+    }
+    User user = userRepository.findByIdAndDeletedAtNull(userId)
+        .orElseThrow(() -> new BusinessException(UserErrorCode.USER_NOT_FOUND));
+
+    return createTokenResultByUser(user);
+  }
+
+  private TokenResult createTokenResultByUser(User user) {
     String accessToken = jwtTokenProvider.createAccessToken(
         user.getId(),
         user.getRoleName(),
@@ -63,6 +88,8 @@ public class AuthCommandServiceImpl implements AuthCommandService {
         user.isActive());
 
     String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
-    return LoginResult.from(user.getId(), accessToken, refreshToken);
+    Long expiresIn = jwtTokenProvider.getRemainingTime(accessToken);
+    return TokenResult.from(user.getId(), accessToken, refreshToken, expiresIn);
   }
+
 }

@@ -12,5 +12,5 @@ public class HubRouteResult {
     private UUID fromHubId;
     private UUID toHubId;
     private double distance;
-    private int duration;
+    private double duration;
 }

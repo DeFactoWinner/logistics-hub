@@ -2,6 +2,7 @@ package com.winner.client.productservice.product.application.service.dto.result;
 
 import com.winner.client.productservice.product.domain.entity.Product;
 import com.winner.client.productservice.product.domain.vo.StatusEnum;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record ProductResult(
@@ -10,7 +11,10 @@ public record ProductResult(
     String description,
     UUID hubId,
     UUID companyId,
-    StatusEnum statusEnum
+    StatusEnum statusEnum,
+
+    LocalDateTime createdAt,
+    LocalDateTime updatedAt
 ) {
 
   public static ProductResult from(Product product){
@@ -20,7 +24,9 @@ public record ProductResult(
         product.getDescription(),
         product.getHubId().getHubId(),
         product.getCompanyId().getCompanyId(),
-        product.getStatusEnum()
+        product.getStatusEnum(),
+        product.getCreatedAt(),
+        product.getUpdatedAt()
     );
   }
 }

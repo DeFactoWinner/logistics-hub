@@ -9,14 +9,18 @@ import lombok.Getter;
 public class Duration {
 
     @Column(name = "route_time", nullable = false)
-    private int minutes;
+    private int seconds;
 
     protected Duration() {}
 
-    public Duration(int minutes) {
-        if (minutes <= 0) {
+    public Duration(int seconds) {
+        if (seconds <= 0) {
             throw new IllegalArgumentException("소요 시간은 0보다 커야 합니다.");
         }
-        this.minutes = minutes;
+        this.seconds = seconds;
+    }
+
+    public double getValue() {
+        return seconds;
     }
 }

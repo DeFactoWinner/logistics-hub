@@ -11,13 +11,8 @@ import com.winner.client.deliveryservice.delivery.domain.entity.DeliveryRoute;
 import com.winner.client.deliveryservice.delivery.domain.repository.DeliveryRepository;
 import com.winner.client.deliveryservice.delivery.domain.repository.DeliveryRouteRepository;
 import com.winner.client.deliveryservice.delivery.infrastructure.repository.custom.DeliveryCustomRepository;
-import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryInfoResponse;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryRouteInfoResponse;
-import com.winner.client.deliveryservice.delivery.presentation.dto.response.GetDeliveryResponse;
-import com.winner.client.deliveryservice.delivery.presentation.dto.response.GetDeliveryRouteResponse;
-import com.winner.client.deliveryservice.delivery.presentation.dto.response.ListDeliveryRouteResponse;
 import com.winner.client.global.exception.BusinessException;
-import com.winner.client.global.pagination.CommonPageRequest;
 import com.winner.client.global.pagination.PageResponse;
 import java.util.List;
 import java.util.UUID;
@@ -44,6 +39,10 @@ public class DeliveryQueryServiceImpl implements DeliveryQueryService {
   public List<FindDeliveryRouteResult> getDeliveryRoutes(UUID deliveryId) {
     validateDeliveryExists(deliveryId);
     List<DeliveryRoute> routes = deliveryRouteRepository.findAllByDeliveryId(deliveryId);
+
+    if (routes.isEmpty()) {
+      return List.of();
+    }
 
     return routes.stream().map(FindDeliveryRouteResult::from).toList();
   }

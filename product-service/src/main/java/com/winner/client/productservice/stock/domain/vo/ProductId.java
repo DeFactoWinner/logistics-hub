@@ -25,4 +25,7 @@ public class ProductId {
       throw new IllegalArgumentException("ID값은 필수입니다.");
     }
   }
+  public static ProductId of(UUID productId){
+    return new ProductId(productId);
+  }
 }

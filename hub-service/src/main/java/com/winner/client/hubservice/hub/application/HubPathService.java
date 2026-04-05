@@ -1,7 +1,7 @@
 package com.winner.client.hubservice.hub.application;
 
-import com.winner.client.hubservice.hub.application.dto.HubRouteResult;
 import com.winner.client.hubservice.hub.domain.graph.DijkstraPathFinder;
+import com.winner.client.hubservice.hub.domain.graph.HubEdge;
 import com.winner.client.hubservice.hub.domain.graph.HubGraph;
 import com.winner.client.hubservice.hub.domain.repository.HubRepository;
 import com.winner.client.hubservice.hub.infrastructure.graph.HubGraphBuilder;
@@ -50,7 +50,8 @@ public class HubPathService {
 
         return new ShortestPathResponse(
             nodes.size(),
-            nodes
+            nodes,
+            result.totalTime
         );
     }
 
@@ -77,11 +78,10 @@ public class HubPathService {
                 .map(h -> h.getName())
                 .orElse("UNKNOWN");
 
-            HubRouteResult route = hubRouteService
-                .searchRoutes(fromHubId, toHubId)
-                .stream()
+            HubEdge edge = graph.getEdges(fromHubId).stream()
+                .filter(e -> e.getTo().equals(toHubId))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Route not found"));
+                .orElseThrow(() -> new RuntimeException("Edge not found"));
 
             steps.add(new HubNodeInfo(
                 fromHubId,
@@ -89,14 +89,15 @@ public class HubPathService {
                 toHubId,
                 toName,
                 i + 1,
-                route.getDistance(),
-                route.getDuration()
+                edge.getDistance(),
+                edge.getTime()
             ));
         }
 
         return new HubRoutePathResponse(
             steps,
-            steps.size()
+            steps.size(),
+            result.totalTime
         );
     }
 }
