@@ -1,11 +1,11 @@
-package com.winner.client.userservice.user.presentation;
+package com.winner.client.userservice.user.presentation.controller;
 
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import com.winner.client.global.security.CustomUserPrincipal;
 import com.winner.client.userservice.user.application.service.UserCommandService;
 import com.winner.client.userservice.user.application.service.UserQueryService;
-import com.winner.client.userservice.user.presentation.response.UserDetailResponse;
+import com.winner.client.userservice.user.presentation.dto.response.UserDetailResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

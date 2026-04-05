@@ -1,6 +1,6 @@
-package com.winner.client.userservice.user.presentation.response;
+package com.winner.client.userservice.user.presentation.dto.response;
 
-import com.winner.client.userservice.user.application.result.TokenResult;
+import com.winner.client.userservice.user.application.dto.result.TokenResult;
 import java.util.UUID;
 import lombok.Builder;
 

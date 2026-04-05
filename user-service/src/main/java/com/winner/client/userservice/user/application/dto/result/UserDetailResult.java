@@ -1,4 +1,4 @@
-package com.winner.client.userservice.user.application.result;
+package com.winner.client.userservice.user.application.dto.result;
 
 import com.winner.client.userservice.user.domain.entity.User;
 import com.winner.client.userservice.user.domain.enums.ApprovalStatusType;

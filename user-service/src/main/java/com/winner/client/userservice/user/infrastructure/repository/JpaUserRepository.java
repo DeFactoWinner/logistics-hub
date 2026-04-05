@@ -1,4 +1,4 @@
-package com.winner.client.userservice.user.infrastructure;
+package com.winner.client.userservice.user.infrastructure.repository;
 
 import com.winner.client.userservice.user.domain.entity.User;
 import com.winner.client.userservice.user.domain.repository.UserRepository;

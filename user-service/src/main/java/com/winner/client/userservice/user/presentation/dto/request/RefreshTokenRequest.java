@@ -1,6 +1,6 @@
-package com.winner.client.userservice.user.presentation.request;
+package com.winner.client.userservice.user.presentation.dto.request;
 
-import com.winner.client.userservice.user.application.command.RefreshTokenCommand;
+import com.winner.client.userservice.user.application.dto.command.RefreshTokenCommand;
 import jakarta.validation.constraints.NotBlank;
 
 public record RefreshTokenRequest(
