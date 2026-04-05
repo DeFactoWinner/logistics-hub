@@ -36,7 +36,7 @@ public class HubRouteService {
 
     @Transactional(readOnly = true)
     public List<HubRouteResult> getAllRoutes() {
-        return hubRouteRepository.findAll().stream()
+        return hubRouteRepository.findAllByDeletedAtIsNull().stream()
             .map(route -> HubRouteResult.builder()
                 .id(route.getId())
                 .fromHubId(route.getRouteInfo().getFromHubId())

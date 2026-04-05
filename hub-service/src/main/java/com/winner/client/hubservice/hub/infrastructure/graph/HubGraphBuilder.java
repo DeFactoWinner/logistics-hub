@@ -15,7 +15,7 @@ public class HubGraphBuilder {
     private final HubRouteRepository hubRouteRepository;
 
     public HubGraph build() {
-        List<HubRoute> routes = hubRouteRepository.findAll();
+        List<HubRoute> routes = hubRouteRepository.findAllByDeletedAtIsNull();
 
         HubGraph graph = new HubGraph();
 

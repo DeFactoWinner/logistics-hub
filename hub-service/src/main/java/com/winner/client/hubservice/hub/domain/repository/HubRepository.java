@@ -5,9 +5,10 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface HubRepository extends JpaRepository<Hub, UUID> {
+public interface HubRepository {
+
+    Hub save(Hub hub);
 
     boolean existsByNameAndDeletedAtIsNull(String name);
 
