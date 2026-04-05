@@ -23,7 +23,11 @@ public enum DeliveryManagerCompanyErrorCode implements ErrorCode {
 	NOT_AVAILABLE("ERROR_607", HttpStatus.CONFLICT,
 		"배송 가능상태가 아닙니다."),
 	NOT_FOUND_AVAILABLE_COMPANY_DELIVERY_MANAGER("ERROR_608", HttpStatus.NOT_FOUND,
-		"배정 가능한 업체 배송담당자를 찾을 수 없습니다.")
+		"배정 가능한 업체 배송담당자를 찾을 수 없습니다."),
+	DELIVERY_NOT_FOUND("ERROR_609", HttpStatus.BAD_REQUEST,
+		"진행중인 배송이 없습니다."),
+	DELIVERY_ID_MISMATCH("ERROR_610", HttpStatus.BAD_REQUEST,
+		"배정된 배송 건이 아니므로 완료할 수 없습니다."),
 	;
 
 	private final String code;
