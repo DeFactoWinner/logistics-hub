@@ -15,7 +15,8 @@ public record OrderSummaryResult(
     String productName,
     Long count,
     OrderStatus status,
-    LocalDateTime orderedAt
+    LocalDateTime orderedAt,
+    LocalDateTime createdAt
 ) {
   public static OrderSummaryResult from(Order order) {
     return new OrderSummaryResult(
@@ -28,7 +29,8 @@ public record OrderSummaryResult(
         order.getSnapshot().getProductName(),
         order.getOrderDetail().getCount(),
         order.getStatus(),
-        order.getOrderedAt()
+        order.getOrderedAt(),
+        order.getCreatedAt()
     );
   }
 }

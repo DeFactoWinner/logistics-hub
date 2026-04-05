@@ -13,4 +13,3 @@ public interface OrderCommandService {
   OrderResult confirmOrder(UUID orderId, UserContext ctx);
   OrderResult cancelOrder(UUID orderId, UserContext ctx);
 }
-

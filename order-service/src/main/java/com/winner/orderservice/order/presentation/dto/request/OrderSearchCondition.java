@@ -3,6 +3,7 @@ package com.winner.orderservice.order.presentation.dto.request;
 import com.winner.orderservice.order.domain.enums.OrderStatus;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public record OrderSearchCondition(
@@ -21,7 +22,7 @@ public record OrderSearchCondition(
 
     String sortBy,
 
-    String sortDirection
+    Direction sortDirection
 ) {
   public String resolvedSortBy() {
     if (sortBy == null || sortBy.isBlank()) return "createdAt";
@@ -33,6 +34,6 @@ public record OrderSearchCondition(
   }
 
   public boolean isAscending() {
-    return "asc".equalsIgnoreCase(sortDirection);
+    return Direction.ASC.equals(sortDirection);
   }
 }
