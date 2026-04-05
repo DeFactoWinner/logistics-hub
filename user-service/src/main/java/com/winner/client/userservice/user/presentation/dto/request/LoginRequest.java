@@ -1,6 +1,6 @@
-package com.winner.client.userservice.user.presentation.request;
+package com.winner.client.userservice.user.presentation.dto.request;
 
-import com.winner.client.userservice.user.application.command.LoginCommand;
+import com.winner.client.userservice.user.application.dto.command.LoginCommand;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 

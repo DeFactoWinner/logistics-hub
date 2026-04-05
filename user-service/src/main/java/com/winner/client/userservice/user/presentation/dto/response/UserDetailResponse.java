@@ -1,6 +1,6 @@
-package com.winner.client.userservice.user.presentation.response;
+package com.winner.client.userservice.user.presentation.dto.response;
 
-import com.winner.client.userservice.user.application.result.UserDetailResult;
+import com.winner.client.userservice.user.application.dto.result.UserDetailResult;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Builder;

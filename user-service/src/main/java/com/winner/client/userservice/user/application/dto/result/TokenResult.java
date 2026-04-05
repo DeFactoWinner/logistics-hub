@@ -1,4 +1,4 @@
-package com.winner.client.userservice.user.application.result;
+package com.winner.client.userservice.user.application.dto.result;
 
 import java.util.UUID;
 import lombok.Builder;

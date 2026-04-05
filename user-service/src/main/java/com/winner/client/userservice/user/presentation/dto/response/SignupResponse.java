@@ -1,6 +1,6 @@
-package com.winner.client.userservice.user.presentation.response;
+package com.winner.client.userservice.user.presentation.dto.response;
 
-import com.winner.client.userservice.user.application.result.SignupResult;
+import com.winner.client.userservice.user.application.dto.result.SignupResult;
 import com.winner.client.userservice.user.domain.enums.ApprovalStatusType;
 import com.winner.client.userservice.user.domain.enums.UserStatusType;
 import java.time.LocalDateTime;

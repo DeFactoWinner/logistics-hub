@@ -1,13 +1,13 @@
-package com.winner.client.userservice.user.presentation;
+package com.winner.client.userservice.user.presentation.controller;
 
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import com.winner.client.userservice.user.application.service.AuthCommandService;
-import com.winner.client.userservice.user.presentation.request.LoginRequest;
-import com.winner.client.userservice.user.presentation.request.RefreshTokenRequest;
-import com.winner.client.userservice.user.presentation.request.SignupRequest;
-import com.winner.client.userservice.user.presentation.response.AuthTokenResponse;
-import com.winner.client.userservice.user.presentation.response.SignupResponse;
+import com.winner.client.userservice.user.presentation.dto.request.LoginRequest;
+import com.winner.client.userservice.user.presentation.dto.request.RefreshTokenRequest;
+import com.winner.client.userservice.user.presentation.dto.request.SignupRequest;
+import com.winner.client.userservice.user.presentation.dto.response.AuthTokenResponse;
+import com.winner.client.userservice.user.presentation.dto.response.SignupResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

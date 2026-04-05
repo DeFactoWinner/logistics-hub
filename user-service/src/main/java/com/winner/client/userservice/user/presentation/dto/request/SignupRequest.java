@@ -1,6 +1,6 @@
-package com.winner.client.userservice.user.presentation.request;
+package com.winner.client.userservice.user.presentation.dto.request;
 
-import com.winner.client.userservice.user.application.command.SignupCommand;
+import com.winner.client.userservice.user.application.dto.command.SignupCommand;
 import com.winner.client.userservice.user.domain.enums.RoleType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

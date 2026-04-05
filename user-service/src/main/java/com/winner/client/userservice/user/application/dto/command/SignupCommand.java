@@ -1,4 +1,4 @@
-package com.winner.client.userservice.user.application.command;
+package com.winner.client.userservice.user.application.dto.command;
 
 import com.winner.client.userservice.user.domain.enums.RoleType;
 import java.util.UUID;

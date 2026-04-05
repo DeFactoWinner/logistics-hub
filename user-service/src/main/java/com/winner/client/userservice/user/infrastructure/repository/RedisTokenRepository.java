@@ -1,4 +1,4 @@
-package com.winner.client.userservice.user.infrastructure;
+package com.winner.client.userservice.user.infrastructure.repository;
 
 import com.winner.client.global.variable.JwtProperties;
 import com.winner.client.userservice.user.domain.repository.TokenRepository;
