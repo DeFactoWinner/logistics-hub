@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name="user-service")
 public interface UserClient {
 
-    @PatchMapping("/internal/v1/users/{userId}/unassign")
-    void unassignUser(@PathVariable UUID userId);
+    @PatchMapping("/internal/v1/users/unassign/{referenceId}")
+    void unassignUsersByReferenceId(@PathVariable UUID referenceId);
 }

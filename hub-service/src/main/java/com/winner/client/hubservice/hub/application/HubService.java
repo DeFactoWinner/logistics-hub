@@ -77,8 +77,7 @@ public class HubService {
         Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId)
             .orElseThrow(()-> new HubException(HubErrorCode.HUB_NOT_FOUND));
 
-        // TODO: 허브에 속한 사용자 목록 조회 후 전체 unassign 처리 필요
-        userPort.unassignUser(userId);
+        userPort.unassignUsersByReferenceId(hubId);
 
         hub.delete(userId);
 

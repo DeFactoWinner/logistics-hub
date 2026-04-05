@@ -12,7 +12,7 @@ public class UserClientAdapter implements UserPort {
     private final UserClient userClient;
 
     @Override
-    public void unassignUser(UUID userId) {
-        userClient.unassignUser(userId);
+    public void unassignUsersByReferenceId(UUID referenceId) {
+        userClient.unassignUsersByReferenceId(referenceId);
     }
 }

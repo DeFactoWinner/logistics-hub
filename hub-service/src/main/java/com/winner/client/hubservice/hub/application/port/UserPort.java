@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface UserPort {
 
-    void unassignUser(UUID userId);
+    void unassignUsersByReferenceId(UUID referenceId);
 }
