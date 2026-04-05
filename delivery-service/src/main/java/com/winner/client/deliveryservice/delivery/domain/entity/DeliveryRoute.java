@@ -90,9 +90,10 @@ public class DeliveryRoute {
 
   private static void validateSeq(int seq) {
     if (seq < 0) {
-      throw new IllegalArgumentException("순번은 0 이상이어야 합니다.");
+      throw new BusinessException(DeliveryErrorCode.INVALID_SEQUENCE);
     }
   }
+
   private void changeStatus(DeliveryRouteStatus next) {
     if (!this.status.canTransitionTo(next)) {
 
@@ -132,8 +133,9 @@ public class DeliveryRoute {
     this.DeliveryManagerName = DeliveryManagerName;
   }
 
-  public DeliveryRoute(Delivery delivery, int seq, CurrentHubRoute currentHubRoute,
+  private DeliveryRoute(Delivery delivery, int seq, CurrentHubRoute currentHubRoute,
       String curHubName, String nextHubName, Distance estimatedDistance, Duration estimatedArrivalTime) {
+    validateSeq(seq);
     this.delivery = delivery;
     this.seq = seq;
     this.currentHubRoute = currentHubRoute;
