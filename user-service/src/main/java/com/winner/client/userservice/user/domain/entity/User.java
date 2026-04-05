@@ -35,7 +35,7 @@ public class User extends BaseAuditEntity {
   private UUID id;
 
   @Column(nullable = false, length = 15)
-  private String username;
+  private String userName;
 
   @Column(nullable = false, length = 20)
   private String name;
@@ -65,7 +65,7 @@ public class User extends BaseAuditEntity {
       PhoneNumber phoneNumber, String slackId, UserRole userRole
   ) {
     User user = new User();
-    user.username = username;
+    user.userName = username;
     user.name = name;
     user.passwordHash = passwordHash;
     user.phoneNumber = phoneNumber;

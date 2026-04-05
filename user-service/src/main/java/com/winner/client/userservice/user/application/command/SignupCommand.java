@@ -6,7 +6,7 @@ import lombok.Builder;
 
 @Builder
 public record SignupCommand(
-    String username,
+    String userName,
     String name,
     String password,
     String phoneNumber,
