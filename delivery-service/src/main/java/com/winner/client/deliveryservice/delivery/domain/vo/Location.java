@@ -1,5 +1,7 @@
 package com.winner.client.deliveryservice.delivery.domain.vo;
 
+import com.winner.client.deliveryservice.common.exception.delivery.DeliveryErrorCode;
+import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -23,13 +25,13 @@ public class Location {
 
   private void validateLatitude(double latitude) {
     if (latitude < -90 || latitude > 90) {
-      throw new IllegalArgumentException("위도(latitude)는 -90 ~ 90 범위여야 합니다.");
+      throw new BusinessException(DeliveryErrorCode.INVALID_LATITUDE);
     }
   }
 
   private void validateLongitude(double longitude) {
     if (longitude < -180 || longitude > 180) {
-      throw new IllegalArgumentException("경도(longitude)는 -180 ~ 180 범위여야 합니다.");
+      throw new BusinessException(DeliveryErrorCode.INVALID_LONGITUDE);
     }
   }
 }

@@ -4,12 +4,7 @@ import com.winner.client.deliveryservice.delivery.application.dto.query.SearchDe
 import com.winner.client.deliveryservice.delivery.application.dto.result.FindDeliveryResult;
 import com.winner.client.deliveryservice.delivery.application.dto.result.FindDeliveryRouteResult;
 import com.winner.client.deliveryservice.delivery.application.dto.result.SearchDeliveryResult;
-import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryInfoResponse;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryRouteInfoResponse;
-import com.winner.client.deliveryservice.delivery.presentation.dto.response.GetDeliveryResponse;
-import com.winner.client.deliveryservice.delivery.presentation.dto.response.GetDeliveryRouteResponse;
-import com.winner.client.deliveryservice.delivery.presentation.dto.response.ListDeliveryRouteResponse;
-import com.winner.client.global.pagination.CommonPageRequest;
 import com.winner.client.global.pagination.PageResponse;
 import java.util.List;
 import java.util.UUID;

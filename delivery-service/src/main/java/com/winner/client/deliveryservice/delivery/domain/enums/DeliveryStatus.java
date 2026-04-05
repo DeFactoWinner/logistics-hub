@@ -4,7 +4,7 @@ import java.util.Set;
 
 public enum DeliveryStatus {
 
-  CREATED {
+  PENDING {
     public Set<DeliveryStatus> nextStates() {
       return Set.of(HUB_WAITING, CANCELLED);
     }
