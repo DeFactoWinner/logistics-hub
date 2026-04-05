@@ -2,7 +2,9 @@ package com.winner.client.deliveryservice.deliverymanagercompany.infrastructure.
 
 import com.winner.client.deliveryservice.common.event.deliverymanager.company.AssignCompanyDeliveryManagerFailEvent;
 import com.winner.client.deliveryservice.common.event.deliverymanager.company.AssignCompanyDeliveryManagerSuccessEvent;
+import com.winner.client.deliveryservice.common.event.deliverymanager.company.DeliveryFinalCompleteEvent;
 import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.re.CompanyDeliveryManagerAssignResult;
+import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.result.DeliveryFinalCompleteResult;
 import com.winner.client.deliveryservice.deliverymanagercompany.application.message.CompanyDeliveryManagerExternalPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -23,5 +25,10 @@ public class CompanyDeliveryManagerExternalPortImpl implements CompanyDeliveryMa
 			publisher.publishEvent(
 				AssignCompanyDeliveryManagerFailEvent.from(result));
 		}
+	}
+
+	@Override
+	public void deliveryFinalCompleteEventPublish(DeliveryFinalCompleteResult result) {
+		publisher.publishEvent(DeliveryFinalCompleteEvent.from(result));
 	}
 }

@@ -1,6 +1,8 @@
 package com.winner.client.deliveryservice.deliverymanagercompany.domain.entity;
 
+import static com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode.DELIVERY_ID_MISMATCH;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode.DELIVERY_MANAGER_IN_PROGRESS;
+import static com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode.DELIVERY_NOT_FOUND;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode.EXCEEDED_TO_IN_HUB_DELIVERY_MANAGER;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.company.DeliveryManagerCompanyErrorCode.NOT_AVAILABLE;
 
@@ -79,9 +81,16 @@ public class DeliveryManagerCompany extends BaseAuditEntity {
 		this.deliveryManagerStatus = DeliveryManagerStatus.IN_DELIVERY;
 	}
 
-	public void completeDelivery() {
+	public void completeDelivery(UUID deliveryId) {
+		if (!getNullSafeDeliveryId().isAssigned()) {
+			throw new BusinessException(DELIVERY_NOT_FOUND);
+		}
+		if (!this.deliveryId.isMatched(deliveryId)) {
+			throw new BusinessException(DELIVERY_ID_MISMATCH);
+		}
 		this.lastDeliveryCompletedTime = LocalDateTime.now();
 		this.deliveryManagerStatus = DeliveryManagerStatus.AVAILABLE;
+		this.deliveryId = new DeliveryId(null);
 	}
 
 	public void changeHub(UUID newHubId) {
@@ -107,7 +116,11 @@ public class DeliveryManagerCompany extends BaseAuditEntity {
 	public String getName() { return user.getName(); }
 	public UUID getHubId() { return hubId.getValue(); }
 	public UUID getDeliveryId() {
-		return deliveryId != null ? deliveryId.getValue() : new DeliveryId(null).getValue();
+		return getNullSafeDeliveryId().getValue();
 	}
 	public Long getAssignmentOrder() { return assignmentOrder.getValue(); }
+
+	private DeliveryId getNullSafeDeliveryId() {
+		return deliveryId != null ? this.deliveryId : new DeliveryId(null);
+	}
 }

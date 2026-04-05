@@ -7,6 +7,7 @@ import static com.winner.client.deliveryservice.common.exception.deliverymanager
 import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.command.DeliveryManagerAssignEventCommand;
 import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.command.DeliveryManagerCompanyRegistrationCommand;
 import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.re.CompanyDeliveryManagerAssignResult;
+import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.result.DeliveryFinalCompleteResult;
 import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.result.DeliveryManagerCompanyInfoResult;
 import com.winner.client.deliveryservice.deliverymanagercompany.application.message.CompanyDeliveryManagerExternalPort;
 import com.winner.client.deliveryservice.deliverymanagercompany.application.message.DeliveryDeliveryManagerCompanyUsecase;
@@ -85,5 +86,13 @@ public class DeliveryManagerCompanyWriteService implements DeliveryDeliveryManag
 			.stream()
 			.findFirst()
 			.orElseThrow(() -> new BusinessException(NOT_FOUND_AVAILABLE_COMPANY_DELIVERY_MANAGER));
+	}
+
+	public void completion(UUID userId, UUID deliveryId) {
+		DeliveryManagerCompany manager = repository.findByUserIdAndDeletedByNull(
+				userId).orElseThrow(() -> new BusinessException(NOT_FOUND_COMPANY_DELIVERY_MANAGER));
+		manager.completeDelivery(deliveryId);
+		companyDeliveryManagerExternalPort
+			.deliveryFinalCompleteEventPublish(DeliveryFinalCompleteResult.of(userId, deliveryId));
 	}
 }
