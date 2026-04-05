@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional()
 public class AuthCommandServiceImpl implements AuthCommandService {
 
   private final PasswordEncoder passwordEncoder;
