@@ -55,15 +55,25 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       throw new BusinessException(OrderErrorCode.OUT_OF_STOCK);
     }
 
-    Order order = Order.create(
-        new OrderParticipants(command.supplierId(), command.receiverId()),
-        new OrderSnapshot(product.name(), command.deliveryAddress(), command.deliveryAddressDetail()),
-        new OrderDetail(command.productId(), command.count(), command.comment()),
-        product.hubId(),
-        command.orderedAt()
-    );
-    orderRepository.save(order);
-
+    Order order;
+    try {
+      order = Order.create(
+          new OrderParticipants(command.supplierId(), command.receiverId()),
+          new OrderSnapshot(product.name(), command.deliveryAddress(), command.deliveryAddressDetail()),
+          new OrderDetail(command.productId(), command.count(), command.comment()),
+          product.hubId(),
+          command.orderedAt()
+      );
+      orderRepository.save(order);
+    } catch (Exception e) {
+      log.error("주문 생성/저장 실패 productId={}", command.productId(), e);
+      try {
+        productFeignClient.modifyStock(command.productId(), new ModifyStockRequest(command.count()));
+      } catch (Exception restoreEx) {
+        log.error("보상 재고 복원 실패 — 수동 처리 필요 productId={}", command.productId(), restoreEx);
+      }
+      throw new BusinessException(OrderErrorCode.ORDER_CREATE_FAILED);
+    }
 
     try {
       var deliveryReq = new CreateDeliveryRequest(
@@ -75,7 +85,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       );
       var deliveryResponse = deliveryFeignClient.createDelivery(deliveryReq);
       if (deliveryResponse == null || deliveryResponse.getData() == null) {
-        throw new IllegalStateException("Delivery service returned null response or data");
+        throw new BusinessException(OrderErrorCode.DELIVERY_CREATE_FAILED);
       }
       DeliveryResponse delivery = deliveryResponse.getData();
 
