@@ -20,7 +20,7 @@ public class DeliveryMessagePortImpl implements DeliveryMessagePort {
 	public void assignEventPublish(DeliveryAssignResult result) {
 		if (result.isSuccess()) {
 			publisher.publishEvent(
-				AssignSuccessEvent.of(result.getDeliveryId(), result.getOrderId())
+				AssignSuccessEvent.of(result.getDeliveryId(), result.getDeliveryManagerId())
 			);
 		} else {
 			publisher.publishEvent(AssignFailEvent.from(result.getErrorMessage()));

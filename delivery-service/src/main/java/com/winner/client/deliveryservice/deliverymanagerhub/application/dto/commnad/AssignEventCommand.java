@@ -3,8 +3,7 @@ package com.winner.client.deliveryservice.deliverymanagerhub.application.dto.com
 import java.util.UUID;
 
 public record AssignEventCommand (
-	UUID deliveryId,
-	UUID orderId
+	UUID deliveryId
 ) {
 
 }

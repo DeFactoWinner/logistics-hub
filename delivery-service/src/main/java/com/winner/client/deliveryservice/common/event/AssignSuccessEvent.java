@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public record AssignSuccessEvent (
 	UUID deliveryId,
-	UUID orderId
+	UUID deliveryManagerId
 ) {
-	public static AssignSuccessEvent of(UUID deliveryId, UUID orderId) {
-		return new AssignSuccessEvent(deliveryId, orderId);
+	public static AssignSuccessEvent of(UUID deliveryId, UUID deliveryManagerId) {
+		return new AssignSuccessEvent(deliveryId, deliveryManagerId);
 	}
 }

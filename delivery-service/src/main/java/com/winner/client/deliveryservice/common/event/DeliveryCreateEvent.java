@@ -4,11 +4,10 @@ import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.comm
 import java.util.UUID;
 
 public record DeliveryCreateEvent(
-	UUID deliveryId,
-	UUID orderId
+	UUID deliveryId
 ) {
 
 	public AssignEventCommand toCommand() {
-		return new AssignEventCommand(this.deliveryId, this.orderId);
+		return new AssignEventCommand(this.deliveryId);
 	}
 }
