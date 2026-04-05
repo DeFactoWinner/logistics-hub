@@ -49,6 +49,7 @@ public record OrderSummaryResponse(
         .deliveryId(result.deliveryId())
         .hubId(result.hubId())
         .orderedAt(result.orderedAt())
+        .createdAt(result.createdAt())
         .build();
   }
 }
