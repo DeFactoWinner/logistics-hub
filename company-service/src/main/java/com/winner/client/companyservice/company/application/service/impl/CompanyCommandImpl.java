@@ -30,7 +30,7 @@ public class CompanyCommandImpl implements CompanyCommandService {
 
   private final GeocodingService geocodingService;
   private final CompanyRepository companyRepository;
-  private final HubFeignClient hubFeignClient;
+  //private final HubFeignClient hubFeignClient; // 수정예정
   private final UserPort userPort;
 
   @Override
@@ -38,11 +38,11 @@ public class CompanyCommandImpl implements CompanyCommandService {
     CompanyLocation companyLocation = convert(request.address());
     CompanyAddress address = CompanyAddress.of(request.address(), request.addressDetail());
 
-    ApiResponse<HubResponse> hubClient =  hubFeignClient.getHub(request.hubId());
+   // ApiResponse<HubResponse> hubClient =  hubFeignClient.getHub(request.hubId());
 
-    if(hubClient == null){
-      throw new BusinessException(CompanyErrorCode.HUB_NOT_FOUND);
-    }
+//    if(hubClient == null){
+//      throw new BusinessException(CompanyErrorCode.HUB_NOT_FOUND);
+//    }
 
     HubId hubId = HubId.of(request.hubId());
 
@@ -62,11 +62,11 @@ public class CompanyCommandImpl implements CompanyCommandService {
     CompanyAddress address = request.address() == null ? null :
         CompanyAddress.of(request.address(), request.addressDetail());
 
-    ApiResponse<HubResponse> hubClient =  hubFeignClient.getHub(request.hubId());
+   // ApiResponse<HubResponse> hubClient =  hubFeignClient.getHub(request.hubId());
 
-    if(hubClient == null){
-      throw new BusinessException(CompanyErrorCode.HUB_NOT_FOUND);
-    }
+//    if(hubClient == null){
+//      throw new BusinessException(CompanyErrorCode.HUB_NOT_FOUND);
+//    }
 
     HubId hubId = request.hubId() == null ? null : HubId.of(request.hubId());
 
