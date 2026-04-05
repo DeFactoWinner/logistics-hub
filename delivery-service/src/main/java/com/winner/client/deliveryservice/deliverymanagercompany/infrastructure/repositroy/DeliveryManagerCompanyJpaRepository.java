@@ -2,7 +2,6 @@ package com.winner.client.deliveryservice.deliverymanagercompany.infrastructure.
 
 import static com.winner.client.deliveryservice.common.constants.DeliveryManagerStatus.AVAILABLE;
 
-import com.winner.client.deliveryservice.common.constants.DeliveryManagerStatus;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.entity.DeliveryManagerCompany;
 import com.winner.client.deliveryservice.deliverymanagercompany.domain.repository.DeliveryManagerCompanyRepository;
 import java.util.List;
