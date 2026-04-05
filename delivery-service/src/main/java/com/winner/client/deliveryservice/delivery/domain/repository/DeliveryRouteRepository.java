@@ -8,5 +8,7 @@ import java.util.UUID;
 public interface DeliveryRouteRepository {
   List<DeliveryRoute> findAllByDeliveryId(UUID deliveryId);
   Optional<DeliveryRoute> findById(UUID id);
+  Optional<DeliveryRoute> findFirstPendingRoute(UUID deliveryId);
+  Optional<DeliveryRoute> findFirstInProgressRoute(UUID deliveryId);
   void save(DeliveryRoute route);
 }

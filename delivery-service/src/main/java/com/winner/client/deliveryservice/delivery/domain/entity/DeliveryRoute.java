@@ -94,6 +94,10 @@ public class DeliveryRoute {
     }
   }
 
+  public boolean isFirstRoute() {
+    return this.seq == 1;
+  }
+
   private void changeStatus(DeliveryRouteStatus next) {
     if (!this.status.canTransitionTo(next)) {
 
