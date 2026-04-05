@@ -145,7 +145,7 @@ public class Delivery extends BaseAuditEntity {
     this.receiver = receiver;
     this.address = address;
     this.location = location;
-    this.status = DeliveryStatus.CREATED;
+    this.status = DeliveryStatus.PENDING;
   }
 
   public static Delivery create(
