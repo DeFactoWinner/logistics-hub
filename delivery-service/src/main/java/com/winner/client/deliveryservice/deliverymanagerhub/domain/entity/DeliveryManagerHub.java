@@ -3,7 +3,6 @@ package com.winner.client.deliveryservice.deliverymanagerhub.domain.entity;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.DELIVERY_MANAGER_IN_PROGRESS;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.HUB_DELIVERY_MANAGER_OVER_CAPACITY;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.NOT_AVAILABLE;
-import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.USER_ID_CANNOT_BE_NULL;
 
 import com.winner.client.deliveryservice.common.constants.DeliveryManagerStatus;
 import com.winner.client.deliveryservice.deliverymanagerhub.domain.vo.AssignmentOrder;

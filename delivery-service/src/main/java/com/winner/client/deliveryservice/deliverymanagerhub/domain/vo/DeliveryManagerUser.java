@@ -3,7 +3,6 @@ package com.winner.client.deliveryservice.deliverymanagerhub.domain.vo;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.USER_ID_CANNOT_BE_NULL;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.USER_NAME_CANNOT_BE_NULL;
 
-import com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode;
 import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
