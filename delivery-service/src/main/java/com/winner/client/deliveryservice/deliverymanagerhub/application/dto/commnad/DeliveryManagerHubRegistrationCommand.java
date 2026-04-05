@@ -3,7 +3,8 @@ package com.winner.client.deliveryservice.deliverymanagerhub.application.dto.com
 import java.util.UUID;
 
 public record DeliveryManagerHubRegistrationCommand(
-	UUID userId
+	UUID userId,
+	String name
 ) {
 
 }

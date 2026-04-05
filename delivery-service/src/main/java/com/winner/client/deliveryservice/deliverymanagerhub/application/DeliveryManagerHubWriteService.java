@@ -43,7 +43,7 @@ public class DeliveryManagerHubWriteService implements DeliveryDeliveryManagerHu
 
 		return DeliveryManagerHubInfoResult.from(
 			repository.save(
-				DeliveryManagerHub.create(command.userId(), nextAssignmentOrder, curCount)
+				DeliveryManagerHub.create(command.userId(), command.name(), nextAssignmentOrder, curCount)
 			)
 		);
 	}
