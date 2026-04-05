@@ -20,10 +20,12 @@ public class DeliveryMessagePortImpl implements DeliveryMessagePort {
 	public void assignEventPublish(DeliveryAssignResult result) {
 		if (result.isSuccess()) {
 			publisher.publishEvent(
-				AssignHubDeliveryManagerSuccessEvent.of(result.getDeliveryId(), result.getDeliveryManagerId())
+				AssignHubDeliveryManagerSuccessEvent
+					.of(result.getDeliveryId(), result.getDeliveryManagerId(), result.getDeliveryManagerName())
 			);
 		} else {
-			publisher.publishEvent(AssignHubDeliveryManagerFailEvent.from(result.getErrorMessage()));
+			publisher.publishEvent(AssignHubDeliveryManagerFailEvent
+				.of(result.getErrorMessage(), result.getDeliveryManagerName()));
 		}
 	}
 

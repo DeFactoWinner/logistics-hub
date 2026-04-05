@@ -24,9 +24,10 @@ public class DeliveryAssignResult {
 			.build();
 	}
 
-	public static DeliveryAssignResult fail(String errorMessage) {
+	public static DeliveryAssignResult fail(String errorMessage, UUID deliveryId) {
 		return DeliveryAssignResult.builder()
 			.success(false)
+			.deliveryId(deliveryId)
 			.errorMessage(errorMessage)
 			.build();
 	}

@@ -4,9 +4,10 @@ import java.util.UUID;
 
 public record AssignHubDeliveryManagerSuccessEvent(
 	UUID deliveryId,
-	UUID deliveryManagerId
+	UUID deliveryManagerId,
+	String name
 ) {
-	public static AssignHubDeliveryManagerSuccessEvent of(UUID deliveryId, UUID deliveryManagerId) {
-		return new AssignHubDeliveryManagerSuccessEvent(deliveryId, deliveryManagerId);
+	public static AssignHubDeliveryManagerSuccessEvent of(UUID deliveryId, UUID deliveryManagerId, String name) {
+		return new AssignHubDeliveryManagerSuccessEvent(deliveryId, deliveryManagerId, name);
 	}
 }
