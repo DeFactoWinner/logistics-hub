@@ -26,8 +26,8 @@ public class CompanyClientAdapter implements CompanyPort {
     try {
       CompanyResponse response = companyFeignClient.getCompany(companyId);
       log.info("CompanyResponse: {}", response);
-      log.info("CompanyId: {}", response.companyId());
-      log.info("HubID : {}",response.hubId());
+      log.info("CompanyId: {}", response.getCompanyId());
+      log.info("HubID : {}",response.getHubId());
 
       return response;
     } catch (feign.FeignException.NotFound e) {

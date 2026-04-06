@@ -16,7 +16,7 @@ import com.winner.client.productservice.product.domain.repository.ProductReposit
 import com.winner.client.productservice.product.domain.vo.CompanyId;
 import com.winner.client.productservice.product.domain.vo.HubId;
 import com.winner.client.productservice.product.domain.vo.StatusEnum;
-import com.winner.client.productservice.product.infrastructure.repository.client.dto.CompanyResponse;
+import com.winner.client.productservice.product.infrastructure.client.dto.CompanyResponse;
 import com.winner.client.productservice.stock.domain.vo.ProductId;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -43,17 +43,17 @@ public class ProductCommandServiceImpl implements ProductCommandService {
     CompanyResponse response =
         companyPort.getCompany(command.companyId().getCompanyId());
 
-    UUID hubId = response.hubId();
+    UUID hubId = response.getHubId();
     HubId hub = HubId.of(hubId);
 
     if(!hub.getHubId().equals(command.hubId().getHubId())){
       throw new BusinessException(ProductErrorCode.HUB_NOT_FOUND);
     }
 
-    UUID companyId = response.companyId();
+    UUID companyId = response.getCompanyId();
     CompanyId company = CompanyId.of(companyId);
 
-    productValidate.upsertProduct(response,userPrincipal);
+    productValidate.createProduct(response,userPrincipal);
 
     Product product = Product.create(command.productName(),
         company,
@@ -74,6 +74,8 @@ public class ProductCommandServiceImpl implements ProductCommandService {
     Product product = productRepository.findByIdAndDeletedAtIsNull(command.productId())
         .orElseThrow(() -> new BusinessException(ProductErrorCode.PRODUCT_NOT_FOUND));
 
+    productValidate.updateProduct(product.getCompanyId(),product.getHubId(),userPrincipal);
+
     try {
       companyPort.getCompany(product.getCompanyId().getCompanyId());
     } catch (Exception e) {
@@ -93,8 +95,7 @@ public class ProductCommandServiceImpl implements ProductCommandService {
     Product product = productRepository.findByIdAndDeletedAtIsNull(productId)
         .orElseThrow(() -> new BusinessException(ProductErrorCode.PRODUCT_NOT_FOUND));
 
-    CompanyResponse response =
-        companyPort.getCompany(product.getCompanyId().getCompanyId());
+    CompanyResponse response = companyPort.getCompany(product.getId());
 
     productValidate.deleteProduct(response,userPrincipal);
 
