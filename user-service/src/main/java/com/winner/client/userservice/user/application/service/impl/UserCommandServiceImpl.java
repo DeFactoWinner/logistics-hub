@@ -3,6 +3,7 @@ package com.winner.client.userservice.user.application.service.impl;
 import com.winner.client.global.config.jwt.JwtTokenProvider;
 import com.winner.client.global.exception.BusinessException;
 import com.winner.client.userservice.common.exception.UserErrorCode;
+import com.winner.client.userservice.user.application.dto.command.UnAssignManagersCommand;
 import com.winner.client.userservice.user.application.dto.command.UserPatchCommand;
 import com.winner.client.userservice.user.application.dto.result.UserDetailResult;
 import com.winner.client.userservice.user.application.service.UserCommandService;
@@ -10,6 +11,7 @@ import com.winner.client.userservice.user.domain.entity.User;
 import com.winner.client.userservice.user.domain.repository.TokenRepository;
 import com.winner.client.userservice.user.domain.repository.UserRepository;
 import com.winner.client.userservice.user.domain.vo.PhoneNumber;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,5 +47,12 @@ public class UserCommandServiceImpl implements UserCommandService {
         command.slackId()
     );
     return UserDetailResult.from(user);
+  }
+
+  @Override
+  public Void unAssignManagersFromAdmin(UnAssignManagersCommand command) {
+    List<User> users = userRepository.findAllByReferenceId(command.referenceId());
+    users.forEach(User::suspend);
+    return null;
   }
 }

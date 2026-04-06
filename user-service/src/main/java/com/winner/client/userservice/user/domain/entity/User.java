@@ -1,8 +1,6 @@
 package com.winner.client.userservice.user.domain.entity;
 
 import com.winner.client.global.entity.BaseAuditEntity;
-import com.winner.client.global.exception.BusinessException;
-import com.winner.client.userservice.common.exception.UserErrorCode;
 import com.winner.client.userservice.user.domain.enums.ApprovalStatusType;
 import com.winner.client.userservice.user.domain.enums.UserStatusType;
 import com.winner.client.userservice.user.domain.vo.Password;
@@ -102,7 +100,7 @@ public class User extends BaseAuditEntity {
 
   public String getRoleName() {
     if (userRole == null || userRole.getRole() == null) {
-      throw new BusinessException(UserErrorCode.INVALID_ROLE);
+      return null;
     }
     return userRole.getRole().name();
   }
@@ -124,6 +122,11 @@ public class User extends BaseAuditEntity {
 
   public void reject() {
     this.approvalStatus = ApprovalStatusType.REJECTED;
+  }
+
+  public void suspend() {
+    this.userStatus = UserStatusType.SUSPEND;
+    this.userRole = null;
   }
 
   public void active() {
