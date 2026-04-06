@@ -1,4 +1,4 @@
-package com.winner.client.productservice.stock.application.service.dto.command;
+package com.winner.client.productservice.stock.application.dto.command;
 
 import com.winner.client.productservice.stock.domain.vo.ProductId;
 import com.winner.client.productservice.stock.presentation.dto.request.UpdateStockRequest;

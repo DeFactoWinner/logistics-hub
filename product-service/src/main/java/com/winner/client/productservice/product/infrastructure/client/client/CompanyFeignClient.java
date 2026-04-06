@@ -1,7 +1,7 @@
-package com.winner.client.productservice.product.infrastructure.repository.client;
+package com.winner.client.productservice.product.infrastructure.client.client;
 
 import com.winner.client.global.config.FeignConfig;
-import com.winner.client.productservice.product.infrastructure.repository.client.dto.CompanyResponse;
+import com.winner.client.productservice.product.infrastructure.client.dto.CompanyResponse;
 import java.util.UUID;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

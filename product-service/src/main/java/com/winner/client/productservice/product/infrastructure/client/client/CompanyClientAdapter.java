@@ -1,10 +1,10 @@
-package com.winner.client.productservice.product.infrastructure.repository.client;
+package com.winner.client.productservice.product.infrastructure.client.client;
 
 import com.winner.client.global.exception.BusinessException;
 import com.winner.client.global.exception.CommonErrorCode;
 import com.winner.client.productservice.common.exception.ProductErrorCode;
 import com.winner.client.productservice.product.application.service.port.CompanyPort;
-import com.winner.client.productservice.product.infrastructure.repository.client.dto.CompanyResponse;
+import com.winner.client.productservice.product.infrastructure.client.dto.CompanyResponse;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

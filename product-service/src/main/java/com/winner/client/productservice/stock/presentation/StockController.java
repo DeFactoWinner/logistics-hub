@@ -1,10 +1,10 @@
-package com.winner.client.productservice.stock.presentation.dto;
+package com.winner.client.productservice.stock.presentation;
 
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import com.winner.client.productservice.stock.application.service.StockCommandService;
-import com.winner.client.productservice.stock.application.service.dto.command.UpdateStockCommand;
-import com.winner.client.productservice.stock.application.service.dto.result.StockResult;
+import com.winner.client.productservice.stock.application.dto.command.UpdateStockCommand;
+import com.winner.client.productservice.stock.application.dto.result.StockResult;
 import com.winner.client.productservice.stock.domain.vo.ProductId;
 import com.winner.client.productservice.stock.presentation.dto.request.UpdateStockRequest;
 import java.util.UUID;
