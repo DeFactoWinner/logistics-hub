@@ -43,8 +43,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
   public OrderResult createOrder(CreateOrderCommand command, UserContext ctx) {
     requireRole(ctx, UserRole.MASTER, UserRole.HUB_MANAGER, UserRole.DELIVERY_MANAGER, UserRole.COMPANY_MANAGER);
 
-    fetchCompany(command.supplierId());
-    fetchCompany(command.receiverId());
+    CompanyResponse supplierCompany = fetchCompany(command.supplierId());
+    CompanyResponse receiverCompany = fetchCompany(command.receiverId());
 
     ProductResponse product = fetchProduct(command.productId());
 
@@ -74,8 +74,13 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     try {
       var deliveryReq = new CreateDeliveryRequest(
           order.getId(),
-          product.hubId(),
+          supplierCompany.hubId(),
+          receiverCompany.hubId(),
+          "orgin",
+          "destination",
           command.receiverId(),
+          receiverCompany.name(),
+          "user-slack-id",
           command.deliveryAddress(),
           command.deliveryAddressDetail()
       );
