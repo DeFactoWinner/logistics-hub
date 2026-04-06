@@ -127,7 +127,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       restoreStock(productId, count);
     }
 
-    cancelDeliverySafely(deliveryId);
+    cancelDeliverySafely(deliveryId, ctx.getRole());
   }
 
   @Override
@@ -154,7 +154,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     UUID deliveryId = order.getDeliveryId();
 
     restoreStock(productId, count);
-    cancelDeliverySafely(deliveryId);
+    cancelDeliverySafely(deliveryId, ctx.getRole());
 
     return OrderResult.from(order);
   }
@@ -184,7 +184,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     UUID deliveryId = order.getDeliveryId();
 
     restoreStock(productId, count);
-    cancelDeliverySafely(deliveryId);
+    cancelDeliverySafely(deliveryId, UserRole.MASTER);
   }
 
   private void restoreStock(UUID productId, Long count) {
@@ -195,10 +195,10 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     }
   }
 
-  private void cancelDeliverySafely(UUID deliveryId) {
+  private void cancelDeliverySafely(UUID deliveryId, UserRole userRole) {
     if (deliveryId == null) return;
     try {
-      deliveryFeignClient.cancelDelivery(deliveryId);
+      deliveryFeignClient.cancelDelivery(deliveryId,userRole.name());
     } catch (Exception e) {
       log.error("배송 취소 실패 — 수동 처리 필요 deliveryId={}", deliveryId, e);
     }
