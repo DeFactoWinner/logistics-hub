@@ -3,8 +3,10 @@ plugins {
     id 'org.springframework.boot' version '3.5.12'
     id 'io.spring.dependency-management' version '1.1.7'
 }
+
 ext {
     springCloudVersion = "2025.0.1"
+    querydslVersion = "5.0.0"
 }
 
 group = 'com.winner.client'
@@ -27,48 +29,48 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
+def generated = 'src/main/generated'
 
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
     implementation project(':global')
     implementation project(path: ':global', configuration: 'securityLib')
     implementation project(path: ':global', configuration: 'feignLib')
     implementation project(path: ':global', configuration: 'redisLib')
 
-    // Web & Validation
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-    // DB
-    runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    // Cloud
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
-    // Utils
+    runtimeOnly 'org.postgresql:postgresql'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // Test
+    implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
+    annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
-    }
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
-}
-tasks.withType(Test).configureEach {
-    systemProperty "file.encoding", "UTF-8"
-}
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
 }
 
 tasks.named('test') {
@@ -83,9 +85,14 @@ tasks.named('test') {
             }
         }
     }
+
     testLogging {
         events "passed", "skipped", "failed"
         showStandardStreams = true
         exceptionFormat = "full"
     }
+}
+
+tasks.withType(Test).configureEach {
+    systemProperty "file.encoding", "UTF-8"
 }

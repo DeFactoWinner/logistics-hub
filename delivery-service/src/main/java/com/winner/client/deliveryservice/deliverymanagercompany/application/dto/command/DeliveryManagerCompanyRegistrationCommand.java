@@ -4,7 +4,8 @@ import java.util.UUID;
 
 public record DeliveryManagerCompanyRegistrationCommand(
 	UUID userId,
-	UUID hubId
+	UUID hubId,
+	String name
 ) {
 
 }

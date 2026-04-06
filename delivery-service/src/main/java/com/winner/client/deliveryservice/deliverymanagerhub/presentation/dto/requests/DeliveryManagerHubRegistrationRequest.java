@@ -4,9 +4,11 @@ import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.comm
 import java.util.UUID;
 
 public record DeliveryManagerHubRegistrationRequest(
-	UUID userId
+	UUID userId,
+	String name
 ) {
-	public static DeliveryManagerHubRegistrationCommand toCommand(UUID userId) {
-		return new DeliveryManagerHubRegistrationCommand(userId);
+
+	public DeliveryManagerHubRegistrationCommand toCommand() {
+		return new DeliveryManagerHubRegistrationCommand(userId, name);
 	}
 }

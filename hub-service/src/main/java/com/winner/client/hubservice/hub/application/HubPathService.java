@@ -37,7 +37,7 @@ public class HubPathService {
 
         for (UUID hubId : result.path) {
 
-            String hubName = hubRepository.findById(hubId)
+            String hubName = hubRepository.findByIdAndDeletedAtIsNull(hubId)
                 .map(hub -> hub.getName())
                 .orElse("UNKNOWN");
 
@@ -70,11 +70,11 @@ public class HubPathService {
             UUID fromHubId = result.path.get(i);
             UUID toHubId = result.path.get(i + 1);
 
-            String fromName = hubRepository.findById(fromHubId)
+            String fromName = hubRepository.findByIdAndDeletedAtIsNull(fromHubId)
                 .map(h -> h.getName())
                 .orElse("UNKNOWN");
 
-            String toName = hubRepository.findById(toHubId)
+            String toName = hubRepository.findByIdAndDeletedAtIsNull(toHubId)
                 .map(h -> h.getName())
                 .orElse("UNKNOWN");
 

@@ -10,6 +10,7 @@ public record DeliveryManagerCompanyInfoResult(
 	UUID userId,
 	UUID hubId,
 	UUID deliveryId,
+	String name,
 	String status,
 	Long assignmentOrder,
 	LocalDateTime lastDeliveryCompletedTime
@@ -19,9 +20,10 @@ public record DeliveryManagerCompanyInfoResult(
 		DeliveryManagerCompany entity) {
 
 		return DeliveryManagerCompanyInfoResult.builder()
-			.userId(entity.getUserId())
+			.userId(entity.getUser())
 			.hubId(entity.getHubId())
 			.deliveryId(entity.getDeliveryId())
+			.name(entity.getName())
 			.status(entity.getDeliveryManagerStatus().name())
 			.assignmentOrder(entity.getAssignmentOrder())
 			.lastDeliveryCompletedTime(entity.getLastDeliveryCompletedTime())

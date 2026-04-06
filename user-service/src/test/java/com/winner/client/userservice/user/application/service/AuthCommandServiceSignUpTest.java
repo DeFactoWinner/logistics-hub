@@ -11,8 +11,8 @@ import static org.mockito.Mockito.verify;
 
 import com.winner.client.global.exception.BusinessException;
 import com.winner.client.userservice.common.exception.UserErrorCode;
-import com.winner.client.userservice.user.application.command.SignupCommand;
-import com.winner.client.userservice.user.application.result.SignupResult;
+import com.winner.client.userservice.user.application.dto.command.SignupCommand;
+import com.winner.client.userservice.user.application.dto.result.SignupResult;
 import com.winner.client.userservice.user.application.service.impl.AuthCommandServiceImpl;
 import com.winner.client.userservice.user.domain.entity.User;
 import com.winner.client.userservice.user.domain.enums.RoleType;
@@ -59,11 +59,11 @@ class AuthCommandServiceSignUpTest {
   @Test
   @DisplayName("회원가입 성공")
   void signup_success() {
-    given(userRepository.existsByUsername(anyString())).willReturn(false);
+    given(userRepository.existsByUserNameAndDeletedAtNull(anyString())).willReturn(false);
     given(passwordEncoder.encode(anyString())).willReturn("encoded_hash_value");
 
     User mockUser = User.create(
-        signupCommand.username(),
+        signupCommand.userName(),
         signupCommand.name(),
         new Password("encoded_hash_value"),
         new PhoneNumber(signupCommand.phoneNumber()),
@@ -83,7 +83,8 @@ class AuthCommandServiceSignUpTest {
   @DisplayName("회원가입 실패 - 중복된 아이디인 경우 BusinessException 발생")
   void signup_fail_duplicate_username() {
     // given
-    given(userRepository.existsByUsername(signupCommand.username())).willReturn(true);
+    given(userRepository.existsByUserNameAndDeletedAtNull(signupCommand.userName())).willReturn(
+        true);
 
     assertThatThrownBy(() -> authCommandService.signup(signupCommand))
         .isInstanceOf(BusinessException.class)

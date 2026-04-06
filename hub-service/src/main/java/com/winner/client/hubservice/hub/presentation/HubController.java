@@ -1,13 +1,19 @@
 package com.winner.client.hubservice.hub.presentation;
 
+import com.winner.client.global.security.CustomUserPrincipal;
 import com.winner.client.hubservice.hub.application.HubService;
 import com.winner.client.hubservice.hub.application.dto.CreateHubCommand;
 import com.winner.client.hubservice.hub.application.dto.HubResult;
+import com.winner.client.hubservice.hub.application.dto.UpdateHubCommand;
 import com.winner.client.hubservice.hub.presentation.dto.CreateHubRequest;
 import com.winner.client.hubservice.hub.presentation.dto.HubResponse;
+import com.winner.client.hubservice.hub.presentation.dto.UpdateHubRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,5 +50,17 @@ public class HubController {
             .lat(result.getLat())
             .lng(result.getLng())
             .build();
+    }
+
+    @PatchMapping("/{hubId}")
+    public void updateHub(@PathVariable UUID hubId, @RequestBody UpdateHubRequest request) {
+        UpdateHubCommand command = UpdateHubCommand.from(request);
+
+        hubService.updateHub(hubId, command);
+    }
+
+    @DeleteMapping("/{hubId}")
+    public void deleteHub(@PathVariable UUID hubId, @AuthenticationPrincipal CustomUserPrincipal user) {
+        hubService.deleteHub(hubId, user.userId());
     }
 }

@@ -9,6 +9,7 @@ import lombok.Builder;
 public record DeliveryManagerHubInfo(
 	UUID userId,
 	UUID deliveryId,
+	String name,
 	String status,
 	Long assignmentOrder,
 	LocalDateTime lastDeliveryCompletedTime
@@ -18,6 +19,7 @@ public record DeliveryManagerHubInfo(
 		return DeliveryManagerHubInfo.builder()
 			.userId(result.userId())
 			.deliveryId(result.deliveryId())
+			.name(result.name())
 			.status(result.status())
 			.assignmentOrder(result.assignmentOrder())
 			.lastDeliveryCompletedTime(result.lastDeliveryCompletedTime())

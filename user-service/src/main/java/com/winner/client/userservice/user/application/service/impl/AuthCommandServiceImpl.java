@@ -4,18 +4,18 @@ import com.winner.client.global.config.jwt.JwtTokenProvider;
 import com.winner.client.global.exception.BusinessException;
 import com.winner.client.global.exception.JwtTokenErrorCode;
 import com.winner.client.userservice.common.exception.UserErrorCode;
-import com.winner.client.userservice.user.application.command.LoginCommand;
-import com.winner.client.userservice.user.application.command.RefreshTokenCommand;
-import com.winner.client.userservice.user.application.command.SignupCommand;
-import com.winner.client.userservice.user.application.result.SignupResult;
-import com.winner.client.userservice.user.application.result.TokenResult;
+import com.winner.client.userservice.user.application.dto.command.LoginCommand;
+import com.winner.client.userservice.user.application.dto.command.RefreshTokenCommand;
+import com.winner.client.userservice.user.application.dto.command.SignupCommand;
+import com.winner.client.userservice.user.application.dto.result.SignupResult;
+import com.winner.client.userservice.user.application.dto.result.TokenResult;
 import com.winner.client.userservice.user.application.service.AuthCommandService;
 import com.winner.client.userservice.user.domain.entity.User;
 import com.winner.client.userservice.user.domain.repository.UserRepository;
 import com.winner.client.userservice.user.domain.vo.Password;
 import com.winner.client.userservice.user.domain.vo.PhoneNumber;
 import com.winner.client.userservice.user.domain.vo.UserRole;
-import com.winner.client.userservice.user.infrastructure.RedisTokenRepository;
+import com.winner.client.userservice.user.infrastructure.repository.RedisTokenRepository;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +35,11 @@ public class AuthCommandServiceImpl implements AuthCommandService {
 
   @Transactional
   public SignupResult signup(SignupCommand command) {
-    if (userRepository.existsByUsernameAndDeletedAtNull(command.username())) {
+    if (userRepository.existsByUserNameAndDeletedAtNull(command.userName())) {
       throw new BusinessException(UserErrorCode.DUPLICATE_USERNAME);
     }
     User user = User.create(
-        command.username(),
+        command.userName(),
         command.name(),
         new Password(passwordEncoder.encode(command.password())),
         new PhoneNumber(command.phoneNumber()),
@@ -54,7 +54,7 @@ public class AuthCommandServiceImpl implements AuthCommandService {
 
   @Override
   public TokenResult login(LoginCommand command) {
-    User user = userRepository.findByUsernameAndDeletedAtNull(command.username())
+    User user = userRepository.findByUserNameAndDeletedAtNull(command.userName())
         .orElseThrow(() -> new BusinessException(UserErrorCode.USER_NOT_FOUND));
 
     if (!user.isCorrectPassword(command.password(), passwordEncoder)) {

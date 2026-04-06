@@ -7,8 +7,6 @@ import java.util.UUID;
 
 public interface DeliveryCommandService {
   CreateDeliveryResult createDelivery(CreateDeliveryCommand command);
-  DeliveryCommandResponse startHubWaiting(
-      UUID deliveryId, String userRole, UUID referenceId);
   DeliveryCommandResponse startHubMoving(
       UUID deliveryId, String userRole, UUID referenceId);
   DeliveryCommandResponse startVendorMoving(

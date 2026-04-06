@@ -36,7 +36,7 @@ public class HubRouteService {
 
     @Transactional(readOnly = true)
     public List<HubRouteResult> getAllRoutes() {
-        return hubRouteRepository.findAll().stream()
+        return hubRouteRepository.findAllByDeletedAtIsNull().stream()
             .map(route -> HubRouteResult.builder()
                 .id(route.getId())
                 .fromHubId(route.getRouteInfo().getFromHubId())
@@ -49,7 +49,7 @@ public class HubRouteService {
 
     @Transactional(readOnly = true)
     public List<HubRouteResult> searchRoutes(UUID fromHubId, UUID toHubId) {
-        return hubRouteRepository.findByRouteInfo_FromHubIdAndRouteInfo_ToHubId(fromHubId, toHubId).stream()
+        return hubRouteRepository.findByRouteInfo_FromHubIdAndRouteInfo_ToHubIdAndDeletedAtIsNull(fromHubId, toHubId).stream()
             .map(route -> HubRouteResult.builder()
                 .id(route.getId())
                 .fromHubId(route.getRouteInfo().getFromHubId())

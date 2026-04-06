@@ -21,4 +21,8 @@ public class DeliveryId {
 	public boolean isAssigned() {
 		return value != null;
 	}
+
+	public boolean isMatched(UUID deliveryId) {
+		return value.equals(deliveryId);
+	}
 }

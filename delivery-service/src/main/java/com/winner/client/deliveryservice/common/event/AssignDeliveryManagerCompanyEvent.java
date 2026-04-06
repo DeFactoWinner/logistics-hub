@@ -5,9 +5,9 @@ import java.util.UUID;
 
 public record AssignDeliveryManagerCompanyEvent(
     UUID deliveryId,
-    UUID toHubId
+    UUID hubId
 ) {
-  public static AssignDeliveryManagerCompanyEvent of(Delivery delivery) {
+  public static AssignDeliveryManagerCompanyEvent from(Delivery delivery) {
     return new AssignDeliveryManagerCompanyEvent(
         delivery.getId(),
         delivery.getHubRoute().getDestinationHubId()

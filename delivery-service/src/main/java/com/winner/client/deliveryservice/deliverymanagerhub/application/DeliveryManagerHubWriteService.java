@@ -4,9 +4,10 @@ import static com.winner.client.deliveryservice.common.exception.deliverymanager
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.NOT_FOUND_AVAILABLE_HUB_DELIVERY_MANAGERS;
 import static com.winner.client.deliveryservice.common.exception.deliverymanager.hub.DeliveryManagerHubErrorCode.NOT_FOUND_HUB_DELIVERY_MANAGER;
 
-import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.AssignEventCommand;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.DeliveryManagerAssignEventCommand;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.DeliveryManagerHubRegistrationCommand;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryAssignResult;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryCompleteResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryDeliveryManagerHubUsecase;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryMessagePort;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryManagerHubInfoResult;
@@ -43,7 +44,7 @@ public class DeliveryManagerHubWriteService implements DeliveryDeliveryManagerHu
 
 		return DeliveryManagerHubInfoResult.from(
 			repository.save(
-				DeliveryManagerHub.create(command.userId(), nextAssignmentOrder, curCount)
+				DeliveryManagerHub.create(command.userId(), command.name(), nextAssignmentOrder, curCount)
 			)
 		);
 	}
@@ -63,14 +64,18 @@ public class DeliveryManagerHubWriteService implements DeliveryDeliveryManagerHu
 	}
 
 	@Override
-	public void assignHubDeliveryManager(AssignEventCommand command) {
+	public void assignHubDeliveryManager(DeliveryManagerAssignEventCommand command) {
 		try {
 			DeliveryManagerHub manager = selectAvailableManager();
 			manager.assignDelivery(command.deliveryId());
-			deliveryMessagePort.assignEventPublish(DeliveryAssignResult.success(command));
+			deliveryMessagePort
+				.assignEventPublish(
+					DeliveryAssignResult
+						.success(command.deliveryId(), manager.getId(), manager.getName()));
 		} catch (BusinessException e) {
 			log.warn("DeliveryManager assignment failure : {}", e.getMessage());
-			deliveryMessagePort.assignEventPublish(DeliveryAssignResult.fail(e.getMessage()));
+			deliveryMessagePort.assignEventPublish(DeliveryAssignResult
+				.fail(e.getMessage(), command.deliveryId()));
 		}
 	}
 
@@ -80,5 +85,12 @@ public class DeliveryManagerHubWriteService implements DeliveryDeliveryManagerHu
 			.stream()
 			.findFirst()
 			.orElseThrow(() -> new BusinessException(NOT_FOUND_AVAILABLE_HUB_DELIVERY_MANAGERS));
+	}
+
+	public void completion(UUID userId, UUID deliveryId) {
+		DeliveryManagerHub manager = repository.findByUserId(userId)
+			.orElseThrow(() -> new BusinessException(NOT_FOUND_HUB_DELIVERY_MANAGER));
+		manager.completeDelivery(deliveryId);
+		deliveryMessagePort.deliveryCompleteEventPublish(DeliveryCompleteResult.of(userId, deliveryId));
 	}
 }

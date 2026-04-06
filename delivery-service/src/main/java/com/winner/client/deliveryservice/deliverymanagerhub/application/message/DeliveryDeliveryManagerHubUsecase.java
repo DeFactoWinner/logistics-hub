@@ -1,8 +1,8 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.application.message;
 
-import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.AssignEventCommand;
+import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.commnad.DeliveryManagerAssignEventCommand;
 
 
 public interface DeliveryDeliveryManagerHubUsecase {
-	void assignHubDeliveryManager(AssignEventCommand command);
+	void assignHubDeliveryManager(DeliveryManagerAssignEventCommand command);
 }
