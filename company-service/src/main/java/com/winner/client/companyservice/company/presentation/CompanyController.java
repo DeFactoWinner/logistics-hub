@@ -10,7 +10,6 @@ import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import com.winner.client.global.security.CustomUserPrincipal;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,10 +66,10 @@ public class CompanyController {
   }
 
   @GetMapping("/{companyId}")
-  public ResponseEntity<ApiResponse<CompanyResponse>> getCompany(@PathVariable UUID companyId) {
+  public ResponseEntity<CompanyResponse> getCompany(@PathVariable UUID companyId) {
     CompanyResponse result = companyQueryService.getCompany(companyId);
-    log.info("companyId : {}",result);
-    return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,result));
+    log.info("companyId : {}", result);
+    return ResponseEntity.ok(result);
   }
 
   @DeleteMapping("/{companyId}")

@@ -2,6 +2,7 @@ package com.winner.client.productservice.product.presentation;
 
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
+import com.winner.client.global.security.CustomUserPrincipal;
 import com.winner.client.productservice.product.application.service.ProductCommandService;
 import com.winner.client.productservice.product.application.service.ProductQueryService;
 import com.winner.client.productservice.product.application.service.dto.command.CreateProductCommand;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -44,9 +46,10 @@ public class ProductController {
 
   @PostMapping
   public ResponseEntity<ApiResponse<CreateProductResponse>> createProduct(
-      @Valid @RequestBody CreateProductRequest request
+      @Valid @RequestBody CreateProductRequest request,
+      @AuthenticationPrincipal CustomUserPrincipal userPrincipal
   ) {
-    ProductResult result = productCommandService.createProduct(CreateProductCommand.from(request));
+    ProductResult result = productCommandService.createProduct(CreateProductCommand.from(request),userPrincipal);
 
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,CreateProductResponse.from(result)));
   }
@@ -71,18 +74,21 @@ public class ProductController {
 
   @PatchMapping("/{productId}")
   public ResponseEntity<ApiResponse<UpdateProductResponse>> updateProduct(
-      @PathVariable UUID productId, @RequestBody UpdateProductRequest request){
+      @PathVariable UUID productId, @RequestBody UpdateProductRequest request,
+      @AuthenticationPrincipal CustomUserPrincipal userPrincipal){
 
-    ProductResult result = productCommandService.updateProduct(UpdateProductCommand.of(productId,request));
+    ProductResult result = productCommandService.updateProduct(UpdateProductCommand.of(productId,request)
+        ,userPrincipal);
 
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,
         UpdateProductResponse.from(result)));
   }
 
   @DeleteMapping("/{product_id}")
-  public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable UUID product_id){
+  public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable UUID product_id,
+      @AuthenticationPrincipal CustomUserPrincipal userPrincipal){
 
-    productCommandService.deleteProduct(product_id);
+    productCommandService.deleteProduct(product_id,userPrincipal);
 
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,null));
   }

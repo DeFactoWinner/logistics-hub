@@ -1,7 +1,6 @@
 package com.winner.client.companyservice.company.presentation.dto.response;
 
 import com.winner.client.companyservice.company.domain.entity.Company;
-import com.winner.client.companyservice.company.domain.vo.Type;
 import java.util.UUID;
 
 public record CompanyResponse(
@@ -9,7 +8,7 @@ public record CompanyResponse(
     String name,
     String address,
     String addressDetail,
-    Type type,
+    String type,
     UUID hubId
 ) {
 
@@ -19,7 +18,7 @@ public record CompanyResponse(
         company.getCompanyName(),
         company.getAddress().getAddress(),
         company.getAddress().getAddressDetail(),
-        company.getType(),
+        company.getType().name(),
         company.getHubId().getHubId()
         );
   }

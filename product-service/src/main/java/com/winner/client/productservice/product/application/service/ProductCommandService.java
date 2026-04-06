@@ -1,5 +1,6 @@
 package com.winner.client.productservice.product.application.service;
 
+import com.winner.client.global.security.CustomUserPrincipal;
 import com.winner.client.productservice.product.application.service.dto.command.CreateProductCommand;
 import com.winner.client.productservice.product.application.service.dto.command.UpdateProductCommand;
 import com.winner.client.productservice.product.application.service.dto.result.ProductResult;
@@ -9,11 +10,11 @@ import java.util.UUID;
 
 public interface ProductCommandService {
 
-  ProductResult createProduct(CreateProductCommand command);
+  ProductResult createProduct(CreateProductCommand command, CustomUserPrincipal userPrincipal);
 
-  ProductResult updateProduct(UpdateProductCommand command);
+  ProductResult updateProduct(UpdateProductCommand command, CustomUserPrincipal userPrincipal);
 
-  void deleteProduct(UUID productId);
+  void deleteProduct(UUID productId, CustomUserPrincipal userPrincipal);
 
   void updateProductStatus(ProductId productId, StatusEnum status);
 }

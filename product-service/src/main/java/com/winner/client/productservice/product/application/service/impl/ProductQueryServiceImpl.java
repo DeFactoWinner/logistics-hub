@@ -26,7 +26,6 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
   private final ProductRepository productRepository;
   private final StockRepository stockRepository;
-  private final ProductCommandServiceImpl productCommandServiceImpl;
 
   @Override
   public ProductResult getProduct(FindProductDetailQuery query) {
