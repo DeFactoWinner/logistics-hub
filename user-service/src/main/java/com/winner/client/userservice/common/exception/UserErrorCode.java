@@ -11,6 +11,7 @@ public enum UserErrorCode implements ErrorCode {
   INVALID_INPUT_VALUE("ERROR_200", HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다"),
   LOGIN_FAILED("ERROR_201", HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 일치하지 않습니다."),
   USER_NOT_APPROVED("ERROR_202", HttpStatus.FORBIDDEN, "아직 승인되지 않은 사용자입니다."),
+  ALREADY_USER_APPROVED("ERROR_202", HttpStatus.FORBIDDEN, "이미 승인된 사용자입니다."),
   USER_DELETED("ERROR_203", HttpStatus.GONE, "삭제된 사용자입니다."),
 
   INVALID_USER_STATUS_CHANGE("ERROR_204", HttpStatus.BAD_REQUEST, "변경할 수 없는 유저 상태입니다."),
