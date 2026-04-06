@@ -17,11 +17,11 @@ import com.winner.orderservice.order.infrastructure.client.CompanyFeignClient;
 import com.winner.orderservice.order.infrastructure.client.DeliveryFeignClient;
 import com.winner.orderservice.order.infrastructure.client.HubFeignClient;
 import com.winner.orderservice.order.infrastructure.client.ProductFeignClient;
+import com.winner.orderservice.order.infrastructure.client.StockFeignClient;
 import com.winner.orderservice.order.infrastructure.client.UserFeignClient;
+import com.winner.orderservice.order.infrastructure.client.dto.request.UpdateStockRequest;
 import com.winner.orderservice.order.infrastructure.client.dto.response.CompanyResponse;
 import com.winner.orderservice.order.infrastructure.client.dto.request.CreateDeliveryRequest;
-import com.winner.orderservice.order.infrastructure.client.dto.response.DeliveryResponse;
-import com.winner.orderservice.order.infrastructure.client.dto.request.ModifyStockRequest;
 import com.winner.orderservice.order.infrastructure.client.dto.response.HubResponse;
 import com.winner.orderservice.order.infrastructure.client.dto.response.ProductResponse;
 import com.winner.orderservice.order.infrastructure.repository.OrderRepository;
@@ -43,6 +43,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
   private final CompanyFeignClient companyFeignClient;
   private final HubFeignClient hubFeignClient;
   private final UserFeignClient userFeignClient;
+  private final StockFeignClient stockFeignClient;
 
   @Override
   public OrderResult createOrder(CreateOrderCommand command, UserContext ctx) {
@@ -58,12 +59,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
     ProductResponse product = fetchProduct(command.productId());
 
-    try {
-      productFeignClient.modifyStock(command.productId(), new ModifyStockRequest(-command.count()));
-    } catch (Exception e) {
-      log.error("재고 감소 실패 productId={}", command.productId(), e);
-      throw new BusinessException(OrderErrorCode.OUT_OF_STOCK);
-    }
+    decreseStock(command.productId(), command.count().intValue());
 
     Order order;
     try {
@@ -77,7 +73,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       orderRepository.save(order);
     } catch (Exception e) {
       log.error("주문 생성/저장 실패 productId={}", command.productId(), e);
-      restoreStock(command.productId(), command.count());
+      restoreStock(command.productId(), command.count().intValue());
       throw new BusinessException(OrderErrorCode.ORDER_CREATE_FAILED);
     }
 
@@ -108,7 +104,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
     } catch (Exception e) {
       log.error("배송 생성 실패 orderId={}", order.getId(), e);
-      restoreStock(command.productId(), command.count());
+      restoreStock(command.productId(), command.count().intValue());
       throw new BusinessException(OrderErrorCode.DELIVERY_CREATE_FAILED);
     }
 
@@ -138,7 +134,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     order.softDeleteOrder(ctx.getUserId());
 
     if (order.getStatus() == OrderStatus.CONFIRMED || order.getStatus() == OrderStatus.SHIPPING) {
-      restoreStock(productId, count);
+      restoreStock(productId, count.intValue());
     }
 
     cancelDeliverySafely(deliveryId, ctx.getRole());
@@ -167,7 +163,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     Long count = order.getOrderDetail().getCount();
     UUID deliveryId = order.getDeliveryId();
 
-    restoreStock(productId, count);
+    restoreStock(productId, count.intValue());
     cancelDeliverySafely(deliveryId, ctx.getRole());
 
     return OrderResult.from(order);
@@ -197,17 +193,36 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     Long count = order.getOrderDetail().getCount();
     UUID deliveryId = order.getDeliveryId();
 
-    restoreStock(productId, count);
+    restoreStock(productId, count.intValue());
     cancelDeliverySafely(deliveryId, UserRole.MASTER);
   }
 
-  private void restoreStock(UUID productId, Long count) {
+  private void decreseStock(UUID productId, int count) {
     try {
-      productFeignClient.modifyStock(productId, new ModifyStockRequest(count));
+      UpdateStockRequest stockRequest = new UpdateStockRequest(-count);
+      var response =stockFeignClient.updateProductStock(productId, stockRequest);
+      if (response == null || response.getData() == null) {
+        throw new RuntimeException("응답이 비어있습니다.");
+      }
     } catch (Exception e) {
-      log.error("보상 재고 복원 실패 — 수동 처리 필요 productId={}", productId, e);
+      log.error("재고 감소 실패 productId={}", productId, e);
+      throw new BusinessException(OrderErrorCode.OUT_OF_STOCK);
     }
   }
+
+  private void restoreStock(UUID productId, int count) {
+    try {
+      UpdateStockRequest stockRequest = new UpdateStockRequest(count);
+      var response = stockFeignClient.updateProductStock(productId, stockRequest);
+      if (response == null || response.getData() == null) {
+        throw new RuntimeException("응답이 비어있습니다.");
+      }
+    } catch (Exception e) {
+      log.error("보상 재고 복원 실패 — 수동 처리 필요 productId={}", productId, e);
+      throw new BusinessException(OrderErrorCode.STOCK_RESTORE_FAILED);
+    }
+  }
+
 
   private void cancelDeliverySafely(UUID deliveryId, UserRole userRole) {
     if (deliveryId == null) return;
