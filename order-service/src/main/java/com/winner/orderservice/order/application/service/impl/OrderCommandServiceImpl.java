@@ -15,11 +15,14 @@ import com.winner.orderservice.order.domain.vo.OrderSnapshot;
 import com.winner.orderservice.order.exception.OrderErrorCode;
 import com.winner.orderservice.order.infrastructure.client.CompanyFeignClient;
 import com.winner.orderservice.order.infrastructure.client.DeliveryFeignClient;
+import com.winner.orderservice.order.infrastructure.client.HubFeignClient;
 import com.winner.orderservice.order.infrastructure.client.ProductFeignClient;
+import com.winner.orderservice.order.infrastructure.client.UserFeignClient;
 import com.winner.orderservice.order.infrastructure.client.dto.response.CompanyResponse;
 import com.winner.orderservice.order.infrastructure.client.dto.request.CreateDeliveryRequest;
 import com.winner.orderservice.order.infrastructure.client.dto.response.DeliveryResponse;
 import com.winner.orderservice.order.infrastructure.client.dto.request.ModifyStockRequest;
+import com.winner.orderservice.order.infrastructure.client.dto.response.HubResponse;
 import com.winner.orderservice.order.infrastructure.client.dto.response.ProductResponse;
 import com.winner.orderservice.order.infrastructure.repository.OrderRepository;
 import java.util.UUID;
@@ -38,6 +41,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
   private final ProductFeignClient productFeignClient;
   private final DeliveryFeignClient deliveryFeignClient;
   private final CompanyFeignClient companyFeignClient;
+  private final HubFeignClient hubFeignClient;
+  private final UserFeignClient userFeignClient;
 
   @Override
   public OrderResult createOrder(CreateOrderCommand command, UserContext ctx) {
@@ -45,6 +50,11 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
     CompanyResponse supplierCompany = fetchCompany(command.supplierId());
     CompanyResponse receiverCompany = fetchCompany(command.receiverId());
+
+    HubResponse supplierHub = fetchHub(supplierCompany.hubId());
+    HubResponse receiverHub = fetchHub(receiverCompany.hubId());
+
+    String slackId = fetchUserSlackId(ctx.getUserId());
 
     ProductResponse product = fetchProduct(command.productId());
 
@@ -76,11 +86,11 @@ public class OrderCommandServiceImpl implements OrderCommandService {
           order.getId(),
           supplierCompany.hubId(),
           receiverCompany.hubId(),
-          "orgin",
-          "destination",
+          supplierHub.name(),
+          receiverHub.name(),
           receiverCompany.companyId(),
           receiverCompany.name(),
-          "user-slack-id",
+          slackId,
           command.deliveryAddress(),
           command.deliveryAddressDetail()
       );
@@ -239,6 +249,22 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     } catch (Exception e) {
       throw new BusinessException(OrderErrorCode.COMPANY_NOT_FOUND);
     }
+  }
+
+  private HubResponse fetchHub(UUID hubId) {
+    var hub = hubFeignClient.getHub(hubId);
+    if (hub == null || hub.id() == null) {
+      throw new BusinessException(OrderErrorCode.HUB_NOT_FOUND);
+    }
+    return hub;
+  }
+
+  private String fetchUserSlackId(UUID userId) {
+    var response = userFeignClient.getUserDetails(userId);
+    if (response == null || response.getData() == null) {
+      throw new BusinessException(OrderErrorCode.USER_NOT_FOUND);
+    }
+    return response.getData().slackId();
   }
 
   private void requireRole(UserContext ctx, UserRole... roles) {
