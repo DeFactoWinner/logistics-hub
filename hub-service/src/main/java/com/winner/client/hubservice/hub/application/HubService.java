@@ -14,6 +14,7 @@ import com.winner.client.hubservice.hub.presentation.dto.HubPageResponse;
 import com.winner.client.hubservice.hub.presentation.dto.HubResponse;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ public class HubService {
     private final HubRouteRepository hubRouteRepository;
     private final UserPort userPort;
 
+    @CacheEvict(value = "hubs", allEntries = true)
     @Transactional
     public UUID createHub(CreateHubCommand command) {
         HubLocation location = new HubLocation(
@@ -58,6 +60,7 @@ public class HubService {
             .build();
     }
 
+    @CacheEvict(value = "hubs", allEntries = true)
     @Transactional
     public void updateHub(UUID hubId, UpdateHubCommand command) {
         Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId)
@@ -77,12 +80,11 @@ public class HubService {
         hub.update(command.getName(), location);
     }
 
+    @CacheEvict(value = "hubs", allEntries = true)
     @Transactional
     public void deleteHub(UUID hubId, UUID userId) {
         Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId)
             .orElseThrow(()-> new HubException(HubErrorCode.HUB_NOT_FOUND));
-
-        userPort.unassignUsersByReferenceId(hubId);
 
         hub.delete(userId);
 
