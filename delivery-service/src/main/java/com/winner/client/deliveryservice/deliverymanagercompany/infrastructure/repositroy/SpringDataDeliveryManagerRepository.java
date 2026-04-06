@@ -16,4 +16,5 @@ public interface SpringDataDeliveryManagerRepository
 	Long countByHubId_ValueAndDeletedByIsNull(UUID hubId);
 	Optional<DeliveryManagerCompany> findByUser_UserIdAndDeletedByNull(UUID userId);
 	List<DeliveryManagerCompany> findAllByHubId_ValueAndDeletedByNullAndDeliveryManagerStatus(UUID hubId, DeliveryManagerStatus status);
+  Optional<DeliveryManagerCompany> findByIdAndDeletedAtNull(UUID deliveryManagerId);
 }
