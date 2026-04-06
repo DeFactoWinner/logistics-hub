@@ -134,10 +134,12 @@ public class Delivery extends BaseAuditEntity {
   }
 
   private Delivery(
-      UUID ordersId, HubRoute hubRoute, Receiver receiver,
-      Address address, Location location) {
+      UUID ordersId, HubRoute hubRoute, String originHubName, String destinationHubName,
+      Receiver receiver, Address address, Location location) {
     this.ordersId = ordersId;
     this.hubRoute = hubRoute;
+    this.originHubName = originHubName;
+    this.destinationHubName = destinationHubName;
     this.receiver = receiver;
     this.address = address;
     this.location = location;
@@ -145,8 +147,8 @@ public class Delivery extends BaseAuditEntity {
   }
 
   public static Delivery create(
-      UUID ordersId, HubRoute hubRoute, Receiver receiver,
-      Address address, Location location) {
-    return new Delivery(ordersId, hubRoute, receiver, address, location);
+      UUID ordersId, HubRoute hubRoute, String originHubName, String destinationHubName,
+      Receiver receiver, Address address, Location location) {
+    return new Delivery(ordersId, hubRoute, originHubName, destinationHubName, receiver, address, location);
   }
 }
