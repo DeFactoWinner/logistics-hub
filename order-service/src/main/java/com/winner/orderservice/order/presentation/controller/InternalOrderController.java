@@ -1,6 +1,7 @@
 package com.winner.orderservice.order.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ public class InternalOrderController {
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK, null));
   }
 
-  @PostMapping("/{orderId}/completion")
+  @PatchMapping("/{orderId}/completion")
   public ResponseEntity<ApiResponse<Void>> completeOrder(@PathVariable UUID orderId) {
     orderCommandService.internalCompleteOrder(orderId);
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK, null));
