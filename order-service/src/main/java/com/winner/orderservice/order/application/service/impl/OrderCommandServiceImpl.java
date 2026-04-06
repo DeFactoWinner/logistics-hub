@@ -78,7 +78,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
           receiverCompany.hubId(),
           "orgin",
           "destination",
-          command.receiverId(),
+          receiverCompany.companyId(),
           receiverCompany.name(),
           "user-slack-id",
           command.deliveryAddress(),

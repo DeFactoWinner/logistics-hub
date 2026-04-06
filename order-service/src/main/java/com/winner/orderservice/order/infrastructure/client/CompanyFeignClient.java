@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface CompanyFeignClient {
 
   @GetMapping("/api/v1/companies/{companyId}")
-  ApiResponse<CompanyResponse> getCompany(@PathVariable UUID companyId);
+  ApiResponse<CompanyResponse> getCompany(@PathVariable("companyId") UUID companyId);
 }
