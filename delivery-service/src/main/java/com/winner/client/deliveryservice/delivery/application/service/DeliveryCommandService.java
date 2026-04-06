@@ -17,4 +17,5 @@ public interface DeliveryCommandService {
       UUID deliveryId, UUID userId, String userRole, UUID referenceId);
   DeliveryCommandResponse cancelDelivery(
       UUID deliveryId, String userRole);
+  void deleteDelivery(UUID deliveryId, UUID userId, String userRole);
 }

@@ -2,6 +2,7 @@ package com.winner.client.deliveryservice.delivery.infrastructure.repository;
 
 import com.winner.client.deliveryservice.delivery.domain.entity.DeliveryRoute;
 import com.winner.client.deliveryservice.delivery.domain.repository.DeliveryRouteRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,7 +35,17 @@ public class DeliveryRouteJpaRepository implements DeliveryRouteRepository {
   }
 
   @Override
+  public void softDeleteAllByDeliveryId(UUID deliveryId, UUID userId, LocalDateTime now) {
+    routeJpaRepository.softDeleteAllByDeliveryId(deliveryId, userId, now);
+  }
+
+  @Override
   public void save(DeliveryRoute route) {
     routeJpaRepository.save(route);
+  }
+
+  @Override
+  public void saveAll(List<DeliveryRoute> routes) {
+    routeJpaRepository.saveAll(routes);
   }
 }

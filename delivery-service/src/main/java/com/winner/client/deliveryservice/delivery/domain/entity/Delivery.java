@@ -128,6 +128,10 @@ public class Delivery extends BaseAuditEntity {
     return hubRoute.isSameHub();
   }
 
+  public boolean isCancelled() {
+    return this.status == DeliveryStatus.CANCELLED;
+  }
+
   public void updateDeliveryManagerInfo(UUID deliveryManagerId, String DeliveryManagerName) {
     this.deliveryManagerId = deliveryManagerId;
     this.DeliveryManagerName = DeliveryManagerName;
