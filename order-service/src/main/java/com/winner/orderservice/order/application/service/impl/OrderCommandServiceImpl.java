@@ -8,6 +8,7 @@ import com.winner.orderservice.order.application.dto.command.CreateOrderCommand;
 import com.winner.orderservice.order.application.dto.command.UpdateOrderCommand;
 import com.winner.orderservice.order.application.dto.result.OrderResult;
 import com.winner.orderservice.order.domain.entity.Order;
+import com.winner.orderservice.order.domain.enums.OrderStatus;
 import com.winner.orderservice.order.domain.vo.OrderDetail;
 import com.winner.orderservice.order.domain.vo.OrderParticipants;
 import com.winner.orderservice.order.domain.vo.OrderSnapshot;
@@ -54,15 +55,21 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       throw new BusinessException(OrderErrorCode.OUT_OF_STOCK);
     }
 
-    Order order = Order.create(
-        new OrderParticipants(command.supplierId(), command.receiverId()),
-        new OrderSnapshot(product.name(), command.deliveryAddress(), command.deliveryAddressDetail()),
-        new OrderDetail(command.productId(), command.count(), command.comment()),
-        product.hubId(),
-        command.orderedAt()
-    );
-    orderRepository.save(order);
-
+    Order order;
+    try {
+      order = Order.create(
+          new OrderParticipants(command.supplierId(), command.receiverId()),
+          new OrderSnapshot(product.name(), command.deliveryAddress(), command.deliveryAddressDetail()),
+          new OrderDetail(command.productId(), command.count(), command.comment()),
+          product.hubId(),
+          command.orderedAt()
+      );
+      orderRepository.save(order);
+    } catch (Exception e) {
+      log.error("주문 생성/저장 실패 productId={}", command.productId(), e);
+      restoreStock(command.productId(), command.count());
+      throw new BusinessException(OrderErrorCode.ORDER_CREATE_FAILED);
+    }
 
     try {
       var deliveryReq = new CreateDeliveryRequest(
@@ -72,16 +79,22 @@ public class OrderCommandServiceImpl implements OrderCommandService {
           command.deliveryAddress(),
           command.deliveryAddressDetail()
       );
-      DeliveryResponse delivery = deliveryFeignClient.createDelivery(deliveryReq).getData();
+      var deliveryResponse = deliveryFeignClient.createDelivery(deliveryReq);
+      if (deliveryResponse == null || deliveryResponse.getData() == null) {
+        throw new BusinessException(OrderErrorCode.DELIVERY_CREATE_FAILED);
+      }
+      DeliveryResponse delivery = deliveryResponse.getData();
+
       order.linkDelivery(delivery.deliveryId());
       order.confirm();
+      if(delivery.assignedDeliveryPersonId() != null) {
+        order.startShipping();
+        order.assignDeliveryPerson(delivery.assignedDeliveryPersonId());
+      }
+
     } catch (Exception e) {
       log.error("배송 생성 실패 orderId={}", order.getId(), e);
-      try {
-        productFeignClient.modifyStock(command.productId(), new ModifyStockRequest(command.count()));
-      } catch (Exception restoreEx) {
-        log.error("보상 재고 복원 실패 — 수동 처리 필요 productId={}", command.productId(), restoreEx);
-      }
+      restoreStock(command.productId(), command.count());
       throw new BusinessException(OrderErrorCode.DELIVERY_CREATE_FAILED);
     }
 
@@ -110,18 +123,11 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
     order.softDeleteOrder(ctx.getUserId());
 
-    try {
-      productFeignClient.modifyStock(productId, new ModifyStockRequest(count));
-    } catch (Exception e) {
-      log.error("재고 복원 실패 — 수동 처리 필요 orderId={}, productId={}", orderId, productId, e);
+    if (order.getStatus() == OrderStatus.CONFIRMED || order.getStatus() == OrderStatus.SHIPPING) {
+      restoreStock(productId, count);
     }
-    if (deliveryId != null) {
-      try {
-        deliveryFeignClient.cancelDelivery(deliveryId);
-      } catch (Exception e) {
-        log.error("배송 취소 실패 — 수동 처리 필요 orderId={}, deliveryId={}", orderId, deliveryId, e);
-      }
-    }
+
+    cancelDeliverySafely(deliveryId);
   }
 
   @Override
@@ -147,20 +153,55 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     Long count = order.getOrderDetail().getCount();
     UUID deliveryId = order.getDeliveryId();
 
+    restoreStock(productId, count);
+    cancelDeliverySafely(deliveryId);
+
+    return OrderResult.from(order);
+  }
+
+  @Override
+  public void internalAssignDeliveryPerson(UUID orderId, UUID deliveryPersonId) {
+    Order order = findActive(orderId);
+    order.assignDeliveryPerson(deliveryPersonId);
+    if (order.getStatus() == OrderStatus.CONFIRMED) {
+      order.startShipping();
+    }
+  }
+
+  @Override
+  public void internalCompleteOrder(UUID orderId) {
+    Order order = findActive(orderId);
+    order.complete();
+  }
+
+  @Override
+  public void internalCancelOrder(UUID orderId) {
+    Order order = findActive(orderId);
+    order.cancel();
+
+    UUID productId = order.getOrderDetail().getProductId();
+    Long count = order.getOrderDetail().getCount();
+    UUID deliveryId = order.getDeliveryId();
+
+    restoreStock(productId, count);
+    cancelDeliverySafely(deliveryId);
+  }
+
+  private void restoreStock(UUID productId, Long count) {
     try {
       productFeignClient.modifyStock(productId, new ModifyStockRequest(count));
     } catch (Exception e) {
-      log.error("취소 재고 복원 실패 — 수동 처리 필요 orderId={}, productId={}", orderId, productId, e);
+      log.error("보상 재고 복원 실패 — 수동 처리 필요 productId={}", productId, e);
     }
-    if (deliveryId != null) {
-      try {
-        deliveryFeignClient.cancelDelivery(deliveryId);
-      } catch (Exception e) {
-        log.error("배송 취소 실패 — 수동 처리 필요 orderId={}, deliveryId={}", orderId, deliveryId, e);
-      }
-    }
+  }
 
-    return OrderResult.from(order);
+  private void cancelDeliverySafely(UUID deliveryId) {
+    if (deliveryId == null) return;
+    try {
+      deliveryFeignClient.cancelDelivery(deliveryId);
+    } catch (Exception e) {
+      log.error("배송 취소 실패 — 수동 처리 필요 deliveryId={}", deliveryId, e);
+    }
   }
 
   private Order findActive(UUID orderId) {

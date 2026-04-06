@@ -16,6 +16,6 @@ public class DeliveryManagerCompanySpringEventListener {
 	@EventListener
 	public void assignDeliveryManagerCompany(AssignDeliveryManagerCompanyEvent event) {
 		usecase.assignHubDeliveryManager(
-			DeliveryManagerAssignEventCommand.of(event.deliveryId(), event.toHubId()));
+			DeliveryManagerAssignEventCommand.of(event.deliveryId(), event.hubId()));
 	}
 }

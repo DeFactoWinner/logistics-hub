@@ -12,4 +12,8 @@ public interface OrderCommandService {
   void deleteOrder(UUID orderId, UserContext ctx);
   OrderResult confirmOrder(UUID orderId, UserContext ctx);
   OrderResult cancelOrder(UUID orderId, UserContext ctx);
+
+  void internalAssignDeliveryPerson(UUID orderId, UUID deliveryPersonId);
+  void internalCompleteOrder(UUID orderId);
+  void internalCancelOrder(UUID orderId);
 }
