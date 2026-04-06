@@ -12,6 +12,8 @@ import com.winner.client.hubservice.hub.domain.repository.HubRouteRepository;
 import com.winner.client.hubservice.hub.domain.vo.HubLocation;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,5 +89,23 @@ public class HubService {
         for (var route : routes) {
             route.delete(userId);
         }
+    }
+
+    public Page<HubResult> searchHubs(String q, Pageable pageable) {
+        Page<Hub> hubs;
+
+        if (q == null || q.isBlank()) {
+            hubs = hubRepository.findAllByDeletedAtIsNull(pageable);
+        } else {
+            hubs = hubRepository.findByNameContainingAndDeletedAtIsNull(q, pageable);
+        }
+
+        return hubs.map(hub -> HubResult.builder()
+            .id(hub.getId())
+            .name(hub.getName())
+            .address(hub.getLocation().getAddress())
+            .lat(hub.getLocation().getLat())
+            .lng(hub.getLocation().getLng())
+            .build());
     }
 }
