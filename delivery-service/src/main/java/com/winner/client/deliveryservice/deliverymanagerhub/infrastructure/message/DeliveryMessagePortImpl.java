@@ -25,7 +25,7 @@ public class DeliveryMessagePortImpl implements DeliveryMessagePort {
 			);
 		} else {
 			publisher.publishEvent(AssignHubDeliveryManagerFailEvent
-				.of(result.getErrorMessage(), result.getDeliveryManagerName()));
+				.of(result.getErrorMessage(), result.getDeliveryId()));
 		}
 	}
 
