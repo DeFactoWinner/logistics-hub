@@ -43,10 +43,7 @@ public class CompanyCommandImpl implements CompanyCommandService {
 
     companyValidate.validateCreate(userPrincipal,hubResponse.id());
 
-    System.out.println("hubId : " + hubResponse.id());
-
     HubId hubId = HubId.of(hubResponse.id());
-
 
     Company company = Company.create(request.name(), request.type(), hubId, companyLocation, address);
 
