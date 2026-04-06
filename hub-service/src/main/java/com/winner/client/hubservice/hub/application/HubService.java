@@ -10,8 +10,11 @@ import com.winner.client.hubservice.hub.domain.entity.Hub;
 import com.winner.client.hubservice.hub.domain.repository.HubRepository;
 import com.winner.client.hubservice.hub.domain.repository.HubRouteRepository;
 import com.winner.client.hubservice.hub.domain.vo.HubLocation;
+import com.winner.client.hubservice.hub.presentation.dto.HubPageResponse;
+import com.winner.client.hubservice.hub.presentation.dto.HubResponse;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -91,7 +94,11 @@ public class HubService {
         }
     }
 
-    public Page<HubResult> searchHubs(String q, Pageable pageable) {
+    @Cacheable(value = "hubs", key = "#q + '-' + #pageable.pageNumber")
+    public HubPageResponse searchHubs(String q, Pageable pageable) {
+
+        long start = System.currentTimeMillis();
+
         Page<Hub> hubs;
 
         if (q == null || q.isBlank()) {
@@ -100,12 +107,23 @@ public class HubService {
             hubs = hubRepository.findByNameContainingAndDeletedAtIsNull(q, pageable);
         }
 
-        return hubs.map(hub -> HubResult.builder()
-            .id(hub.getId())
-            .name(hub.getName())
-            .address(hub.getLocation().getAddress())
-            .lat(hub.getLocation().getLat())
-            .lng(hub.getLocation().getLng())
-            .build());
+        long end = System.currentTimeMillis();
+        System.out.println("DB 조회 시간 " + (end - start) + " ms");
+
+        return new HubPageResponse(
+            hubs.map(h -> HubResponse.builder()
+                .id(h.getId())
+                .name(h.getName())
+                .address(h.getLocation().getAddress())
+                .lat(h.getLocation().getLat())
+                .lng(h.getLocation().getLng())
+                .build()
+            ).getContent(),
+            hubs.getNumber(),
+            hubs.getSize(),
+            hubs.getTotalElements(),
+            hubs.getTotalPages(),
+            hubs.isLast()
+        );
     }
 }

@@ -1,13 +1,14 @@
 package com.winner.client.hubservice.hub.presentation.dto;
 
 import com.winner.client.hubservice.hub.application.dto.HubResult;
+import java.io.Serializable;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class HubResponse {
+public class HubResponse implements Serializable {
 
     private UUID id;
     private String name;

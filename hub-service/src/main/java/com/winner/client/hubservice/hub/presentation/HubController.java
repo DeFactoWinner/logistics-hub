@@ -6,11 +6,11 @@ import com.winner.client.hubservice.hub.application.dto.CreateHubCommand;
 import com.winner.client.hubservice.hub.application.dto.HubResult;
 import com.winner.client.hubservice.hub.application.dto.UpdateHubCommand;
 import com.winner.client.hubservice.hub.presentation.dto.CreateHubRequest;
+import com.winner.client.hubservice.hub.presentation.dto.HubPageResponse;
 import com.winner.client.hubservice.hub.presentation.dto.HubResponse;
 import com.winner.client.hubservice.hub.presentation.dto.UpdateHubRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -59,12 +59,18 @@ public class HubController {
     }
 
     @GetMapping
-    public Page<HubResponse> searchHubs(
-            @RequestParam(required = false) String q,
-            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
-            Pageable pageable
+    public HubPageResponse searchHubs(
+        @RequestParam(required = false) String q,
+        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
+        Pageable pageable
     ) {
-        return hubService.searchHubs(q, pageable)
-            .map(HubResponse::from);
+        long start = System.currentTimeMillis();
+
+        HubPageResponse response = hubService.searchHubs(q, pageable);
+
+        long end = System.currentTimeMillis();
+        System.out.println("전체 응답 시간: " + (end - start) + " ms");
+
+        return response;
     }
 }
