@@ -1,6 +1,6 @@
 package com.winner.client.deliveryservice.common.event.deliverymanager.company;
 
-import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.re.CompanyDeliveryManagerAssignResult;
+import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.result.CompanyDeliveryManagerAssignResult;
 import java.util.UUID;
 
 public record AssignCompanyDeliveryManagerFailEvent(

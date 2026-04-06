@@ -43,6 +43,11 @@ public class DeliveryManagerCompanyJpaRepository implements
 	}
 
 	@Override
+	public Optional<DeliveryManagerCompany> findByIdAndDeletedByNull(UUID deliveryManagerId) {
+		return jpaRepository.findByIdAndDeletedAtNull(deliveryManagerId);
+	}
+
+	@Override
 	public List<DeliveryManagerCompany> findAllAvailableManagers(UUID hubId) {
 		return jpaRepository
 			.findAllByHubId_ValueAndDeletedByNullAndDeliveryManagerStatus(hubId, AVAILABLE);

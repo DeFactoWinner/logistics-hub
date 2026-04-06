@@ -12,5 +12,6 @@ public interface DeliveryManagerHubRepository {
 	Long countByDeletedByIsNull();
 	Optional<DeliveryManagerHub> findFirstByOrderByAssignmentOrderDesc();
 	Optional<DeliveryManagerHub> findByUserId(UUID userId);
+	Optional<DeliveryManagerHub> findByIdAndDeletedAtNull(UUID deliveryManagerId);
 	List<DeliveryManagerHub> findAllAvailableManagers();
 }

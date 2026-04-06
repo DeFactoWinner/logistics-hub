@@ -6,12 +6,12 @@ public enum DeliveryStatus {
 
   PENDING {
     public Set<DeliveryStatus> nextStates() {
-      return Set.of(CANCELLED);
+      return Set.of(CANCELLED, HUB_MOVING);
     }
   },
   HUB_MOVING {
     public Set<DeliveryStatus> nextStates() {
-      return Set.of(DESTINATION_ARRIVED);
+      return Set.of(DESTINATION_ARRIVED, FOR_VENDOR_MOVING);
     }
   },
   DESTINATION_ARRIVED {

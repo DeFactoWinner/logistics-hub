@@ -40,6 +40,11 @@ public class DeliveryManagerHubJpaRepository implements DeliveryManagerHubReposi
 	}
 
 	@Override
+	public Optional<DeliveryManagerHub> findByIdAndDeletedAtNull(UUID deliveryManagerId) {
+		return repository.findByIdAndDeletedAtNull(deliveryManagerId);
+	}
+
+	@Override
 	public List<DeliveryManagerHub> findAllAvailableManagers() {
 		return repository.findAllAvailableManagers();
 	}

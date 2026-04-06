@@ -13,6 +13,7 @@ public interface SpringDataDeliveryManagerHubRepository extends JpaRepository<De
 	Optional<DeliveryManagerHub> findFirstByOrderByAssignmentOrder_ValueDesc();
 	Long countByDeletedByIsNull();
 	Optional<DeliveryManagerHub> findByUser_UserIdAndDeletedByNull(UUID userId);
+	Optional<DeliveryManagerHub> findByIdAndDeletedAtNull(UUID userId);
 	@Query("SELECT d FROM DeliveryManagerHub d " +
 		"WHERE d.deletedBy IS NULL " +
 		"AND d.deliveryManagerStatus = 'AVAILABLE'" +

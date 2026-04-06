@@ -24,8 +24,8 @@ public class DeliveryRouteJpaRepository implements DeliveryRouteRepository {
   }
 
   @Override
-  public Optional<DeliveryRoute> findFirstPendingRoute(UUID deliveryId) {
-    return routeJpaRepository.findFirstPendingRoute(deliveryId);
+  public Optional<DeliveryRoute> findFirstWaitingRoute(UUID deliveryId) {
+    return routeJpaRepository.findFirstWaitingRoute(deliveryId);
   }
 
   @Override

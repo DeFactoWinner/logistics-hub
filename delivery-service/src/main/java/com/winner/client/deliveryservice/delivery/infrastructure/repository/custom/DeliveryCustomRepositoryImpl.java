@@ -6,6 +6,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.winner.client.deliveryservice.delivery.application.dto.query.SearchDeliveryQuery;
+import com.winner.client.deliveryservice.delivery.application.validator.UserRole;
 import com.winner.client.deliveryservice.delivery.domain.entity.Delivery;
 import com.winner.client.deliveryservice.delivery.domain.enums.DeliveryStatus;
 import com.winner.client.global.pagination.PageSortType;
@@ -60,19 +61,19 @@ public class DeliveryCustomRepositoryImpl implements DeliveryCustomRepository {
   }
 
   private BooleanExpression roleCondition(SearchDeliveryQuery query) {
-    return switch (query.userRole()) {
-      case "MASTER" -> null;
-      case "HUB_MANAGER" ->
+    UserRole role = UserRole.of(query.userRole());
+
+    return switch (role) {
+      case MASTER -> null;
+      case HUB_MANAGER ->
           delivery.hubRoute.originHubId.eq(query.referenceId())
               .or(delivery.hubRoute.destinationHubId.eq(query.referenceId()));
 
-      case "COMPANY_MANAGER" ->
+      case COMPANY_MANAGER ->
           delivery.receiver.userId.eq(query.userId());
 
-      case "DELIVERY_MANAGER" ->
+      case DELIVERY_MANAGER ->
           delivery.deliveryManagerId.eq(query.userId());
-
-      default -> throw new IllegalArgumentException("지원하지 않는 권한입니다: " + query.userRole());
     };
   }
 

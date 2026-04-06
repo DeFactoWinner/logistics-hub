@@ -15,10 +15,10 @@ public record GetDeliveryRouteResponse(
     String nextHubName,
 
     BigDecimal estimatedDistance,
-    Integer estimatedArrivalTime,
+    double estimatedArrivalTime,
 
     BigDecimal actualDistance,
-    Integer actualArrivalTime,
+    double actualArrivalTime,
 
     String status,
     String deliveryManagerName

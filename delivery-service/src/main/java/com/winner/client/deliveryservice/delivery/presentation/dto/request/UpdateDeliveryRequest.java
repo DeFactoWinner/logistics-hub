@@ -13,5 +13,5 @@ public record UpdateDeliveryRequest (
 
     @NotNull
     @Positive(message = "소요 시간은 0보다 커야 합니다.")
-    int actualArrivalTime
+    double actualArrivalTime
 ){}

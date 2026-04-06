@@ -12,9 +12,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DeliveryAccessValidator {
 
-  public void validateRole(String userRole, String... allowedRoles) {
-    for (String role : allowedRoles) {
-      if (role.equals(userRole)) return;
+  public void validateRole(String userRole, UserRole... allowedRoles) {
+    UserRole role = UserRole.of(userRole);
+    for (UserRole allowed : allowedRoles) {
+      if (allowed == role) return;
     }
     throw new BusinessException(DeliveryErrorCode.ACCESS_DENIED_ROLE);
   }
@@ -44,9 +45,10 @@ public class DeliveryAccessValidator {
   }
 
   public void validateHubAdminAccess(Delivery delivery, String userRole, UUID userHubId) {
-    validateRole(userRole, "MASTER", "HUB_ADMIN");
+    UserRole role = UserRole.of(userRole);
+    validateRole(userRole, UserRole.MASTER, UserRole.HUB_MANAGER);
 
-    if ("HUB_ADMIN".equals(userRole)) {
+    if (role == UserRole.HUB_MANAGER) {
       validateDeliveryHubAccess(delivery, userHubId);
     }
   }
@@ -54,31 +56,25 @@ public class DeliveryAccessValidator {
   public void validateDeliveryManagerAccess(
       Delivery delivery, UUID userId, String userRole, UUID userHubId
   ) {
-    validateRole(userRole, "MASTER", "HUB_ADMIN", "DELIVERY_MANAGER");
+    UserRole role = UserRole.of(userRole);
+    validateRole(userRole, UserRole.MASTER, UserRole.HUB_MANAGER, UserRole.DELIVERY_MANAGER);
 
-    switch (userRole) {
-      case "HUB_ADMIN" -> validateDeliveryHubAccess(delivery, userHubId);
-      case "DELIVERY_MANAGER" -> validateDeliveryManager(delivery, userId);
+    switch (role) {
+      case HUB_MANAGER -> validateDeliveryHubAccess(delivery, userHubId);
+      case DELIVERY_MANAGER -> validateDeliveryManager(delivery, userId);
       default -> {}
-    }
-  }
-
-  public void validateRouteHubAdminAccess(DeliveryRoute route, String userRole, UUID userHubId) {
-    validateRole(userRole, "MASTER", "HUB_ADMIN");
-
-    if ("HUB_ADMIN".equals(userRole)) {
-      validateRouteHubAccess(route, userHubId);
     }
   }
 
   public void validateRouteDeliveryManagerAccess(
       DeliveryRoute route, UUID userId, String userRole, UUID userHubId
   ) {
-    validateRole(userRole, "MASTER", "HUB_ADMIN", "DELIVERY_MANAGER");
+    UserRole role = UserRole.of(userRole);
+    validateRole(userRole, UserRole.MASTER, UserRole.HUB_MANAGER, UserRole.DELIVERY_MANAGER);
 
-    switch (userRole) {
-      case "HUB_ADMIN" -> validateRouteHubAccess(route, userHubId);
-      case "DELIVERY_MANAGER" -> validateDeliveryManager(route, userId);
+    switch (role) {
+      case HUB_MANAGER -> validateRouteHubAccess(route, userHubId);
+      case DELIVERY_MANAGER -> validateDeliveryManager(route, userId);
       default -> {}
     }
   }

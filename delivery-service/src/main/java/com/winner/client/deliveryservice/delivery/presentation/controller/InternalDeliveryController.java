@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/internal/v1/delivery")
+@RequestMapping("/internal/v1/deliveries")
 public class InternalDeliveryController {
 
   private final DeliveryCommandService deliveryCommandService;
 
-  @PostMapping
   public CreateDeliveryResponse createDelivery(@RequestBody CreateDeliveryRequest request) {
     CreateDeliveryCommand command = CreateDeliveryCommand.from(request);
     CreateDeliveryResult result = deliveryCommandService.createDelivery(command);
