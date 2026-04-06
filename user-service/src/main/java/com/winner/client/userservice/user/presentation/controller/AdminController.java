@@ -64,7 +64,7 @@ public class AdminController {
                 "해당 유저 정보를 수정하였습니다.",
                 UserDetailResponse.from(
                     userCommandService
-                        .updateUser(userId, UserPatchRequest.toCommand(request))
+                        .updateUser(UserPatchRequest.toCommand(userId, request))
                 )
             )
         );

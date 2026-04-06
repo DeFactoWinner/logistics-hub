@@ -70,7 +70,6 @@ public class UserController {
   public ResponseEntity<ApiResponse<UserDetailResponse>> getUserDetail
       (@AuthenticationPrincipal CustomUserPrincipal userPrincipal,
           @Valid @RequestBody UserPatchRequest request) {
-    log.info(request.toString());
     return ResponseEntity
         .status(
             CommonSuccessCode.OK.getStatus()
@@ -80,8 +79,8 @@ public class UserController {
                 CommonSuccessCode.OK,
                 "내 정보를 수정하였습니다.",
                 UserDetailResponse.from(
-                    userCommandService.updateUser(userPrincipal.userId(),
-                        UserPatchRequest.toCommand(request))
+                    userCommandService.updateUser(
+                        UserPatchRequest.toCommand(userPrincipal.userId(), request))
                 )
             )
         );

@@ -35,9 +35,8 @@ public class UserCommandServiceImpl implements UserCommandService {
   }
 
   @Override
-  public UserDetailResult updateUser(UUID id, UserPatchCommand command) {
-    log.info(command.toString());
-    User user = userRepository.findByIdAndDeletedAtNull(id)
+  public UserDetailResult updateUser(UserPatchCommand command) {
+    User user = userRepository.findByIdAndDeletedAtNull(command.userId())
         .orElseThrow(() -> new BusinessException(UserErrorCode.USER_NOT_FOUND));
     user.updateProfile(
         command.name(),

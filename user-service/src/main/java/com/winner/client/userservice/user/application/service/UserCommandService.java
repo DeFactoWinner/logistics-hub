@@ -8,5 +8,5 @@ public interface UserCommandService {
 
   Void logout(UUID userId, String accessToken);
 
-  UserDetailResult updateUser(UUID uuid, UserPatchCommand command);
+  UserDetailResult updateUser(UserPatchCommand command);
 }
