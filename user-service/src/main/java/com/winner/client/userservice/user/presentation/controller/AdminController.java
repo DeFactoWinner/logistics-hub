@@ -16,6 +16,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -87,6 +88,57 @@ public class AdminController {
             ApiResponse.success(CommonSuccessCode.OK,
                 "유저 목록을 조회하였습니다.",
                 PageResponse.of(infoPage)
+            )
+        );
+
+  }
+
+  @PatchMapping("/{userId}/approvals")
+  public ResponseEntity<ApiResponse<UserDetailResponse>> approveUserByAdmin
+      (@PathVariable UUID userId) {
+    return ResponseEntity
+        .status(
+            CommonSuccessCode.OK.getStatus()
+        )
+        .body(
+            ApiResponse.success(
+                CommonSuccessCode.OK,
+                "해당 사용자가 승인되었습니다.",
+                UserDetailResponse.from(
+                    userCommandService.approveUser(userId)
+                )
+            )
+        );
+  }
+
+  @PatchMapping("/{userId}/rejections")
+  public ResponseEntity<ApiResponse<Void>> rejectUserByAdmin
+      (@PathVariable UUID userId) {
+    return ResponseEntity
+        .status(
+            CommonSuccessCode.OK.getStatus()
+        )
+        .body(
+            ApiResponse.success(
+                CommonSuccessCode.OK,
+                "해당 사용자가 거절되었습니다.",
+                userCommandService.rejectUser(userId)
+            )
+        );
+  }
+
+
+  @DeleteMapping("/{userId}")
+  public ResponseEntity<ApiResponse<Void>> deleteUserByAdmin(@PathVariable UUID userId) {
+    return ResponseEntity
+        .status(
+            CommonSuccessCode.OK.getStatus()
+        )
+        .body(
+            ApiResponse.success(
+                CommonSuccessCode.OK,
+                "해당 사용자가 회원탈퇴 되었습니다.",
+                userCommandService.deleteUser(userId)
             )
         );
   }
