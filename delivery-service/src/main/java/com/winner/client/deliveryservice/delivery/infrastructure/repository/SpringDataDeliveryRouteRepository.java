@@ -15,11 +15,11 @@ public interface SpringDataDeliveryRouteRepository extends JpaRepository<Deliver
     SELECT dr FROM DeliveryRoute dr
     JOIN FETCH dr.delivery d
     WHERE d.id = :deliveryId
-    AND dr.status = 'PENDING'
+    AND dr.status = 'WAITING'
     ORDER BY dr.seq ASC
     LIMIT 1
     """)
-  Optional<DeliveryRoute> findFirstPendingRoute(@Param("deliveryId") UUID deliveryId);
+  Optional<DeliveryRoute> findFirstWaitingRoute(@Param("deliveryId") UUID deliveryId);
 
   @Query("""
     SELECT dr FROM DeliveryRoute dr
