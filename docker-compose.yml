@@ -19,6 +19,8 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
+    networks:
+      - logistics-network
     restart: unless-stopped
 
   redis:
@@ -36,8 +38,14 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - logistics-network
     restart: unless-stopped
 
 volumes:
   pgdata:
   redisdata:
+
+networks:
+  logistics-network:
+    external: true
