@@ -67,11 +67,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       orderRepository.save(order);
     } catch (Exception e) {
       log.error("주문 생성/저장 실패 productId={}", command.productId(), e);
-      try {
-        productFeignClient.modifyStock(command.productId(), new ModifyStockRequest(command.count()));
-      } catch (Exception restoreEx) {
-        log.error("보상 재고 복원 실패 — 수동 처리 필요 productId={}", command.productId(), restoreEx);
-      }
+      restoreStock(command.productId(), command.count());
       throw new BusinessException(OrderErrorCode.ORDER_CREATE_FAILED);
     }
 
@@ -98,11 +94,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
     } catch (Exception e) {
       log.error("배송 생성 실패 orderId={}", order.getId(), e);
-      try {
-        productFeignClient.modifyStock(command.productId(), new ModifyStockRequest(command.count()));
-      } catch (Exception restoreEx) {
-        log.error("보상 재고 복원 실패 — 수동 처리 필요 productId={}", command.productId(), restoreEx);
-      }
+      restoreStock(command.productId(), command.count());
       throw new BusinessException(OrderErrorCode.DELIVERY_CREATE_FAILED);
     }
 
@@ -131,18 +123,11 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
     order.softDeleteOrder(ctx.getUserId());
 
-    try {
-      productFeignClient.modifyStock(productId, new ModifyStockRequest(count));
-    } catch (Exception e) {
-      log.error("재고 복원 실패 — 수동 처리 필요 orderId={}, productId={}", orderId, productId, e);
+    if (order.getStatus() == OrderStatus.CONFIRMED || order.getStatus() == OrderStatus.SHIPPING) {
+      restoreStock(productId, count);
     }
-    if (deliveryId != null) {
-      try {
-        deliveryFeignClient.cancelDelivery(deliveryId);
-      } catch (Exception e) {
-        log.error("배송 취소 실패 — 수동 처리 필요 orderId={}, deliveryId={}", orderId, deliveryId, e);
-      }
-    }
+
+    cancelDeliverySafely(deliveryId);
   }
 
   @Override
@@ -168,18 +153,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     Long count = order.getOrderDetail().getCount();
     UUID deliveryId = order.getDeliveryId();
 
-    try {
-      productFeignClient.modifyStock(productId, new ModifyStockRequest(count));
-    } catch (Exception e) {
-      log.error("취소 재고 복원 실패 — 수동 처리 필요 orderId={}, productId={}", orderId, productId, e);
-    }
-    if (deliveryId != null) {
-      try {
-        deliveryFeignClient.cancelDelivery(deliveryId);
-      } catch (Exception e) {
-        log.error("배송 취소 실패 — 수동 처리 필요 orderId={}, deliveryId={}", orderId, deliveryId, e);
-      }
-    }
+    restoreStock(productId, count);
+    cancelDeliverySafely(deliveryId);
 
     return OrderResult.from(order);
   }
@@ -208,18 +183,24 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     Long count = order.getOrderDetail().getCount();
     UUID deliveryId = order.getDeliveryId();
 
+    restoreStock(productId, count);
+    cancelDeliverySafely(deliveryId);
+  }
+
+  private void restoreStock(UUID productId, Long count) {
     try {
       productFeignClient.modifyStock(productId, new ModifyStockRequest(count));
     } catch (Exception e) {
-      log.error("취소 재고 복원 실패 — 수동 처리 필요 orderId={}, productId={}", orderId, productId, e);
+      log.error("보상 재고 복원 실패 — 수동 처리 필요 productId={}", productId, e);
     }
+  }
 
-    if (deliveryId != null) {
-      try {
-        deliveryFeignClient.cancelDelivery(deliveryId);
-      } catch (Exception e) {
-        log.error("배송 취소 실패 — 수동 처리 필요 orderId={}, deliveryId={}", orderId, deliveryId, e);
-      }
+  private void cancelDeliverySafely(UUID deliveryId) {
+    if (deliveryId == null) return;
+    try {
+      deliveryFeignClient.cancelDelivery(deliveryId);
+    } catch (Exception e) {
+      log.error("배송 취소 실패 — 수동 처리 필요 deliveryId={}", deliveryId, e);
     }
   }
 
