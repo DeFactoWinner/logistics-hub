@@ -16,12 +16,11 @@ public interface ProductJpaRepository extends JpaRepository<Product, UUID> {
 
   Optional<Product> findByIdAndDeletedAtIsNull(UUID productId);
 
-  @Query(value = """
+  @Query("""
     SELECT new com.winner.client.productservice.product.domain.repository.ProductStockProjection(p, s)
     FROM Product p
     LEFT JOIN Stock s ON s.productId.productId = p.id
     WHERE p.deletedAt IS NULL
-    """,
-      countQuery = "SELECT count(p) FROM Product p WHERE p.deletedAt IS NULL")
+""")
   Page<ProductStockProjection> findAllWithStock(Pageable pageable);
 }

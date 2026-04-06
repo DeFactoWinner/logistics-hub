@@ -1,7 +1,6 @@
 package com.winner.client.productservice.product.domain.vo;
 
 public enum StatusEnum {
-  INACTIVE,
   ON_SALE,
   SOLD_OUT;
 
@@ -12,4 +11,6 @@ public enum StatusEnum {
   public boolean isOutOfStock() {
     return this == SOLD_OUT;
   }
+
+
 }

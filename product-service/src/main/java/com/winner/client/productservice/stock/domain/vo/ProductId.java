@@ -1,5 +1,7 @@
 package com.winner.client.productservice.stock.domain.vo;
 
+import com.winner.client.global.exception.BusinessException;
+import com.winner.client.productservice.common.exception.StockErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.UUID;
@@ -22,7 +24,7 @@ public class ProductId {
 
   private void validate(UUID productId) {
     if (productId == null) {
-      throw new IllegalArgumentException("ID값은 필수입니다.");
+      throw new BusinessException(StockErrorCode.PRODUCT_ID_REQUIRED);
     }
   }
   public static ProductId of(UUID productId){

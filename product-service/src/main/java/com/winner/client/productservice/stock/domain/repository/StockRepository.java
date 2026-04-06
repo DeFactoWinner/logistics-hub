@@ -10,4 +10,5 @@ public interface StockRepository {
 
   Optional<Stock> findByProductIdAndDeletedAtIsNull(ProductId productId);
 
+
 }

@@ -8,7 +8,7 @@ public record ListProductResponse(
     Long totalCount
 ) {
 
-  public static ListProductResponse of(Page<ProductDetailResult> list) {
+  public static ListProductResponse from(Page<ProductDetailResult> list) {
     return new ListProductResponse(list, list.getTotalElements());
   }
 }
