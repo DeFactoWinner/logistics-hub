@@ -1,3 +1,6 @@
+server:
+  port: ${ORDER_SERVICE_PORT:17003}
+
 spring:
   application:
     name: order-service
@@ -28,5 +31,12 @@ spring:
 
 eureka:
   client:
-    register-with-eureka: ${EUREKA_CLIENT_ENABLED:false}
-    fetch-registry: ${EUREKA_CLIENT_ENABLED:false}
+    service-url:
+      defaultZone: http://localhost:17001/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
