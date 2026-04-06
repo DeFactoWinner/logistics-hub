@@ -4,7 +4,6 @@ import com.winner.client.userservice.user.domain.entity.User;
 import com.winner.client.userservice.user.domain.enums.ApprovalStatusType;
 import com.winner.client.userservice.user.domain.enums.UserStatusType;
 import com.winner.client.userservice.user.domain.vo.PhoneNumber;
-import com.winner.client.userservice.user.domain.vo.UserRole;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Builder;
@@ -18,7 +17,8 @@ public record UserDetailResult(
     String slackId,
     UserStatusType userStatus,
     ApprovalStatusType approvalStatus,
-    UserRole userRole,
+    String role,
+    UUID referenceId,
     LocalDateTime updatedAt
 ) {
 
@@ -31,7 +31,8 @@ public record UserDetailResult(
         .slackId(user.getSlackId())
         .approvalStatus(user.getApprovalStatus())
         .userStatus(user.getUserStatus())
-        .userRole(user.getUserRole())
+        .role(user.getRoleName())
+        .referenceId(user.getReferenceId())
         .updatedAt(user.getUpdatedAt())
         .build();
   }
