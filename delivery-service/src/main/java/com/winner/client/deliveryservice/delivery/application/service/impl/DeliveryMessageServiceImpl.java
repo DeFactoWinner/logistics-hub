@@ -46,9 +46,8 @@ public class DeliveryMessageServiceImpl implements DeliveryMessageUsecase {
     }
 
     orderPort.updateOrderDeliveryInfo(
-        command.deliveryId(),
-        command.deliveryManagerId(),
-        delivery.getStatus().name()
+        delivery.getOrdersId(),
+        command.deliveryManagerId()
     );
   }
 
@@ -61,9 +60,8 @@ public class DeliveryMessageServiceImpl implements DeliveryMessageUsecase {
     delivery.startVendorMoving();
 
     orderPort.updateOrderDeliveryInfo(
-        command.deliveryId(),
-        command.deliveryManagerId(),
-        delivery.getStatus().name()
+        delivery.getOrdersId(),
+        command.deliveryManagerId()
     );
   }
 
@@ -91,7 +89,7 @@ public class DeliveryMessageServiceImpl implements DeliveryMessageUsecase {
     Delivery delivery = findDeliveryById(command.deliveryId());
     delivery.complete();
 
-    orderPort.updateOrderDeliveryCompleted(command.deliveryId());
+    orderPort.updateOrderDeliveryCompleted(delivery.getOrdersId());
   }
 
   @Override

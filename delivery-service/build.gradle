@@ -48,6 +48,7 @@ clean {
 dependencies {
     implementation project(':global')
     annotationProcessor project(':global')
+    implementation project(path: ':global', configuration: 'securityLib')
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-web'
