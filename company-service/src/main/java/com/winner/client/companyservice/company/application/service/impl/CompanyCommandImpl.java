@@ -2,18 +2,20 @@ package com.winner.client.companyservice.company.application.service.impl;
 
 import com.winner.client.companyservice.common.exception.CompanyErrorCode;
 import com.winner.client.companyservice.company.application.service.CompanyCommandService;
+import com.winner.client.companyservice.company.application.service.port.HubPort;
 import com.winner.client.companyservice.company.application.service.port.UserPort;
+import com.winner.client.companyservice.company.application.service.validate.CompanyValidator;
 import com.winner.client.companyservice.company.domain.entity.Company;
 import com.winner.client.companyservice.company.domain.repository.CompanyRepository;
 import com.winner.client.companyservice.company.domain.vo.CompanyAddress;
 import com.winner.client.companyservice.company.domain.vo.CompanyLocation;
 import com.winner.client.companyservice.company.domain.vo.HubId;
+import com.winner.client.companyservice.company.infrastructure.client.dto.response.HubResponse;
 import com.winner.client.companyservice.company.infrastructure.service.GeocodingService;
 import com.winner.client.companyservice.company.presentation.dto.request.CreateCompanyRequest;
 import com.winner.client.companyservice.company.presentation.dto.request.UpdateCompanyRequest;
 import com.winner.client.companyservice.company.presentation.dto.response.CompanyResponse;
 import com.winner.client.global.exception.BusinessException;
-import com.winner.client.global.exception.CommonErrorCode;
 import com.winner.client.global.security.CustomUserPrincipal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -27,21 +29,21 @@ public class CompanyCommandImpl implements CompanyCommandService {
 
   private final GeocodingService geocodingService;
   private final CompanyRepository companyRepository;
-  //private final HubFeignClient hubFeignClient; // 수정예정
+  private final CompanyValidator companyValidate;
+  private final HubPort hubPort;
   private final UserPort userPort;
 
   @Override
-  public CompanyResponse createCompany(CreateCompanyRequest request) {
+  public CompanyResponse createCompany(CreateCompanyRequest request, CustomUserPrincipal userPrincipal) {
+
     CompanyLocation companyLocation = convert(request.address());
     CompanyAddress address = CompanyAddress.of(request.address(), request.addressDetail());
 
-   // ApiResponse<HubResponse> hubClient =  hubFeignClient.getHub(request.hubId());
+    HubResponse hubResponse = hubPort.getHub(request.hubId());
 
-//    if(hubClient == null){
-//      throw new BusinessException(CompanyErrorCode.HUB_NOT_FOUND);
-//    }
+    companyValidate.validateCreate(userPrincipal,hubResponse.id());
 
-    HubId hubId = HubId.of(request.hubId());
+    HubId hubId = HubId.of(hubResponse.id());
 
     Company company = Company.create(request.name(), request.type(), hubId, companyLocation, address);
 
@@ -51,7 +53,7 @@ public class CompanyCommandImpl implements CompanyCommandService {
   }
 
   @Override
-  public CompanyResponse updateCompany(UUID companyId, UpdateCompanyRequest request) {
+  public CompanyResponse updateCompany(UUID companyId, UpdateCompanyRequest request, CustomUserPrincipal userPrincipal) {
     Company company = companyRepository.findById(companyId).orElseThrow(() ->
         new BusinessException(CompanyErrorCode.COMPANY_NOT_FOUND));
 
@@ -59,13 +61,16 @@ public class CompanyCommandImpl implements CompanyCommandService {
     CompanyAddress address = request.address() == null ? null :
         CompanyAddress.of(request.address(), request.addressDetail());
 
-   // ApiResponse<HubResponse> hubClient =  hubFeignClient.getHub(request.hubId());
+    HubId hubId = null;
 
-//    if(hubClient == null){
-//      throw new BusinessException(CompanyErrorCode.HUB_NOT_FOUND);
-//    }
+    companyValidate.validateCreate(userPrincipal, company.getHubId().getHubId());
 
-    HubId hubId = request.hubId() == null ? null : HubId.of(request.hubId());
+    if(request.hubId() != null){
+      HubResponse hubResponse = hubPort.getHub(request.hubId());
+      hubId = HubId.of(hubResponse.id());
+    }
+
+    companyValidate.validateAccess(company,userPrincipal,"update");
 
     company.updateCompany(request.name(), hubId, location, address);
 
@@ -78,16 +83,11 @@ public class CompanyCommandImpl implements CompanyCommandService {
     Company company = companyRepository.findById(id).orElseThrow(()->
        new BusinessException(CompanyErrorCode.COMPANY_NOT_FOUND));
 
-    boolean isMaster = "MASTER".equals(userPrincipal.role());
-    boolean isMyHub = company.getHubId().getHubId().equals(userPrincipal.referenceId());
-
-    if(!isMaster && !isMyHub){
-      throw new BusinessException(CommonErrorCode.FORBIDDEN);
-    }
+    companyValidate.validateAccess(company,userPrincipal,"delete");
 
     userPort.unassignUsersByCompany(id);
 
-    company.softDelete(UUID.randomUUID());
+    company.softDelete(userPrincipal.userId());
   }
 
   private CompanyLocation convert(String address) {

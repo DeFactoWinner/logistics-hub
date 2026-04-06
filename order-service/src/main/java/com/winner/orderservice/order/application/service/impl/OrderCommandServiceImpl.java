@@ -15,12 +15,16 @@ import com.winner.orderservice.order.domain.vo.OrderSnapshot;
 import com.winner.orderservice.order.exception.OrderErrorCode;
 import com.winner.orderservice.order.infrastructure.client.CompanyFeignClient;
 import com.winner.orderservice.order.infrastructure.client.DeliveryFeignClient;
+import com.winner.orderservice.order.infrastructure.client.HubFeignClient;
 import com.winner.orderservice.order.infrastructure.client.ProductFeignClient;
+import com.winner.orderservice.order.infrastructure.client.StockFeignClient;
+import com.winner.orderservice.order.infrastructure.client.UserFeignClient;
+import com.winner.orderservice.order.infrastructure.client.dto.request.UpdateStockRequest;
 import com.winner.orderservice.order.infrastructure.client.dto.response.CompanyResponse;
 import com.winner.orderservice.order.infrastructure.client.dto.request.CreateDeliveryRequest;
-import com.winner.orderservice.order.infrastructure.client.dto.response.DeliveryResponse;
-import com.winner.orderservice.order.infrastructure.client.dto.request.ModifyStockRequest;
+import com.winner.orderservice.order.infrastructure.client.dto.response.HubResponse;
 import com.winner.orderservice.order.infrastructure.client.dto.response.ProductResponse;
+import com.winner.orderservice.order.infrastructure.client.dto.response.UserDetailResponse;
 import com.winner.orderservice.order.infrastructure.repository.OrderRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -38,22 +42,25 @@ public class OrderCommandServiceImpl implements OrderCommandService {
   private final ProductFeignClient productFeignClient;
   private final DeliveryFeignClient deliveryFeignClient;
   private final CompanyFeignClient companyFeignClient;
+  private final HubFeignClient hubFeignClient;
+  private final UserFeignClient userFeignClient;
+  private final StockFeignClient stockFeignClient;
 
   @Override
   public OrderResult createOrder(CreateOrderCommand command, UserContext ctx) {
     requireRole(ctx, UserRole.MASTER, UserRole.HUB_MANAGER, UserRole.DELIVERY_MANAGER, UserRole.COMPANY_MANAGER);
 
-    fetchCompany(command.supplierId());
-    fetchCompany(command.receiverId());
+    CompanyResponse supplierCompany = fetchCompany(command.supplierId());
+    CompanyResponse receiverCompany = fetchCompany(command.receiverId());
+
+    HubResponse supplierHub = fetchHub(supplierCompany.hubId());
+    HubResponse receiverHub = fetchHub(receiverCompany.hubId());
+
+    UserDetailResponse receiver = fetchUserSlackId(ctx.getUserId());
 
     ProductResponse product = fetchProduct(command.productId());
 
-    try {
-      productFeignClient.modifyStock(command.productId(), new ModifyStockRequest(-command.count()));
-    } catch (Exception e) {
-      log.error("재고 감소 실패 productId={}", command.productId(), e);
-      throw new BusinessException(OrderErrorCode.OUT_OF_STOCK);
-    }
+    decreaseStock(command.productId(), command.count().intValue());
 
     Order order;
     try {
@@ -67,34 +74,38 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       orderRepository.save(order);
     } catch (Exception e) {
       log.error("주문 생성/저장 실패 productId={}", command.productId(), e);
-      restoreStock(command.productId(), command.count());
+      restoreStock(command.productId(), command.count().intValue());
       throw new BusinessException(OrderErrorCode.ORDER_CREATE_FAILED);
     }
 
     try {
       var deliveryReq = new CreateDeliveryRequest(
           order.getId(),
-          product.hubId(),
-          command.receiverId(),
+          supplierCompany.hubId(),
+          receiverCompany.hubId(),
+          supplierHub.name(),
+          receiverHub.name(),
+          receiver.userId(),
+          receiver.name(),
+          receiver.slackId(),
           command.deliveryAddress(),
           command.deliveryAddressDetail()
       );
       var deliveryResponse = deliveryFeignClient.createDelivery(deliveryReq);
-      if (deliveryResponse == null || deliveryResponse.getData() == null) {
+      if (deliveryResponse == null || deliveryResponse.deliveryId() == null) {
         throw new BusinessException(OrderErrorCode.DELIVERY_CREATE_FAILED);
       }
-      DeliveryResponse delivery = deliveryResponse.getData();
 
-      order.linkDelivery(delivery.deliveryId());
+      order.linkDelivery(deliveryResponse.deliveryId());
       order.confirm();
-      if(delivery.assignedDeliveryPersonId() != null) {
+      if(deliveryResponse.deliveriesId() != null) {
         order.startShipping();
-        order.assignDeliveryPerson(delivery.assignedDeliveryPersonId());
+        order.assignDeliveryPerson(deliveryResponse.deliveriesId());
       }
 
     } catch (Exception e) {
       log.error("배송 생성 실패 orderId={}", order.getId(), e);
-      restoreStock(command.productId(), command.count());
+      restoreStock(command.productId(), command.count().intValue());
       throw new BusinessException(OrderErrorCode.DELIVERY_CREATE_FAILED);
     }
 
@@ -124,10 +135,10 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     order.softDeleteOrder(ctx.getUserId());
 
     if (order.getStatus() == OrderStatus.CONFIRMED || order.getStatus() == OrderStatus.SHIPPING) {
-      restoreStock(productId, count);
+      restoreStock(productId, count.intValue());
     }
 
-    cancelDeliverySafely(deliveryId);
+    cancelDeliverySafely(deliveryId, ctx.getRole());
   }
 
   @Override
@@ -153,8 +164,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     Long count = order.getOrderDetail().getCount();
     UUID deliveryId = order.getDeliveryId();
 
-    restoreStock(productId, count);
-    cancelDeliverySafely(deliveryId);
+    restoreStock(productId, count.intValue());
+    cancelDeliverySafely(deliveryId, ctx.getRole());
 
     return OrderResult.from(order);
   }
@@ -183,22 +194,46 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     Long count = order.getOrderDetail().getCount();
     UUID deliveryId = order.getDeliveryId();
 
-    restoreStock(productId, count);
-    cancelDeliverySafely(deliveryId);
+    restoreStock(productId, count.intValue());
+    cancelDeliverySafely(deliveryId, UserRole.MASTER);
   }
 
-  private void restoreStock(UUID productId, Long count) {
+  private void decreaseStock(UUID productId, int count) {
     try {
-      productFeignClient.modifyStock(productId, new ModifyStockRequest(count));
+      UpdateStockRequest stockRequest = new UpdateStockRequest(-count);
+      var response =stockFeignClient.updateProductStock(productId, stockRequest);
+      if (response == null || response.getData() == null) {
+        throw new RuntimeException("응답이 비어있습니다.");
+      }
+    } catch (feign.FeignException e) {
+      log.error("재고 감소 실패 productId={}, status={}", productId, e.status(), e);
+      if (e.status() >= 400 && e.status() < 500) {
+        throw new BusinessException(OrderErrorCode.OUT_OF_STOCK);
+      }
+      throw new BusinessException(OrderErrorCode.STOCK_UPDATE_FAILED);
+    } catch (Exception e) {
+      log.error("재고 감소 중 알 수 없는 오류 발생 productId={}", productId, e);
+      throw new BusinessException(OrderErrorCode.STOCK_UPDATE_FAILED);
+    }
+  }
+
+  private void restoreStock(UUID productId, int count) {
+    try {
+      UpdateStockRequest stockRequest = new UpdateStockRequest(count);
+      var response = stockFeignClient.updateProductStock(productId, stockRequest);
+      if (response == null || response.getData() == null) {
+        throw new RuntimeException("응답이 비어있습니다.");
+      }
     } catch (Exception e) {
       log.error("보상 재고 복원 실패 — 수동 처리 필요 productId={}", productId, e);
     }
   }
 
-  private void cancelDeliverySafely(UUID deliveryId) {
+
+  private void cancelDeliverySafely(UUID deliveryId, UserRole userRole) {
     if (deliveryId == null) return;
     try {
-      deliveryFeignClient.cancelDelivery(deliveryId);
+      deliveryFeignClient.cancelDelivery(deliveryId,userRole.name());
     } catch (Exception e) {
       log.error("배송 취소 실패 — 수동 처리 필요 deliveryId={}", deliveryId, e);
     }
@@ -235,6 +270,22 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     } catch (Exception e) {
       throw new BusinessException(OrderErrorCode.COMPANY_NOT_FOUND);
     }
+  }
+
+  private HubResponse fetchHub(UUID hubId) {
+    var hub = hubFeignClient.getHub(hubId);
+    if (hub == null || hub.id() == null) {
+      throw new BusinessException(OrderErrorCode.HUB_NOT_FOUND);
+    }
+    return hub;
+  }
+
+  private UserDetailResponse fetchUserSlackId(UUID userId) {
+    var response = userFeignClient.getUserDetails(userId);
+    if (response == null || response.getData() == null) {
+      throw new BusinessException(OrderErrorCode.USER_NOT_FOUND);
+    }
+    return response.getData();
   }
 
   private void requireRole(UserContext ctx, UserRole... roles) {

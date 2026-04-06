@@ -5,7 +5,9 @@ import com.winner.client.global.pagination.PageResponse;
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import com.winner.client.global.security.CustomUserPrincipal;
+import com.winner.client.userservice.user.application.dto.command.UnAssignManagersCommand;
 import com.winner.client.userservice.user.application.dto.result.UserSearchResult;
+import com.winner.client.userservice.user.application.service.UserCommandService;
 import com.winner.client.userservice.user.application.service.UserQueryService;
 import com.winner.client.userservice.user.presentation.dto.request.ManagerUserSearchRequest;
 import com.winner.client.userservice.user.presentation.dto.response.UserDetailResponse;
@@ -14,6 +16,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class InternalController {
 
   private final UserQueryService userQueryService;
+  private final UserCommandService userCommandService;
 
   @GetMapping("/{userId}")
   public ResponseEntity<ApiResponse<UserDetailResponse>> getUserDetailsForManager(
@@ -67,6 +71,25 @@ public class InternalController {
                 PageResponse.of(
                     infoPage
                 )
+            )
+        );
+  }
+
+  @PreAuthorize("hasRole('MASTER')")
+  @GetMapping("/unassign/{referenceId}")
+  public ResponseEntity<ApiResponse<Void>> unAssignManagers(
+      @PathVariable UUID referenceId) {
+    return ResponseEntity
+        .status(
+            CommonSuccessCode.OK.getStatus()
+        )
+        .body(
+            ApiResponse.success(
+                CommonSuccessCode.OK,
+                "소속된 관리자들이 해제되었습니다.",
+                userCommandService.unAssignManagersFromAdmin(
+
+                    UnAssignManagersCommand.from(referenceId))
             )
         );
   }

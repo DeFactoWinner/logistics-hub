@@ -28,8 +28,8 @@ public record UserDetailResponse(
         .phoneNumber(command.phoneNumber().getNumber())
         .approvalStatus(command.approvalStatus().name())
         .userStatus(command.userStatus().name())
-        .userRole(command.userRole().getRole().name())
-        .referenceId(command.userRole().getReferenceId())
+        .userRole(command.role())
+        .referenceId(command.referenceId())
         .slackId(command.slackId())
         .updatedAt(command.updatedAt())
         .build();

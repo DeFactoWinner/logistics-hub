@@ -6,6 +6,7 @@ import com.winner.client.userservice.user.domain.entity.User;
 import com.winner.client.userservice.user.domain.repository.UserRepository;
 import com.winner.client.userservice.user.infrastructure.repository.JpaUserRepository;
 import com.winner.client.userservice.user.infrastructure.repository.UserQueryRepository;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -51,5 +52,10 @@ public class UserRepositoryImpl implements UserRepository {
   @Override
   public Page<User> findAllByAdminCondition(AdminUserPageQuery query) {
     return userQueryRepository.findAllByAdminCondition(query);
+  }
+
+  @Override
+  public List<User> findAllByReferenceId(UUID referenceId) {
+    return jpaUserRepository.findAllByUserRole_ReferenceId(referenceId);
   }
 }

@@ -71,7 +71,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
       Claims claims = jwtTokenProvider.getClaims(token);
 
       String userId = claims.getSubject();
-      String userRole = claims.get("role", String.class);
+      String userRole = String.valueOf(claims.get("role"));
       String userStatus = String.valueOf(claims.get("status"));
       String referenceId =
           claims.get("referenceId") != null ? String.valueOf(claims.get("referenceId")) : "";

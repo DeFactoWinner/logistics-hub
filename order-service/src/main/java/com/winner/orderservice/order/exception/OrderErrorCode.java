@@ -18,9 +18,13 @@ public enum OrderErrorCode implements ErrorCode {
   INVALID_QUERY_PARAMETER("ORDER_E807", HttpStatus.BAD_REQUEST, "잘못된 조회 파라미터입니다."),
   ACCESS_DENIED("ORDER_E808", HttpStatus.FORBIDDEN, "해당 주문에 접근 권한이 없습니다."),
   DELIVERY_CREATE_FAILED("ORDER_E809", HttpStatus.INTERNAL_SERVER_ERROR, "배송 생성에 실패했습니다."),
-  ORDER_CREATE_FAILED("ORDER_E812", HttpStatus.INTERNAL_SERVER_ERROR, "주문 생성에 실패했습니다."),
   INVALID_ROLE("ORDER_E810", HttpStatus.FORBIDDEN, "해당 작업을 수행할 권한이 없습니다."),
-  INVALID_INPUT("ORDER_E811", HttpStatus.BAD_REQUEST, "잘못된 입력입니다.");
+  INVALID_INPUT("ORDER_E811", HttpStatus.BAD_REQUEST, "잘못된 입력입니다."),
+  ORDER_CREATE_FAILED("ORDER_E812", HttpStatus.INTERNAL_SERVER_ERROR, "주문 생성에 실패했습니다."),
+  USER_NOT_FOUND("ORDER_E813", HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
+  HUB_NOT_FOUND("ORDER_E814", HttpStatus.NOT_FOUND, "허브를 찾을 수 없습니다."),
+  STOCK_UPDATE_FAILED("ORDER_E815", HttpStatus.INTERNAL_SERVER_ERROR, "재고 업데이트에 실패했습니다."),
+  STOCK_RESTORE_FAILED("ORDER_E816", HttpStatus.INTERNAL_SERVER_ERROR, "재고 복구에 실패했습니다.");
 
   private final String code;
   private final HttpStatus status;

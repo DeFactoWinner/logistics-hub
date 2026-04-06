@@ -7,6 +7,7 @@ import com.winner.client.deliveryservice.delivery.presentation.dto.request.Creat
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.CreateDeliveryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,8 +18,7 @@ public class InternalDeliveryController {
 
   private final DeliveryCommandService deliveryCommandService;
 
-  @PostMapping("/shortest")
-  public CreateDeliveryResponse createDelivery(CreateDeliveryRequest request) {
+  public CreateDeliveryResponse createDelivery(@RequestBody CreateDeliveryRequest request) {
     CreateDeliveryCommand command = CreateDeliveryCommand.from(request);
     CreateDeliveryResult result = deliveryCommandService.createDelivery(command);
     return CreateDeliveryResponse.from(result);

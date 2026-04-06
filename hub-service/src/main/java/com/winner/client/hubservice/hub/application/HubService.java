@@ -10,13 +10,20 @@ import com.winner.client.hubservice.hub.domain.entity.Hub;
 import com.winner.client.hubservice.hub.domain.repository.HubRepository;
 import com.winner.client.hubservice.hub.domain.repository.HubRouteRepository;
 import com.winner.client.hubservice.hub.domain.vo.HubLocation;
+import com.winner.client.hubservice.hub.presentation.dto.HubPageResponse;
+import com.winner.client.hubservice.hub.presentation.dto.HubResponse;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -26,6 +33,9 @@ public class HubService {
     private final HubRouteRepository hubRouteRepository;
     private final UserPort userPort;
 
+    @Caching(evict = {
+        @CacheEvict(value = "hubs", allEntries = true)
+    })
     @Transactional
     public UUID createHub(CreateHubCommand command) {
         HubLocation location = new HubLocation(
@@ -42,6 +52,7 @@ public class HubService {
         return hubRepository.save(hub).getId();
     }
 
+    @Cacheable(value = "hub", key = "#hubId")
     public HubResult getHub(UUID hubId) {
         Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId)
             .orElseThrow(()-> new HubException(HubErrorCode.HUB_NOT_FOUND));
@@ -55,6 +66,10 @@ public class HubService {
             .build();
     }
 
+    @Caching(evict = {
+        @CacheEvict(value = "hub", key = "#hubId"),
+        @CacheEvict(value = "hubs", allEntries = true)
+    })
     @Transactional
     public void updateHub(UUID hubId, UpdateHubCommand command) {
         Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId)
@@ -74,12 +89,14 @@ public class HubService {
         hub.update(command.getName(), location);
     }
 
+    @Caching(evict = {
+        @CacheEvict(value = "hub", key = "#hubId"),
+        @CacheEvict(value = "hubs", allEntries = true)
+    })
     @Transactional
     public void deleteHub(UUID hubId, UUID userId) {
         Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId)
             .orElseThrow(()-> new HubException(HubErrorCode.HUB_NOT_FOUND));
-
-        userPort.unassignUsersByReferenceId(hubId);
 
         hub.delete(userId);
 
@@ -91,7 +108,11 @@ public class HubService {
         }
     }
 
-    public Page<HubResult> searchHubs(String q, Pageable pageable) {
+    @Cacheable(value = "hubs", key = "#q + '-' + #pageable.pageNumber")
+    public HubPageResponse searchHubs(String q, Pageable pageable) {
+
+        long start = System.currentTimeMillis();
+
         Page<Hub> hubs;
 
         if (q == null || q.isBlank()) {
@@ -100,12 +121,16 @@ public class HubService {
             hubs = hubRepository.findByNameContainingAndDeletedAtIsNull(q, pageable);
         }
 
-        return hubs.map(hub -> HubResult.builder()
-            .id(hub.getId())
-            .name(hub.getName())
-            .address(hub.getLocation().getAddress())
-            .lat(hub.getLocation().getLat())
-            .lng(hub.getLocation().getLng())
-            .build());
+        long end = System.currentTimeMillis();
+        log.debug("DB 조회 시간: {} ms", (end - start));
+
+        return new HubPageResponse(
+            hubs.map(HubResponse::from).getContent(),
+            hubs.getNumber(),
+            hubs.getSize(),
+            hubs.getTotalElements(),
+            hubs.getTotalPages(),
+            hubs.isLast()
+        );
     }
 }
