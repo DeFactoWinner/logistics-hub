@@ -1,6 +1,6 @@
 package com.winner.client.deliveryservice.deliverymanagercompany.application.message;
 
-import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.re.CompanyDeliveryManagerAssignResult;
+import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.result.CompanyDeliveryManagerAssignResult;
 import com.winner.client.deliveryservice.deliverymanagercompany.application.dto.result.DeliveryFinalCompleteResult;
 
 public interface CompanyDeliveryManagerExternalPort {

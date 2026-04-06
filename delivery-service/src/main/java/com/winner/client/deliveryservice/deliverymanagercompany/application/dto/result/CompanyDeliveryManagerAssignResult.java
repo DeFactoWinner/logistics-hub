@@ -1,4 +1,4 @@
-package com.winner.client.deliveryservice.deliverymanagercompany.application.dto.re;
+package com.winner.client.deliveryservice.deliverymanagercompany.application.dto.result;
 
 import java.util.UUID;
 import lombok.Builder;
@@ -23,11 +23,12 @@ public class CompanyDeliveryManagerAssignResult {
 			.build();
 	}
 
-	public static CompanyDeliveryManagerAssignResult fail(String errorMessage) {
+	public static CompanyDeliveryManagerAssignResult fail(String errorMessage, UUID deliveryId) {
 		return CompanyDeliveryManagerAssignResult.builder()
-			.success(false)
-			.errorMessage(errorMessage)
-			.build();
+				.success(false)
+				.errorMessage(errorMessage)
+				.deliveryId(deliveryId)
+				.build();
 	}
 
 }
