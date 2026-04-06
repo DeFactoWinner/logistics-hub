@@ -2,11 +2,10 @@ package com.winner.orderservice.order.infrastructure.client.dto.response;
 
 import java.util.UUID;
 
-public record CompanyResponse(
-    UUID companyId,
+public record HubResponse(
+    UUID id,
     String name,
     String address,
-    String addressDetail,
-    String type,
-    UUID hubId
+    double lat,
+    double lng
 ) {}

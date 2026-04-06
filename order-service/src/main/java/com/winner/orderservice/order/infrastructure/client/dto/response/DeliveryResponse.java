@@ -4,6 +4,5 @@ import java.util.UUID;
 
 public record DeliveryResponse(
     UUID deliveryId,
-    UUID assignedDeliveryPersonId
+    UUID deliveriesId
 ) {}
-
