@@ -6,9 +6,11 @@ import com.winner.client.deliveryservice.deliverymanagercompany.application.Deli
 import com.winner.client.deliveryservice.deliverymanagercompany.application.DeliveryManagerCompanyWriteService;
 import com.winner.client.deliveryservice.deliverymanagercompany.presentation.dto.responses.DeliveryManagerCompanyInfo;
 import com.winner.client.global.response.ApiResponse;
+import com.winner.client.global.security.CustomUserPrincipal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,10 +44,10 @@ public class DeliveryManagerCompanyController {
 
 	@PatchMapping("/{deliveryId}/completion")
 	public ResponseEntity<ApiResponse<Void>> completionDelivery(
-		@RequestHeader("X-User-Id") UUID userId,
+		@AuthenticationPrincipal CustomUserPrincipal principal,
 		@PathVariable UUID deliveryId
 	) {
-		deliveryManagerCompanyWriteService.completion(userId, deliveryId);
+		deliveryManagerCompanyWriteService.completion(principal.userId(), deliveryId);
 		return ResponseEntity.status(OK.getStatus())
 			.body(ApiResponse.success(OK, null));
 	}
