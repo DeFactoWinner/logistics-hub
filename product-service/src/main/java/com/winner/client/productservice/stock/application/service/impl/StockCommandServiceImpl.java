@@ -1,12 +1,14 @@
 package com.winner.client.productservice.stock.application.service.impl;
 
 import com.winner.client.global.exception.BusinessException;
+import com.winner.client.global.security.CustomUserPrincipal;
 import com.winner.client.productservice.common.exception.StockErrorCode;
 import com.winner.client.productservice.stock.application.service.StockCommandService;
 import com.winner.client.productservice.stock.application.dto.command.CreateStockCommand;
 import com.winner.client.productservice.stock.application.dto.command.DeleteStockCommand;
 import com.winner.client.productservice.stock.application.dto.command.UpdateStockCommand;
 import com.winner.client.productservice.stock.application.dto.result.StockResult;
+import com.winner.client.productservice.stock.application.service.validate.StockValidate;
 import com.winner.client.productservice.stock.domain.entity.Stock;
 import com.winner.client.productservice.stock.domain.event.StockUpdateEvent;
 import com.winner.client.productservice.stock.domain.repository.StockRepository;
@@ -23,6 +25,7 @@ public class StockCommandServiceImpl implements StockCommandService {
 
   private final StockRepository stockRepository;
   private final ApplicationEventPublisher eventPublisher;
+  private final StockValidate stockValidate;
 
   @Override
   public void createStock(CreateStockCommand command) {
@@ -40,10 +43,12 @@ public class StockCommandServiceImpl implements StockCommandService {
   }
 
   @Override
-  public StockResult updateStock(UpdateStockCommand command) {
+  public StockResult updateStock(UpdateStockCommand command, CustomUserPrincipal user) {
 
     Stock stock = stockRepository.findByProductIdAndDeletedAtIsNull(command.productId())
         .orElseThrow(() -> new BusinessException(StockErrorCode.STOCK_NOT_FOUND));
+
+    stockValidate.updateStock(stock,user);
 
     boolean statusChanged = stock.updateQuantityAndCheckStatus(command.amount());
 
