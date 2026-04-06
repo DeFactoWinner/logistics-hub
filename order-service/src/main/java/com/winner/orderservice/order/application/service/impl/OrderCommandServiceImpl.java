@@ -220,7 +220,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       }
     } catch (Exception e) {
       log.error("보상 재고 복원 실패 — 수동 처리 필요 productId={}", productId, e);
-      throw new BusinessException(OrderErrorCode.STOCK_RESTORE_FAILED);
     }
   }
 
