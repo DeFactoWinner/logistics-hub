@@ -23,14 +23,14 @@ public record HubRouteInfo(
       UUID toHubId, String toHubName,
       int sequence,
       BigDecimal estimatedDistance,
-      int estimatedArrivalTime
+      double estimatedArrivalTime
   ) {
     public static Node from(HubRouteResponse.HubNodeInfo node) {
       return new Node(
           node.fromHubId(), node.fromHubName(),
           node.toHubId(), node.toHubName(),
           node.sequence(),
-          node.estimatedDistance(),
+          BigDecimal.valueOf(node.estimatedDistance()),
           node.estimatedArrivalTime()
       );
     }

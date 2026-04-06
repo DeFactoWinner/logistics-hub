@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Duration {
-  private int minutes;
+  private double minutes;
 
-  public Duration(int minutes) {
+  public Duration(double minutes) {
     if (minutes <= 0) {
       throw new BusinessException(DeliveryErrorCode.INVALID_DURATION);
     }
