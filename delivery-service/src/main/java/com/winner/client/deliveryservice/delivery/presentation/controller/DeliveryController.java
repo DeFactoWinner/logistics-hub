@@ -1,9 +1,13 @@
 package com.winner.client.deliveryservice.delivery.presentation.controller;
 
+import com.winner.client.deliveryservice.delivery.application.dto.command.CreateDeliveryCommand;
 import com.winner.client.deliveryservice.delivery.application.dto.query.SearchDeliveryQuery;
+import com.winner.client.deliveryservice.delivery.application.dto.result.CreateDeliveryResult;
 import com.winner.client.deliveryservice.delivery.application.dto.result.SearchDeliveryResult;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryCommandService;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryQueryService;
+import com.winner.client.deliveryservice.delivery.presentation.dto.request.CreateDeliveryRequest;
+import com.winner.client.deliveryservice.delivery.presentation.dto.response.CreateDeliveryResponse;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryCommandResponse;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryInfoResponse;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.GetDeliveryResponse;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +38,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class DeliveryController {
   private final DeliveryQueryService deliveryQueryService;
   private final DeliveryCommandService deliveryCommandService;
+
+  @PreAuthorize("hasRole('MASTER')")
+  @PostMapping
+  public CreateDeliveryResponse createDelivery(
+      @AuthenticationPrincipal CustomUserPrincipal principal,
+      @RequestBody CreateDeliveryRequest request) {
+    CreateDeliveryCommand command = CreateDeliveryCommand.from(request);
+    CreateDeliveryResult result = deliveryCommandService.createDelivery(command);
+    return CreateDeliveryResponse.from(result);
+  }
 
   @GetMapping
   public ResponseEntity<ApiResponse<PageResponse<DeliveryInfoResponse>>> getMyDeliveries(
