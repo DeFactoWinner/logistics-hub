@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ProductFeignClient {
 
   @GetMapping("/api/v1/products/{productId}")
-  ApiResponse<ProductResponse> getProduct(@PathVariable UUID productId);
+  ApiResponse<ProductResponse> getProduct(@PathVariable("productId") UUID productId);
 
 }
