@@ -87,10 +87,10 @@ public class DeliveryManagerHubWriteService implements DeliveryDeliveryManagerHu
 			.orElseThrow(() -> new BusinessException(NOT_FOUND_AVAILABLE_HUB_DELIVERY_MANAGERS));
 	}
 
-	public void completion(UUID userId, UUID deliveryId) {
-		DeliveryManagerHub manager = repository.findByUserId(userId)
+	public void completion(UUID deliveryManagerId, UUID deliveryId) {
+		DeliveryManagerHub manager = repository.findByIdAndDeletedAtNull(deliveryManagerId)
 			.orElseThrow(() -> new BusinessException(NOT_FOUND_HUB_DELIVERY_MANAGER));
 		manager.completeDelivery(deliveryId);
-		deliveryMessagePort.deliveryCompleteEventPublish(DeliveryCompleteResult.of(userId, deliveryId));
+		deliveryMessagePort.deliveryCompleteEventPublish(DeliveryCompleteResult.of(deliveryManagerId, deliveryId));
 	}
 }
