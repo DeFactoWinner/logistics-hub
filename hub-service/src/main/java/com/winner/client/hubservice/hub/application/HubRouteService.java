@@ -10,6 +10,8 @@ import com.winner.client.hubservice.hub.domain.vo.RouteInfo;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ public class HubRouteService {
 
     private final HubRouteRepository hubRouteRepository;
 
+    @CacheEvict(value = "hubRoutes", allEntries = true)
     @Transactional
     public UUID createRoute(CreateRouteCommand command) {
         RouteInfo routeInfo = new RouteInfo(
@@ -34,6 +37,7 @@ public class HubRouteService {
         return hubRouteRepository.save(route).getId();
     }
 
+    @Cacheable(value = "hubRoutes", key = "'all'")
     @Transactional(readOnly = true)
     public List<HubRouteResult> getAllRoutes() {
         return hubRouteRepository.findAllByDeletedAtIsNull().stream()
@@ -47,6 +51,7 @@ public class HubRouteService {
             .toList();
     }
 
+    @Cacheable(value = "hubRoutes", key = "#fromHubId + '-' + #toHubId")
     @Transactional(readOnly = true)
     public List<HubRouteResult> searchRoutes(UUID fromHubId, UUID toHubId) {
         return hubRouteRepository.findByRouteInfo_FromHubIdAndRouteInfo_ToHubIdAndDeletedAtIsNull(fromHubId, toHubId).stream()
