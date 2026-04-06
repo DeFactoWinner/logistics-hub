@@ -6,6 +6,7 @@ import com.winner.client.deliveryservice.delivery.domain.enums.DeliveryRouteStat
 import com.winner.client.deliveryservice.delivery.domain.vo.CurrentHubRoute;
 import com.winner.client.deliveryservice.delivery.domain.vo.Distance;
 import com.winner.client.deliveryservice.delivery.domain.vo.Duration;
+import com.winner.client.global.entity.BaseAuditEntity;
 import com.winner.client.global.exception.BusinessException;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -37,7 +38,7 @@ import org.hibernate.annotations.UuidGenerator;
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DeliveryRoute {
+public class DeliveryRoute extends BaseAuditEntity {
 
   @Id
   @GeneratedValue
@@ -81,7 +82,7 @@ public class DeliveryRoute {
   @Column(name = "status", nullable = false)
   private DeliveryRouteStatus status;
 
-  @Column(name = "delivery_manager_id", nullable = false)
+  @Column(name = "delivery_manager_id")
   private UUID deliveryManagerId;
 
   @Column(name = "delivery_manager_name")
@@ -127,7 +128,7 @@ public class DeliveryRoute {
     return currentHubRoute.isRelatedTo(hubId); // 위임
   }
 
-  public void updateActualDeliveryRouteInfo(BigDecimal actualDistance, int actualArrivalTime) {
+  public void updateActualDeliveryRouteInfo(BigDecimal actualDistance, double actualArrivalTime) {
     this.actualDistance = new Distance(actualDistance);
     this.actualArrivalTime = new Duration(actualArrivalTime);
   }
