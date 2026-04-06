@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface DeliveryFeignClient {
 
   @PostMapping("/internal/v1/delivery")
-  ApiResponse<DeliveryResponse> createDelivery(@RequestBody CreateDeliveryRequest request);
+  DeliveryResponse createDelivery(@RequestBody CreateDeliveryRequest request);
 
   @PatchMapping("/api/v1/deliveries/{deliveryId}/cancelled")
-  ApiResponse<Void> cancelDelivery(
+  ApiResponse<Object> cancelDelivery(
       @PathVariable("deliveryId") UUID deliveryId,
       @RequestHeader("X-User-Role") String userRole
   );

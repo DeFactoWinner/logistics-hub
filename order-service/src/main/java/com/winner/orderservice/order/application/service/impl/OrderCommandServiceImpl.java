@@ -80,16 +80,15 @@ public class OrderCommandServiceImpl implements OrderCommandService {
           command.deliveryAddressDetail()
       );
       var deliveryResponse = deliveryFeignClient.createDelivery(deliveryReq);
-      if (deliveryResponse == null || deliveryResponse.getData() == null) {
+      if (deliveryResponse == null || deliveryResponse.deliveryId() == null) {
         throw new BusinessException(OrderErrorCode.DELIVERY_CREATE_FAILED);
       }
-      DeliveryResponse delivery = deliveryResponse.getData();
 
-      order.linkDelivery(delivery.deliveryId());
+      order.linkDelivery(deliveryResponse.deliveryId());
       order.confirm();
-      if(delivery.assignedDeliveryPersonId() != null) {
+      if(deliveryResponse.deliveriesId() != null) {
         order.startShipping();
-        order.assignDeliveryPerson(delivery.assignedDeliveryPersonId());
+        order.assignDeliveryPerson(deliveryResponse.deliveriesId());
       }
 
     } catch (Exception e) {
