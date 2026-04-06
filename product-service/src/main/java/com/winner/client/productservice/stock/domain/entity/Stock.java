@@ -1,6 +1,8 @@
 package com.winner.client.productservice.stock.domain.entity;
 
 import com.winner.client.global.entity.BaseAuditEntity;
+import com.winner.client.global.exception.BusinessException;
+import com.winner.client.productservice.common.exception.StockErrorCode;
 import com.winner.client.productservice.stock.domain.vo.ProductId;
 import com.winner.client.productservice.stock.domain.vo.Quantity;
 import jakarta.persistence.Column;
@@ -40,11 +42,20 @@ public class Stock extends BaseAuditEntity {
     return new Stock(productId, new Quantity(0));
   }
 
-  public void increase(int amount) {
-    quantity = quantity.add(amount);
+  public boolean isAvailable() {
+    return this.quantity.getQuantity() > 0;
   }
 
-  public void decrease( int amount) {
-    quantity = quantity.reduce(amount);
+  public boolean updateQuantityAndCheckStatus(int amount){
+     boolean previousStatus = isAvailable();
+
+     if(amount == 0){
+       throw new BusinessException(StockErrorCode.INVALID_STOCK_UPDATE_AMOUNT);
+     }
+     this.quantity = this.quantity.add(amount);
+
+    return previousStatus != isAvailable();
   }
+
+
 }

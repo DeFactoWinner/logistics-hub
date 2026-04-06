@@ -1,5 +1,7 @@
 package com.winner.client.productservice.stock.domain.vo;
 
+import com.winner.client.global.exception.BusinessException;
+import com.winner.client.productservice.common.exception.StockErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -19,26 +21,19 @@ public class Quantity {
     this.quantity = quantity;
   }
 
-  public Quantity add(int quantity) {
+  public Quantity add(int delta) {
+    int newQuantity = this.quantity + delta;
 
-    int newQuantity = this.quantity + quantity;
-
-    return new Quantity(newQuantity);
-  }
-
-  public Quantity reduce(int quantity) {
-
-    int newQuantity = this.quantity - quantity;
-
-    if(newQuantity < 0){
-      throw new IllegalArgumentException("재고가 부족합니다.");
+    if (newQuantity < 0) {
+      throw new BusinessException(StockErrorCode.INSUFFICIENT_STOCK);
     }
+
     return new Quantity(newQuantity);
   }
 
   private void validateQuantity(int quantity){
     if(quantity < 0){
-      throw new IllegalArgumentException("0 이상이어야 합니다.");
+      throw new BusinessException(StockErrorCode.INVALID_STOCK_QUANTITY);
     }
   }
 

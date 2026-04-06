@@ -66,15 +66,16 @@ public class Product extends BaseAuditEntity {
       throw new BusinessException(ProductErrorCode.COMPANY_ID_REQUIRED);
     }
 
-    return new Product(name,companyId,hubId,description,StatusEnum.INACTIVE);
+    return new Product(name,companyId,hubId,description,StatusEnum.SOLD_OUT);
   }
 
-  public void update(String name, String description, StatusEnum statusEnum) {
+  public void updateInfo(String name, String description) {
 
     if(name != null) this.name = name;
     if(description != null) this.description = description;
-    if(statusEnum != null) this.statusEnum = statusEnum;
   }
 
-
+  public void updateStatus(StatusEnum statusEnum) {
+    this.statusEnum = statusEnum;
+  }
 }

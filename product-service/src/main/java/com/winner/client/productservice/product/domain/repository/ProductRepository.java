@@ -1,11 +1,11 @@
 package com.winner.client.productservice.product.domain.repository;
 
-import com.winner.client.global.pagination.CommonPageRequest;
 import com.winner.client.productservice.product.domain.entity.Product;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductRepository {
 
@@ -15,5 +15,5 @@ public interface ProductRepository {
 
   List<Product> findAllByDeletedAtIsNull();
 
-  Page<ProductStockProjection> findAllWithStock(CommonPageRequest pageable);
+  Page<ProductStockProjection> findAllWithStock(Pageable pageable);
 }

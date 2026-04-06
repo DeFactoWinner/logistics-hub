@@ -76,6 +76,18 @@ public class User extends BaseAuditEntity {
     return user;
   }
 
+  public void updateProfile(String name, PhoneNumber phoneNumber, String slackId) {
+    if (name != null) {
+      this.name = name;
+    }
+    if (phoneNumber != null) {
+      this.phoneNumber = phoneNumber;
+    }
+    if (slackId != null) {
+      this.slackId = slackId;
+    }
+  }
+
   public void assignRole(UserRole userRole) {
     this.userRole = userRole;
   }
