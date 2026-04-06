@@ -6,7 +6,7 @@ import java.util.UUID;
 public record StockResultResponse(
     UUID stockId,
     UUID productId,
-    Quantity quantity, // Object 대신 전용 DTO 사용
+    Quantity quantity,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
