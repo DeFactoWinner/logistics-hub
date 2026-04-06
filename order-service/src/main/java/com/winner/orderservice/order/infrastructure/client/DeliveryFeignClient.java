@@ -18,7 +18,7 @@ public interface DeliveryFeignClient {
   DeliveryResponse createDelivery(@RequestBody CreateDeliveryRequest request);
 
   @PatchMapping("/api/v1/deliveries/{deliveryId}/cancelled")
-  ApiResponse<Object> cancelDelivery(
+  ApiResponse<Void> cancelDelivery(
       @PathVariable("deliveryId") UUID deliveryId,
       @RequestHeader("X-User-Role") String userRole
   );
