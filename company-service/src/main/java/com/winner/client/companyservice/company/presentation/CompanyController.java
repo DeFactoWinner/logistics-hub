@@ -9,6 +9,7 @@ import com.winner.client.companyservice.company.presentation.dto.response.ListCo
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
 import com.winner.client.global.security.CustomUserPrincipal;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -36,42 +37,46 @@ public class CompanyController {
   private final CompanyQueryService companyQueryService;
 
   @PostMapping
+  @PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
   public ResponseEntity<ApiResponse<CompanyResponse>> createCompany(
-      @RequestBody CreateCompanyRequest companyRequestDto,
+      @Valid @RequestBody CreateCompanyRequest companyRequestDto,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 
-    CompanyResponse result = companyCommandService.createCompany(companyRequestDto);
+    CompanyResponse result = companyCommandService.createCompany(companyRequestDto,principal);
 
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.CREATED,result));
   }
 
   @PatchMapping("/{companyId}")
+  @PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
   public ResponseEntity<ApiResponse<CompanyResponse>> updateCompany(
       @RequestBody UpdateCompanyRequest companyRequestDto,
-      @PathVariable UUID companyId) {
+      @PathVariable UUID companyId,
+      @AuthenticationPrincipal CustomUserPrincipal principal) {
 
-    CompanyResponse result = companyCommandService.updateCompany(companyId,companyRequestDto);
+    CompanyResponse result = companyCommandService.updateCompany(companyId,companyRequestDto,principal);
 
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,result));
   }
 
   @GetMapping
+  @PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
   public ResponseEntity<ApiResponse<ListCompanyResponse>> getCompanyList() {
-
     ListCompanyResponse result = companyQueryService.getCompanyList();
 
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,result));
   }
 
   @GetMapping("/{companyId}")
+  @PreAuthorize("hasAnyRole('MASTER','HUB_MANAGER')")
   public ResponseEntity<ApiResponse<CompanyResponse>> getCompany(@PathVariable UUID companyId) {
     CompanyResponse result = companyQueryService.getCompany(companyId);
     log.info("companyId : {}",result);
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK,result));
   }
 
-  @PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
   @DeleteMapping("/{companyId}")
+  @PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
   public ResponseEntity<ApiResponse<Void>> deleteCompany(@PathVariable UUID companyId,
       @AuthenticationPrincipal CustomUserPrincipal principal) {
 

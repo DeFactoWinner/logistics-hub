@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface CompanyCommandService {
 
-  CompanyResponse createCompany(CreateCompanyRequest request);
+  CompanyResponse createCompany(CreateCompanyRequest request, CustomUserPrincipal principal);
 
-  CompanyResponse updateCompany(UUID id,UpdateCompanyRequest request);
+  CompanyResponse updateCompany(UUID id,UpdateCompanyRequest request, CustomUserPrincipal principal);
 
   void deleteCompany(UUID companyId, CustomUserPrincipal principal);
 
