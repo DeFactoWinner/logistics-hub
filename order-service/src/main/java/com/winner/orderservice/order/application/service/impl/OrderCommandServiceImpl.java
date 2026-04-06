@@ -205,9 +205,15 @@ public class OrderCommandServiceImpl implements OrderCommandService {
       if (response == null || response.getData() == null) {
         throw new RuntimeException("응답이 비어있습니다.");
       }
+    } catch (feign.FeignException e) {
+      log.error("재고 감소 실패 productId={}, status={}", productId, e.status(), e);
+      if (e.status() >= 400 && e.status() < 500) {
+        throw new BusinessException(OrderErrorCode.OUT_OF_STOCK);
+      }
+      throw new BusinessException(OrderErrorCode.STOCK_UPDATE_FAILED);
     } catch (Exception e) {
-      log.error("재고 감소 실패 productId={}", productId, e);
-      throw new BusinessException(OrderErrorCode.OUT_OF_STOCK);
+      log.error("재고 감소 중 알 수 없는 오류 발생 productId={}", productId, e);
+      throw new BusinessException(OrderErrorCode.STOCK_UPDATE_FAILED);
     }
   }
 
