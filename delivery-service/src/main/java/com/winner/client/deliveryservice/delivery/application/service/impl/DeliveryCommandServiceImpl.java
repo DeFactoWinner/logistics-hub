@@ -6,6 +6,7 @@ import com.winner.client.deliveryservice.delivery.application.dto.result.CreateD
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryAssignmentService;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryCommandService;
 import com.winner.client.deliveryservice.delivery.application.validator.DeliveryAccessValidator;
+import com.winner.client.deliveryservice.delivery.application.validator.UserRole;
 import com.winner.client.deliveryservice.delivery.domain.entity.Delivery;
 import com.winner.client.deliveryservice.delivery.domain.repository.DeliveryRepository;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryCommandResponse;
@@ -82,7 +83,7 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
   @Override
   public DeliveryCommandResponse cancelDelivery(
       UUID deliveryId, String userRole) {
-    validator.validateRole(userRole, "MASTER_ADMIN");
+    validator.validateRole(userRole, UserRole.MASTER);
     Delivery delivery = findByIdWithRoutes(deliveryId);
     delivery.cancel();
     return DeliveryCommandResponse.from(delivery);
