@@ -60,7 +60,6 @@ public class CompanyController {
   }
 
   @GetMapping
-  @PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
   public ResponseEntity<ApiResponse<ListCompanyResponse>> getCompanyList() {
     ListCompanyResponse result = companyQueryService.getCompanyList();
 
@@ -68,7 +67,6 @@ public class CompanyController {
   }
 
   @GetMapping("/{companyId}")
-  @PreAuthorize("hasAnyRole('MASTER','HUB_MANAGER')")
   public ResponseEntity<ApiResponse<CompanyResponse>> getCompany(@PathVariable UUID companyId) {
     CompanyResponse result = companyQueryService.getCompany(companyId);
     log.info("companyId : {}",result);
