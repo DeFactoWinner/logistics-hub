@@ -1,0 +1,16 @@
+services:
+  eureka-server:
+    platform: linux/arm64
+    build:
+      context: ..
+      dockerfile: eureka-server/Dockerfile
+    container_name: eureka-server
+    ports:
+      - "17001:17001"
+    networks:
+      - logistics-network
+    restart: always
+
+networks:
+  logistics-network:
+    external: true
