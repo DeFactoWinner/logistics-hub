@@ -12,4 +12,10 @@ public interface UserCommandService {
   UserDetailResult updateUser(UserPatchCommand command);
 
   Void unAssignManagersFromAdmin(UnAssignManagersCommand command);
+
+  Void deleteUser(UUID userId);
+
+  UserDetailResult approveUser(UUID userId);
+
+  Void rejectUser(UUID userId);
 }

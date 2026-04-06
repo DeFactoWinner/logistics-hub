@@ -1,6 +1,7 @@
 package com.winner.client.userservice.user.infrastructure.client;
 
 import com.winner.client.global.exception.BusinessException;
+import com.winner.client.global.exception.CommonErrorCode;
 import com.winner.client.userservice.common.exception.UserErrorCode;
 import com.winner.client.userservice.user.application.port.DeliverManagerPort;
 import com.winner.client.userservice.user.domain.entity.User;
@@ -39,7 +40,7 @@ public class DeliveryManagerClientAdapter implements DeliverManagerPort {
             DeliveryManagerCompanyRegistrationRequest.from(user));
       }
     } catch (Exception e) {
-      throw new BusinessException(UserErrorCode.ACTIVE_USER_CANNOT_WITHDRAW);
+      throw new BusinessException(CommonErrorCode.INTERNAL_SERVER_ERROR);
     }
   }
 
