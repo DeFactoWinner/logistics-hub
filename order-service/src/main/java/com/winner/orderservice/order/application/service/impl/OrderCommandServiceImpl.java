@@ -24,6 +24,7 @@ import com.winner.orderservice.order.infrastructure.client.dto.response.CompanyR
 import com.winner.orderservice.order.infrastructure.client.dto.request.CreateDeliveryRequest;
 import com.winner.orderservice.order.infrastructure.client.dto.response.HubResponse;
 import com.winner.orderservice.order.infrastructure.client.dto.response.ProductResponse;
+import com.winner.orderservice.order.infrastructure.client.dto.response.UserDetailResponse;
 import com.winner.orderservice.order.infrastructure.repository.OrderRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     HubResponse supplierHub = fetchHub(supplierCompany.hubId());
     HubResponse receiverHub = fetchHub(receiverCompany.hubId());
 
-    String slackId = fetchUserSlackId(ctx.getUserId());
+    UserDetailResponse receiver = fetchUserSlackId(ctx.getUserId());
 
     ProductResponse product = fetchProduct(command.productId());
 
@@ -84,9 +85,9 @@ public class OrderCommandServiceImpl implements OrderCommandService {
           receiverCompany.hubId(),
           supplierHub.name(),
           receiverHub.name(),
-          receiverCompany.companyId(),
-          receiverCompany.name(),
-          slackId,
+          receiver.userId(),
+          receiver.name(),
+          receiver.slackId(),
           command.deliveryAddress(),
           command.deliveryAddressDetail()
       );
@@ -274,12 +275,12 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     return hub;
   }
 
-  private String fetchUserSlackId(UUID userId) {
+  private UserDetailResponse fetchUserSlackId(UUID userId) {
     var response = userFeignClient.getUserDetails(userId);
     if (response == null || response.getData() == null) {
       throw new BusinessException(OrderErrorCode.USER_NOT_FOUND);
     }
-    return response.getData().slackId();
+    return response.getData();
   }
 
   private void requireRole(UserContext ctx, UserRole... roles) {
