@@ -11,6 +11,7 @@ import com.winner.client.hubservice.hub.presentation.dto.HubResponse;
 import com.winner.client.hubservice.hub.presentation.dto.UpdateHubRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/hubs")
@@ -69,7 +71,7 @@ public class HubController {
         HubPageResponse response = hubService.searchHubs(q, pageable);
 
         long end = System.currentTimeMillis();
-        System.out.println("전체 응답 시간: " + (end - start) + " ms");
+        log.debug("전체 응답 시간: {} ms", (end - start));
 
         return response;
     }

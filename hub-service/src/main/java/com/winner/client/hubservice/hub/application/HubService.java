@@ -14,6 +14,7 @@ import com.winner.client.hubservice.hub.presentation.dto.HubPageResponse;
 import com.winner.client.hubservice.hub.presentation.dto.HubResponse;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -120,17 +122,10 @@ public class HubService {
         }
 
         long end = System.currentTimeMillis();
-        System.out.println("DB 조회 시간 " + (end - start) + " ms");
+        log.debug("DB 조회 시간: {} ms", (end - start));
 
         return new HubPageResponse(
-            hubs.map(h -> HubResponse.builder()
-                .id(h.getId())
-                .name(h.getName())
-                .address(h.getLocation().getAddress())
-                .lat(h.getLocation().getLat())
-                .lng(h.getLocation().getLng())
-                .build()
-            ).getContent(),
+            hubs.map(HubResponse::from).getContent(),
             hubs.getNumber(),
             hubs.getSize(),
             hubs.getTotalElements(),
