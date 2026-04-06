@@ -21,7 +21,7 @@ public abstract class BaseAuditEntity extends BaseTimeEntity {
 
   @LastModifiedBy
   @Column(name = "updated_by")
-  private UUID updatedBy;
+  protected UUID updatedBy;
 
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
