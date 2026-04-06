@@ -24,12 +24,7 @@ public class HubRouteController {
 
     @PostMapping
     public UUID createHubRoute(@RequestBody CreateHubRouteRequest request) {
-        CreateRouteCommand command = CreateRouteCommand.builder()
-            .fromHubId(request.getFromHubId())
-            .toHubId(request.getToHubId())
-            .distance(request.getDistance())
-            .duration(request.getDuration())
-            .build();
+        CreateRouteCommand command = CreateRouteCommand.from(request);
 
         return hubRouteService.createRoute(command);
     }
@@ -49,13 +44,7 @@ public class HubRouteController {
         }
 
         return results.stream()
-            .map(result -> HubRouteResponse.builder()
-                .id(result.getId())
-                .fromHubId(result.getFromHubId())
-                .toHubId(result.getToHubId())
-                .distance(result.getDistance())
-                .duration(result.getDuration())
-                .build())
+            .map(HubRouteResponse::from)
             .toList();
     }
 

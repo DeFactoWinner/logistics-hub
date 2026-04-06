@@ -10,6 +10,10 @@ import com.winner.client.hubservice.hub.presentation.dto.HubResponse;
 import com.winner.client.hubservice.hub.presentation.dto.UpdateHubRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,12 +34,7 @@ public class HubController {
 
     @PostMapping
     public UUID createHub(@RequestBody CreateHubRequest request) {
-        CreateHubCommand command = CreateHubCommand.builder()
-            .name(request.getName())
-            .address(request.getAddress())
-            .lat(request.getLat())
-            .lng(request.getLng())
-            .build();
+        CreateHubCommand command = CreateHubCommand.from(request);
 
         return hubService.createHub(command);
     }
@@ -43,13 +43,7 @@ public class HubController {
     public HubResponse getHub(@PathVariable UUID hubId) {
         HubResult result = hubService.getHub(hubId);
 
-        return HubResponse.builder()
-            .id(result.getId())
-            .name(result.getName())
-            .address(result.getAddress())
-            .lat(result.getLat())
-            .lng(result.getLng())
-            .build();
+        return HubResponse.from(result);
     }
 
     @PatchMapping("/{hubId}")
@@ -62,5 +56,15 @@ public class HubController {
     @DeleteMapping("/{hubId}")
     public void deleteHub(@PathVariable UUID hubId, @AuthenticationPrincipal CustomUserPrincipal user) {
         hubService.deleteHub(hubId, user.userId());
+    }
+
+    @GetMapping
+    public Page<HubResponse> searchHubs(
+            @RequestParam(required = false) String q,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
+            Pageable pageable
+    ) {
+        return hubService.searchHubs(q, pageable)
+            .map(HubResponse::from);
     }
 }
