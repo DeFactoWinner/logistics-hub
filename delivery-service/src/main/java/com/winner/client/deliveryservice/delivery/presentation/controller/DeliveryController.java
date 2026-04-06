@@ -12,14 +12,17 @@ import com.winner.client.global.pagination.CommonPageRequest;
 import com.winner.client.global.pagination.PageResponse;
 import com.winner.client.global.response.ApiResponse;
 import com.winner.client.global.response.CommonSuccessCode;
+import com.winner.client.global.security.CustomUserPrincipal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,14 +37,13 @@ public class DeliveryController {
   @GetMapping
   public ResponseEntity<ApiResponse<PageResponse<DeliveryInfoResponse>>> getMyDeliveries(
       CommonPageRequest pageRequest,
+      @AuthenticationPrincipal CustomUserPrincipal principal,
       @RequestParam(value = "keyword", required = false) String keyword,
-      @RequestParam(value = "delivery-status", required = false) String deliveryStatus,
-      @RequestHeader("X-User-Id") UUID userId,
-      @RequestHeader("X-User-Role") String userRole,
-      @RequestHeader("X-Reference-Id") UUID referenceId
+      @RequestParam(value = "delivery-status", required = false) String deliveryStatus
   ) {
     SearchDeliveryQuery query =
-        SearchDeliveryQuery.of(userId, userRole, referenceId, keyword, deliveryStatus, pageRequest);
+        SearchDeliveryQuery.of(
+            principal.userId(), principal.role(), principal.referenceId(), keyword, deliveryStatus, pageRequest);
 
     Page<SearchDeliveryResult> resultPage = deliveryQueryService.getDeliveryPage(query);
     Page<DeliveryInfoResponse> infoPage = resultPage.map(DeliveryInfoResponse::from);
@@ -51,7 +53,8 @@ public class DeliveryController {
   }
 
   @GetMapping("/{deliveryId}")
-  public ResponseEntity<ApiResponse<GetDeliveryResponse>> getDeliveryDetail(@PathVariable UUID deliveryId) {
+  public ResponseEntity<ApiResponse<GetDeliveryResponse>> getDeliveryDetail(
+      @AuthenticationPrincipal CustomUserPrincipal principal, @PathVariable UUID deliveryId) {
     GetDeliveryResponse response =
         GetDeliveryResponse.from(deliveryQueryService.getDeliveryDetail(deliveryId));
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
@@ -59,21 +62,22 @@ public class DeliveryController {
   }
 
   @GetMapping("/{deliveryId}/routes")
-  public ResponseEntity<ApiResponse<ListDeliveryRouteResponse>> getDeliveryRoutes(@PathVariable UUID deliveryId){
+  public ResponseEntity<ApiResponse<ListDeliveryRouteResponse>> getDeliveryRoutes(
+      @AuthenticationPrincipal CustomUserPrincipal principal, @PathVariable UUID deliveryId){
     ListDeliveryRouteResponse response =
         ListDeliveryRouteResponse.from(deliveryQueryService.getDeliveryRoutes(deliveryId));
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }
 
+  @PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
   @PatchMapping("/{deliveryId}/hub-moving")
   public ResponseEntity<ApiResponse<DeliveryCommandResponse>> startHubMoving(
       @PathVariable UUID deliveryId,
-      @RequestHeader("X-User-Role") String userRole,
-      @RequestHeader("X-Reference-Id") UUID referenceId
+      @AuthenticationPrincipal CustomUserPrincipal principal
   ){
     DeliveryCommandResponse response =
-        deliveryCommandService.startHubMoving(deliveryId, userRole, referenceId);
+        deliveryCommandService.startHubMoving(deliveryId, principal.role(), principal.referenceId());
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }
@@ -81,12 +85,10 @@ public class DeliveryController {
   @PatchMapping("/{deliveryId}/destination-arrived")
   public ResponseEntity<ApiResponse<DeliveryCommandResponse>> startVendorMoving(
       @PathVariable UUID deliveryId,
-      @RequestHeader("X-User-Id") UUID userId,
-      @RequestHeader("X-User-Role") String userRole,
-      @RequestHeader("X-Reference-Id") UUID referenceId
+      @AuthenticationPrincipal CustomUserPrincipal principal
   ){
     DeliveryCommandResponse response
-        = deliveryCommandService.startVendorMoving(deliveryId, userId, userRole, referenceId);
+        = deliveryCommandService.startVendorMoving(deliveryId, principal.userId(), principal.role(), principal.referenceId());
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }
@@ -94,11 +96,10 @@ public class DeliveryController {
   @PatchMapping("/{deliveryId}/for-vendor-moving")
   public ResponseEntity<ApiResponse<DeliveryCommandResponse>> arriveDestination(
       @PathVariable UUID deliveryId,
-      @RequestHeader("X-User-Role") String userRole,
-      @RequestHeader("X-Reference-Id") UUID referenceId
+      @AuthenticationPrincipal CustomUserPrincipal principal
   ){
     DeliveryCommandResponse response =
-        deliveryCommandService.arriveDestination(deliveryId, userRole, referenceId);
+        deliveryCommandService.arriveDestination(deliveryId, principal.role(), principal.referenceId());
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }
@@ -106,23 +107,22 @@ public class DeliveryController {
   @PatchMapping("/{deliveryId}/completed")
   public ResponseEntity<ApiResponse<DeliveryCommandResponse>> completeDelivery(
       @PathVariable UUID deliveryId,
-      @RequestHeader("X-User-Id") UUID userId,
-      @RequestHeader("X-User-Role") String userRole,
-      @RequestHeader("X-Reference-Id") UUID referenceId
+      @AuthenticationPrincipal CustomUserPrincipal principal
   ){
     DeliveryCommandResponse response =
-        deliveryCommandService.completeDelivery(deliveryId, userId, userRole, referenceId);
+        deliveryCommandService.completeDelivery(deliveryId, principal.userId(), principal.role(), principal.referenceId());
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }
 
-  @PatchMapping("/{deliveryId}/cancelled")
+  @PreAuthorize("hasRole('MASTER')")
+  @PostMapping("/{deliveryId}/cancelled")
   public ResponseEntity<ApiResponse<DeliveryCommandResponse>> cancelDelivery(
       @PathVariable UUID deliveryId,
-      @RequestHeader("X-User-Role") String userRole
+      @AuthenticationPrincipal CustomUserPrincipal principal
   ){
     DeliveryCommandResponse response
-        = deliveryCommandService.cancelDelivery(deliveryId, userRole);
+        = deliveryCommandService.cancelDelivery(deliveryId, principal.role());
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
   }

@@ -44,7 +44,7 @@ public class DeliveryAccessValidator {
   }
 
   public void validateHubAdminAccess(Delivery delivery, String userRole, UUID userHubId) {
-    validateRole(userRole, "MASTER_ADMIN", "HUB_ADMIN");
+    validateRole(userRole, "MASTER", "HUB_ADMIN");
 
     if ("HUB_ADMIN".equals(userRole)) {
       validateDeliveryHubAccess(delivery, userHubId);
@@ -54,7 +54,7 @@ public class DeliveryAccessValidator {
   public void validateDeliveryManagerAccess(
       Delivery delivery, UUID userId, String userRole, UUID userHubId
   ) {
-    validateRole(userRole, "MASTER_ADMIN", "HUB_ADMIN", "DELIVERY_MANAGER");
+    validateRole(userRole, "MASTER", "HUB_ADMIN", "DELIVERY_MANAGER");
 
     switch (userRole) {
       case "HUB_ADMIN" -> validateDeliveryHubAccess(delivery, userHubId);
@@ -64,7 +64,7 @@ public class DeliveryAccessValidator {
   }
 
   public void validateRouteHubAdminAccess(DeliveryRoute route, String userRole, UUID userHubId) {
-    validateRole(userRole, "MASTER_ADMIN", "HUB_ADMIN");
+    validateRole(userRole, "MASTER", "HUB_ADMIN");
 
     if ("HUB_ADMIN".equals(userRole)) {
       validateRouteHubAccess(route, userHubId);
@@ -74,7 +74,7 @@ public class DeliveryAccessValidator {
   public void validateRouteDeliveryManagerAccess(
       DeliveryRoute route, UUID userId, String userRole, UUID userHubId
   ) {
-    validateRole(userRole, "MASTER_ADMIN", "HUB_ADMIN", "DELIVERY_MANAGER");
+    validateRole(userRole, "MASTER", "HUB_ADMIN", "DELIVERY_MANAGER");
 
     switch (userRole) {
       case "HUB_ADMIN" -> validateRouteHubAccess(route, userHubId);
