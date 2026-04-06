@@ -16,6 +16,6 @@ public class HubClientAdapter implements HubRouteReader {
   @Override
   public HubRouteInfo getHubRoutes(UUID fromHubId, UUID toHubId) {
     HubRouteResponse response = hubClient.getHubRoutes(fromHubId, toHubId);
-    return HubRouteInfo.from(response); // ← 여기서 변환
+    return HubRouteInfo.from(response);
   }
 }

@@ -6,12 +6,7 @@ public enum DeliveryStatus {
 
   PENDING {
     public Set<DeliveryStatus> nextStates() {
-      return Set.of(HUB_WAITING, CANCELLED);
-    }
-  },
-  HUB_WAITING {
-    public Set<DeliveryStatus> nextStates() {
-      return Set.of(HUB_MOVING, CANCELLED);
+      return Set.of(CANCELLED);
     }
   },
   HUB_MOVING {

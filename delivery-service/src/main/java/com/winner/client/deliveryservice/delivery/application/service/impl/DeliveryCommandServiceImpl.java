@@ -44,15 +44,6 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
   }
 
   @Override
-  public DeliveryCommandResponse startHubWaiting(
-      UUID deliveryId, String userRole, UUID referenceId) {
-    Delivery delivery = findById(deliveryId);
-    validator.validateHubAdminAccess(delivery, userRole, referenceId);
-    delivery.startHubWaiting();
-    return DeliveryCommandResponse.from(delivery);
-  }
-
-  @Override
   public DeliveryCommandResponse startHubMoving(
       UUID deliveryId, String userRole, UUID referenceId) {
     Delivery delivery = findById(deliveryId);

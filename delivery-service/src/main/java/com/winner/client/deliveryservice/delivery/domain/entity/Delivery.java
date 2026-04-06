@@ -96,10 +96,6 @@ public class Delivery extends BaseAuditEntity {
         .allMatch(route -> route.getStatus() == DeliveryRouteStatus.COMPLETED);
   }
 
-  public void startHubWaiting() {
-    changeStatus(DeliveryStatus.HUB_WAITING);
-  }
-
   public void startHubMoving() {
     changeStatus(DeliveryStatus.HUB_MOVING);
   }

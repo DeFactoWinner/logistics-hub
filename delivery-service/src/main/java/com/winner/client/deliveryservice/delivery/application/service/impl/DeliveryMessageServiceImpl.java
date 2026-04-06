@@ -7,6 +7,7 @@ import com.winner.client.deliveryservice.delivery.application.dto.command.Comple
 import com.winner.client.deliveryservice.delivery.application.dto.command.DeliveryAssignCompleteCommand;
 import com.winner.client.deliveryservice.delivery.application.dto.command.DeliveryRouteAssignCompleteCommand;
 import com.winner.client.deliveryservice.delivery.application.dto.command.HubDeliveryManagerAssignFailCommand;
+import com.winner.client.deliveryservice.delivery.application.port.OrderPort;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryAssignmentService;
 import com.winner.client.deliveryservice.delivery.application.service.DeliveryMessageUsecase;
 import com.winner.client.deliveryservice.delivery.domain.entity.Delivery;
@@ -27,6 +28,7 @@ public class DeliveryMessageServiceImpl implements DeliveryMessageUsecase {
   private final DeliveryRepository deliveryRepository;
   private final DeliveryRouteRepository deliveryRouteRepository;
   private final DeliveryAssignmentService deliveryAssignmentService;
+  private final OrderPort orderPort;
 
   @Override
   @Transactional
@@ -35,13 +37,19 @@ public class DeliveryMessageServiceImpl implements DeliveryMessageUsecase {
         .orElseThrow(() -> new BusinessException(DeliveryErrorCode.NOT_FOUND_DELIVERY_ROUTE));
 
     route.updateDeliveryManagerInfo(command.deliveryManagerId(), command.deliveryManagerName());
-    route.startProgress(); // PENDING → IN_PROGRESS
+    route.startProgress();
+
+    Delivery delivery = route.getDelivery();
 
     if (route.isFirstRoute()) {
-      Delivery delivery = route.getDelivery();
       delivery.startHubMoving();
     }
-    // todo: order 배송 담당자 정보 update
+
+    orderPort.updateOrderDeliveryInfo(
+        command.deliveryId(),
+        command.deliveryManagerId(),
+        delivery.getStatus().name()
+    );
   }
 
   @Override
@@ -51,7 +59,12 @@ public class DeliveryMessageServiceImpl implements DeliveryMessageUsecase {
 
     delivery.updateDeliveryManagerInfo(command.deliveryManagerId(), command.deliveryManagerName());
     delivery.startVendorMoving();
-    // todo: order 배송 담당자 정보 update
+
+    orderPort.updateOrderDeliveryInfo(
+        command.deliveryId(),
+        command.deliveryManagerId(),
+        delivery.getStatus().name()
+    );
   }
 
   @Override
@@ -77,7 +90,8 @@ public class DeliveryMessageServiceImpl implements DeliveryMessageUsecase {
   public void completeDelivery(CompleteDeliveryCommand command) {
     Delivery delivery = findDeliveryById(command.deliveryId());
     delivery.complete();
-    // todo: order 배송 완료 status update
+
+    orderPort.updateOrderDeliveryCompleted(command.deliveryId());
   }
 
   @Override
