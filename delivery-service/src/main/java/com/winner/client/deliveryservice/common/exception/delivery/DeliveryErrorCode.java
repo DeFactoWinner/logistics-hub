@@ -28,7 +28,7 @@ public enum DeliveryErrorCode implements ErrorCode {
   SAME_HUB_NOT_ALLOWED("ERROR_517", HttpStatus.BAD_REQUEST, "현재 허브와 다음 허브는 동일할 수 없습니다."),
   FIELD_CANNOT_BE_EMPTY_ADDRESS("ERROR_518", HttpStatus.BAD_REQUEST, "주소 필드(도로명, 상세)는 비워둘 수 없습니다."),
   INVALID_SEQUENCE("ERROR_519", HttpStatus.BAD_REQUEST, "순번(sequence)은 0 이상이어야 합니다."),
-  INVALID_ROLE("ERROR_520", HttpStatus.BAD_REQUEST, "검증되지 않은 역할 입니다."),
+  INVALID_ROLE("ERROR_520", HttpStatus.BAD_REQUEST, "유효하지 않은 사용자 역할(Role)입니다."),
   ;
 
   private final String code;
