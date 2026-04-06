@@ -60,7 +60,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
     ProductResponse product = fetchProduct(command.productId());
 
-    decreseStock(command.productId(), command.count().intValue());
+    decreaseStock(command.productId(), command.count().intValue());
 
     Order order;
     try {
@@ -198,7 +198,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     cancelDeliverySafely(deliveryId, UserRole.MASTER);
   }
 
-  private void decreseStock(UUID productId, int count) {
+  private void decreaseStock(UUID productId, int count) {
     try {
       UpdateStockRequest stockRequest = new UpdateStockRequest(-count);
       var response =stockFeignClient.updateProductStock(productId, stockRequest);
