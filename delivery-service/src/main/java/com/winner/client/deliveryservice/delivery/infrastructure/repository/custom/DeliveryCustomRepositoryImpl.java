@@ -26,14 +26,14 @@ public class DeliveryCustomRepositoryImpl implements DeliveryCustomRepository {
 
   @Override
   public Page<Delivery> getAllDeliveries(SearchDeliveryQuery query) {
-    BooleanExpression condition = roleCondition(query)
-        .and(keywordCondition(query.keyword()))
-        .and(statusCondition(query.status()))
-        .and(delivery.deletedAt.isNull());
-
     List<Delivery> content = queryFactory
         .selectFrom(delivery)
-        .where(condition)
+        .where(
+            roleCondition(query),
+            keywordCondition(query.keyword()),
+            statusCondition(query.status()),
+            delivery.deletedAt.isNull()
+        )
         .orderBy(orderSpecifier(query.sortType()))
         .offset((long) query.page() * query.size())
         .limit(query.size())
@@ -42,7 +42,12 @@ public class DeliveryCustomRepositoryImpl implements DeliveryCustomRepository {
     Long total = queryFactory
         .select(delivery.count())
         .from(delivery)
-        .where(condition)
+        .where(
+            roleCondition(query),
+            keywordCondition(query.keyword()),
+            statusCondition(query.status()),
+            delivery.deletedAt.isNull()
+        )
         .fetchOne();
 
     Pageable pageable = PageRequest.of(query.page(), query.size(), Sort.by(query.sortType().getProperty()));
@@ -56,7 +61,7 @@ public class DeliveryCustomRepositoryImpl implements DeliveryCustomRepository {
 
   private BooleanExpression roleCondition(SearchDeliveryQuery query) {
     return switch (query.userRole()) {
-      case "MASTER_ADMIN" -> null;
+      case "MASTER" -> null;
       case "HUB_MANAGER" ->
           delivery.hubRoute.originHubId.eq(query.referenceId())
               .or(delivery.hubRoute.destinationHubId.eq(query.referenceId()));
