@@ -3,7 +3,7 @@ package com.winner.client.productservice.stock.application.service.impl;
 import com.winner.client.global.exception.BusinessException;
 import com.winner.client.productservice.common.exception.StockErrorCode;
 import com.winner.client.productservice.stock.application.service.StockQueryService;
-import com.winner.client.productservice.stock.application.service.dto.result.StockResult;
+import com.winner.client.productservice.stock.application.dto.result.StockResult;
 import com.winner.client.productservice.stock.domain.entity.Stock;
 import com.winner.client.productservice.stock.domain.repository.StockRepository;
 import com.winner.client.productservice.stock.domain.vo.ProductId;
