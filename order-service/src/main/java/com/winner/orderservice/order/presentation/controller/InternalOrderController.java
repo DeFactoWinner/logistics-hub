@@ -33,7 +33,7 @@ public class InternalOrderController {
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK, null));
   }
 
-  @PostMapping("/{orderId}/cancellations")
+  @PostMapping("/{orderId}/cancellation")
   public ResponseEntity<ApiResponse<Void>> cancelOrder(@PathVariable UUID orderId) {
     orderCommandService.internalCancelOrder(orderId);
     return ResponseEntity.ok(ApiResponse.success(CommonSuccessCode.OK, null));
