@@ -1,4 +1,4 @@
-package com.winner.client.deliveryservice.common.event;
+package com.winner.client.deliveryservice.common.event.deliverymanager.hub;
 
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryCompleteResult;
 import java.util.UUID;

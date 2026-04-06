@@ -1,8 +1,8 @@
 package com.winner.client.deliveryservice.deliverymanagerhub.infrastructure.message;
 
-import com.winner.client.deliveryservice.common.event.AssignFailEvent;
-import com.winner.client.deliveryservice.common.event.AssignSuccessEvent;
-import com.winner.client.deliveryservice.common.event.DeliveryCompleteEvent;
+import com.winner.client.deliveryservice.common.event.deliverymanager.hub.AssignHubDeliveryManagerFailEvent;
+import com.winner.client.deliveryservice.common.event.deliverymanager.hub.AssignHubDeliveryManagerSuccessEvent;
+import com.winner.client.deliveryservice.common.event.deliverymanager.hub.DeliveryCompleteEvent;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryAssignResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.dto.result.DeliveryCompleteResult;
 import com.winner.client.deliveryservice.deliverymanagerhub.application.message.DeliveryMessagePort;
@@ -20,10 +20,12 @@ public class DeliveryMessagePortImpl implements DeliveryMessagePort {
 	public void assignEventPublish(DeliveryAssignResult result) {
 		if (result.isSuccess()) {
 			publisher.publishEvent(
-				AssignSuccessEvent.of(result.getDeliveryId(), result.getDeliveryManagerId())
+				AssignHubDeliveryManagerSuccessEvent
+					.of(result.getDeliveryId(), result.getDeliveryManagerId(), result.getDeliveryManagerName())
 			);
 		} else {
-			publisher.publishEvent(AssignFailEvent.from(result.getErrorMessage()));
+			publisher.publishEvent(AssignHubDeliveryManagerFailEvent
+				.of(result.getErrorMessage(), result.getDeliveryManagerName()));
 		}
 	}
 
