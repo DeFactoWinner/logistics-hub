@@ -37,3 +37,13 @@ eureka:
 
 server :
   port : 17003
+
+logging:
+  level:
+    feign: DEBUG
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: FULL

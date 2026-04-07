@@ -1,4 +1,4 @@
-package com.winner.client.productservice.stock.application.service.dto.result;
+package com.winner.client.productservice.stock.application.dto.result;
 
 import com.winner.client.productservice.stock.domain.entity.Stock;
 import com.winner.client.productservice.stock.domain.vo.Quantity;

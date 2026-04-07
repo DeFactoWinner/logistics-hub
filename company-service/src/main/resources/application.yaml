@@ -22,9 +22,6 @@ spring:
     init:
       mode: never
 
-server:
-  port: 17007
-
 eureka:
   client:
     service-url:
