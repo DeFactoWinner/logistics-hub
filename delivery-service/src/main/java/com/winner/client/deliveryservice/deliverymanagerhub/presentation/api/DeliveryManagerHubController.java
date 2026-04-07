@@ -6,13 +6,14 @@ import com.winner.client.deliveryservice.deliverymanagerhub.application.Delivery
 import com.winner.client.deliveryservice.deliverymanagerhub.application.DeliveryManagerHubWriteService;
 import com.winner.client.deliveryservice.deliverymanagerhub.presentation.dto.responses.DeliveryManagerHubInfo;
 import com.winner.client.global.response.ApiResponse;
+import com.winner.client.global.security.CustomUserPrincipal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,20 +34,20 @@ public class DeliveryManagerHubController {
 				DeliveryManagerHubInfo.from(deliveryManagerHubReadService.getDetail(userId))));
 	}
 
-	@PatchMapping("/{userId}")
+	@PatchMapping
 	public ResponseEntity<ApiResponse<DeliveryManagerHubInfo>> switchStatus(
-		@PathVariable UUID userId
+		@AuthenticationPrincipal CustomUserPrincipal principal
 	) {
 		return ResponseEntity.ok().body(ApiResponse.success(OK,
-			DeliveryManagerHubInfo.from(deliveryManagerHubWriteService.switchStatus(userId))));
+			DeliveryManagerHubInfo.from(deliveryManagerHubWriteService.switchStatus(principal.userId()))));
 	}
 
 	@PatchMapping("/{deliveryId}/completion")
 	public ResponseEntity<ApiResponse<Void>> completionDelivery(
-		@RequestHeader("X-User-Id") UUID userId,
+		@AuthenticationPrincipal CustomUserPrincipal customUserPrincipal,
 		@PathVariable UUID deliveryId
 	) {
-		deliveryManagerHubWriteService.completion(userId, deliveryId);
+		deliveryManagerHubWriteService.completion(customUserPrincipal.userId(), deliveryId);
 		return ResponseEntity.status(OK.getStatus())
 			.body(ApiResponse.success(OK, null));
 	}
