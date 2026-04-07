@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +43,6 @@ public class DeliveryController {
   @PreAuthorize("hasRole('MASTER')")
   @PostMapping
   public CreateDeliveryResponse createDelivery(
-      @AuthenticationPrincipal CustomUserPrincipal principal,
       @RequestBody CreateDeliveryRequest request) {
     CreateDeliveryCommand command = CreateDeliveryCommand.from(request);
     CreateDeliveryResult result = deliveryCommandService.createDelivery(command);
@@ -69,7 +69,7 @@ public class DeliveryController {
 
   @GetMapping("/{deliveryId}")
   public ResponseEntity<ApiResponse<GetDeliveryResponse>> getDeliveryDetail(
-      @AuthenticationPrincipal CustomUserPrincipal principal, @PathVariable UUID deliveryId) {
+      @PathVariable UUID deliveryId) {
     GetDeliveryResponse response =
         GetDeliveryResponse.from(deliveryQueryService.getDeliveryDetail(deliveryId));
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
@@ -78,7 +78,7 @@ public class DeliveryController {
 
   @GetMapping("/{deliveryId}/routes")
   public ResponseEntity<ApiResponse<ListDeliveryRouteResponse>> getDeliveryRoutes(
-      @AuthenticationPrincipal CustomUserPrincipal principal, @PathVariable UUID deliveryId){
+      @PathVariable UUID deliveryId){
     ListDeliveryRouteResponse response =
         ListDeliveryRouteResponse.from(deliveryQueryService.getDeliveryRoutes(deliveryId));
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
@@ -140,5 +140,17 @@ public class DeliveryController {
         = deliveryCommandService.cancelDelivery(deliveryId, principal.role());
     return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
         .body(ApiResponse.success(CommonSuccessCode.OK, response));
+  }
+
+  @PreAuthorize("hasRole('MASTER')")
+  @DeleteMapping("/{deliveryId}")
+  public ResponseEntity<ApiResponse<DeliveryCommandResponse>> deleteDelivery(
+      @PathVariable UUID deliveryId,
+      @AuthenticationPrincipal CustomUserPrincipal principal
+  ){
+    deliveryCommandService.deleteDelivery(deliveryId, principal.userId(), principal.role());
+
+    return ResponseEntity.status(CommonSuccessCode.OK.getStatus())
+        .body(ApiResponse.success(CommonSuccessCode.OK, null));
   }
 }

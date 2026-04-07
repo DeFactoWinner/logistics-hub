@@ -29,6 +29,7 @@ public enum DeliveryErrorCode implements ErrorCode {
   FIELD_CANNOT_BE_EMPTY_ADDRESS("ERROR_518", HttpStatus.BAD_REQUEST, "주소 필드(도로명, 상세)는 비워둘 수 없습니다."),
   INVALID_SEQUENCE("ERROR_519", HttpStatus.BAD_REQUEST, "순번(sequence)은 0 이상이어야 합니다."),
   INVALID_ROLE("ERROR_520", HttpStatus.BAD_REQUEST, "유효하지 않은 사용자 역할(Role)입니다."),
+  NOT_CANCELLED_DELIVERY("ERROR_521", HttpStatus.BAD_REQUEST, "배송/배송 경로가 모두 취소되지 않았습니다"),
   ;
 
   private final String code;

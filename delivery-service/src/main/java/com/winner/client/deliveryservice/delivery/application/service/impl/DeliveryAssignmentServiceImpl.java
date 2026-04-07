@@ -26,7 +26,7 @@ public class DeliveryAssignmentServiceImpl implements DeliveryAssignmentService 
   @Transactional
   public void assignHubDeliveryManager(Delivery delivery, List<DeliveryRoute> routes) {
     deliveryRepository.save(delivery);
-    routes.forEach(deliveryRouteRepository::save);
+    deliveryRouteRepository.saveAll(routes);
     publishHubAssignEvent(delivery.getId());
   }
 

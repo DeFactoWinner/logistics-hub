@@ -18,6 +18,7 @@ public class InternalDeliveryController {
 
   private final DeliveryCommandService deliveryCommandService;
 
+  @PostMapping
   public CreateDeliveryResponse createDelivery(@RequestBody CreateDeliveryRequest request) {
     CreateDeliveryCommand command = CreateDeliveryCommand.from(request);
     CreateDeliveryResult result = deliveryCommandService.createDelivery(command);

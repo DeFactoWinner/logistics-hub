@@ -1,6 +1,7 @@
 package com.winner.client.deliveryservice.delivery.domain.repository;
 
 import com.winner.client.deliveryservice.delivery.domain.entity.DeliveryRoute;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,5 +11,7 @@ public interface DeliveryRouteRepository {
   Optional<DeliveryRoute> findById(UUID id);
   Optional<DeliveryRoute> findFirstWaitingRoute(UUID deliveryId);
   Optional<DeliveryRoute> findFirstInProgressRoute(UUID deliveryId);
+  void softDeleteAllByDeliveryId(UUID deliveryId, UUID userId, LocalDateTime now);
   void save(DeliveryRoute route);
+  void saveAll(List<DeliveryRoute> routes);
 }

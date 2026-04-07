@@ -12,9 +12,12 @@ import com.winner.client.deliveryservice.delivery.application.validator.Delivery
 import com.winner.client.deliveryservice.delivery.application.validator.UserRole;
 import com.winner.client.deliveryservice.delivery.domain.entity.Delivery;
 import com.winner.client.deliveryservice.delivery.domain.entity.DeliveryRoute;
+import com.winner.client.deliveryservice.delivery.domain.enums.DeliveryRouteStatus;
 import com.winner.client.deliveryservice.delivery.domain.repository.DeliveryRepository;
+import com.winner.client.deliveryservice.delivery.domain.repository.DeliveryRouteRepository;
 import com.winner.client.deliveryservice.delivery.presentation.dto.response.DeliveryCommandResponse;
 import com.winner.client.global.exception.BusinessException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeliveryCommandServiceImpl implements DeliveryCommandService {
 
   private final DeliveryRepository deliveryRepository;
+  private final DeliveryRouteRepository deliveryRouteRepository;
   private final DeliveryAssignmentService deliveryAssignmentService;
   private final DeliveryAccessValidator validator;
   private final HubRouteReader hubRouteReader;
@@ -109,6 +113,22 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
     Delivery delivery = findByIdWithRoutes(deliveryId);
     delivery.cancel();
     return DeliveryCommandResponse.from(delivery);
+  }
+
+  @Override
+  public void deleteDelivery(UUID deliveryId, UUID userId, String userRole) {
+    validator.validateRole(userRole, UserRole.MASTER);
+    Delivery delivery = findByIdWithRoutes(deliveryId);
+
+    boolean allCancelled = delivery.getRoutes().stream()
+        .allMatch(route -> route.getStatus() == DeliveryRouteStatus.CANCELLED);
+
+    if (!delivery.isCancelled() || !allCancelled) {
+      throw new BusinessException(DeliveryErrorCode.NOT_CANCELLED_DELIVERY);
+    }
+
+    delivery.softDelete(userId);
+    deliveryRouteRepository.softDeleteAllByDeliveryId(deliveryId, userId, LocalDateTime.now());
   }
 
   private Delivery findById(UUID deliveryId) {
