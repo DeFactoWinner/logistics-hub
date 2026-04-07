@@ -233,13 +233,23 @@ API Gateway를 통해 외부 요청을 단일 진입점으로 처리합니다.**
 - Hub(Node) / HubRoute(Edge) 모델링
 - Dijkstra 알고리즘 적용
 - 거리 → 시간 기반 가중치 적용 (실제 물류 환경 반영)
-- Redis 캐싱
+- Redis 캐싱 도입
 
 #### 주요 기능
 - 허브 CRUD (Soft Delete)
 - 허브 간 경로 관리
 - 최단 경로 탐색
 
+#### 성능 개선
+- Redis Cache Aside 패턴 적용
+- 조회 시 DB 접근 최소화
+- @Cacheable / @CacheEvict 기반 캐싱 전략 적용
+```
+기존: 약 300 ~ 400ms  
+개선: 약 2 ~ 10ms
+
+→ 최대 약 98% 응답 속도 개선
+```
 ---
 
 ### Delivery Service
